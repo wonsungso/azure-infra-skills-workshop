@@ -18,7 +18,7 @@
 
 **사용 Skill:** `azure-enterprise-infra-planner`
 
-`my-inputs.md`의 값으로 대괄호를 바꿔 실행합니다.
+`.env`의 값으로 대괄호를 바꿔 실행합니다.
 
 ```text
 azure-enterprise-infra-planner를 사용해 [resource-group]에 [aks-name] AKS를 위한 인프라 계획을 작성해줘. azure-kubernetes의 Day-0 검토와 azure-rbac의 least privilege 검토를 반영해줘. public API server의 authorized IP ranges는 [egress-ip-cidr]만 사용하고, Entra와 Azure RBAC for Kubernetes를 사용하며 local accounts는 비활성화해줘. system/user node pool 분리, Azure CNI Overlay + Cilium, load balancer egress, 비중첩 CIDR을 포함해줘. 대안, 위험, 비용 요인을 보여주고 계획 승인 전에는 멈춰.

@@ -12,7 +12,7 @@ Skill에게 작업을 요청하면 Skill은 절차와 판단 기준을, MCP 도�
 
 ## 시작 전에
 
-- [README](../../README.md)의 시작하기를 마치고 `my-inputs.md`에 **workshop ID가 채워져 있는지** 확인했나요?
+- [README](../../README.md)의 시작하기를 마쳤나요?
 - Codespace 터미널에서 `az login`으로 로그인했나요?
 
 ## Step 1. 역할 이해하기 (5분)
@@ -32,25 +32,22 @@ Skill에게 작업을 요청하면 Skill은 절차와 판단 기준을, MCP 도�
 > [!TIP]
 > 헷갈리면 "지금 이 작업이 Azure를 바꾸나요, 읽기만 하나요?"를 먼저 물어보세요.
 
-## Step 2. 입력값 확인하고 채우기 (10분)
+## Step 2. 입력값 채우기 (10분)
 
-이후 모든 프롬프트가 이 값을 공유합니다. **`my-inputs.md`는 이미 만들어져 있습니다.** Codespace가 생성될 때 workshop ID와 리소스 이름이 자동으로 채워졌습니다.
+이후 모든 프롬프트가 저장소 루트의 `.env`를 공유합니다. 리소스 이름은 미리 채워져 있고, 빈 칸을 Lab을 진행하며 넣습니다.
 
 ```bash
-cat my-inputs.md
+cat .env
 ```
 
-> [!NOTE]
-> 파일이 없다면 `bash scripts/init-workshop.sh`로 만듭니다. 이 파일은 `.gitignore`에 등록돼 있어 커밋되지 않습니다.
-
-빈 칸을 채워 나갑니다. **이번 Lab에서 채울 것**은 두 가지입니다.
+**이번 Lab에서 채울 것**은 두 가지입니다.
 
 | 항목 | 어떻게 |
 | --- | --- |
-| subscription ID 또는 scope | Step 3에서 조회 |
-| egress IP | 아래에서 지금 조회 |
+| `SUBSCRIPTION_ID` | Step 3에서 조회 |
+| `EGRESS_IP_CIDR` | 아래에서 지금 조회 |
 
-region, CIDR, VM SKU는 Lab 02에서 quota를 확인한 뒤 채우고, node resource group은 Lab 05 배포 후 output으로 채웁니다.
+`REGION`, CIDR, VM SKU는 Lab 02에서 quota를 확인한 뒤 채우고, `NODE_RESOURCE_GROUP`은 Lab 05 배포 후 output으로 채웁니다.
 
 **egress IP를 지금 조회합니다.** AKS API server에 접근할 수 있는 유일한 주소가 됩니다.
 
@@ -78,7 +75,7 @@ azure-resource-lookup을 사용해 내 subscription과 [resource-group]을 읽�
 
 **확인할 것**
 
-- 조회된 subscription·region이 `my-inputs.md`와 같은가?
+- 조회된 subscription·region이 `.env`와 같은가?
 - resource group이 없다면 **지금 만들지 않고** 이름만 확정합니다. 생성은 Lab 05에서 배포와 함께 합니다.
 - 그룹에 다른 리소스가 이미 있다면, Lab 08에서 실수로 지우지 않도록 목록을 기록해 둡니다.
 
@@ -95,9 +92,8 @@ azure-resource-lookup을 사용해 내 subscription과 [resource-group]을 읽�
 
 ## ✅ 완료 체크리스트
 
-- [ ] `my-inputs.md`에 workshop ID와 리소스 이름이 채워진 것을 확인했다
-- [ ] Codespace 터미널에서 egress IP를 조회해 기록했다
-- [ ] 조회 결과가 `my-inputs.md`와 일치함을 확인했다
+- [ ] Codespace 터미널에서 egress IP를 조회해 `.env`에 기록했다
+- [ ] 조회 결과가 `.env`와 일치함을 확인했다
 - [ ] [증거 로그](../../templates/evidence-log.md)에 기록했다
 
 ## 🚧 문제가 생겼다면

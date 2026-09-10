@@ -85,7 +85,7 @@ kubectl create namespace lab
 | 배포가 quota 오류로 실패 | vCPU 한도 초과 또는 region 용량 부족 | [Lab 02](02-design-aks.md) Step 1로 돌아가 node 개수·SKU를 줄이거나 region 변경 |
 | 배포가 정책 오류로 실패 | Azure Policy 제약 | 위반한 정책 이름을 확인하고 해당 설정만 조정 |
 | API server 접속 불가 | authorized IP ranges 미반영, 전파 지연, 또는 내 IP 변경 | 내 egress IP를 다시 조회해 비교, 몇 분 대기 후 재시도 |
-| 어제까지 되던 접속이 갑자기 안 됨 | Codespace를 재시작해 egress IP가 바뀌었을 수 있음 | `curl -s https://api.ipify.org`로 다시 조회해 `my-inputs.md`와 비교하고, 다르면 authorized IP ranges를 갱신 |
+| 어제까지 되던 접속이 갑자기 안 됨 | Codespace를 재시작해 egress IP가 바뀌었을 수 있음 | `curl -s https://api.ipify.org`로 다시 조회해 `.env`와 비교하고, 다르면 authorized IP ranges를 갱신 |
 | `kubectl`에서 권한 거부 | 클러스터에 대한 Kubernetes RBAC 역할 미부여 | `azure-rbac`으로 내 계정에 필요한 AKS RBAC 역할을 확인하고 부여 |
 | 역할 할당 자체가 실패 | subscription에서 `Microsoft.Authorization` 작업이 제한됨 | [설계 결정](../design-decisions.md)의 "제한된 subscription에서의 테스트" 항목 참고 |
 

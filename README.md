@@ -92,34 +92,9 @@ az version && az bicep version && kubectl version --client && kubelogin --versio
 ```
 
 > [!NOTE]
-> 로컬 VS Code로 진행해도 됩니다. 그때는 위 도구를 직접 설치하세요. 이후 Lab은 두 경우 모두 동일합니다.
+> 로컬 VS Code로 진행해도 됩니다. 그때는 위 도구를 직접 설치하고 `bash scripts/init-workshop.sh`를 한 번 실행하세요. 이후 Lab은 두 경우 모두 동일합니다.
 
-### 3. workshop ID를 확인합니다
-
-Codespace가 만들어질 때 6글자 ID가 **자동으로 생성되어** `my-inputs.md`에 채워집니다. 직접 만들 필요가 없습니다.
-
-```bash
-cat my-inputs.md
-```
-
-이 ID는 **모든 리소스 이름에 공통으로** 들어갑니다.
-
-| 리소스 | 이름 |
-| --- | --- |
-| resource group | `rg-aks-lab-<ID>` |
-| VNet | `vnet-aks-lab-<ID>` |
-| AKS | `aks-lab-<ID>` |
-
-같은 ID를 쓰면 내 리소스를 한눈에 찾을 수 있고, 여러 명이 같은 subscription에서 진행해도 이름이 겹치지 않습니다. VNet과 AKS 이름은 Bicep이 ID로부터 만들므로 직접 짓지 않습니다.
-
-> [!NOTE]
-> Codespace를 쓰지 않는다면 아래 명령으로 같은 파일을 만듭니다. 파일이 이미 있으면 덮어쓰지 않습니다.
->
-> ```bash
-> bash scripts/init-workshop.sh
-> ```
-
-### 4. Lab 01부터 순서대로 진행합니다
+### 3. Lab 01부터 순서대로 진행합니다
 
 [Lab 01: 워크샵 시작하기](docs/labs/01-orientation-and-setup.md)로 이동하세요. 배경이 궁금하면 [설계 결정](docs/design-decisions.md)을 참고할 수 있지만, 읽지 않아도 진행에는 지장이 없습니다.
 
@@ -129,7 +104,7 @@ cat my-inputs.md
 새 세션에서 아래 프롬프트로 현재 상태부터 이어갑니다.
 
 ```text
-이 저장소의 my-inputs.md와 증거 로그를 읽고 현재 완료된 단계를 판별해줘. Azure에서 실제 상태를 조회해 문서와 비교하되 리소스를 변경하지 마. 다음 미완료 단계와 선행 조건만 제시해줘.
+이 저장소의 .env와 증거 로그를 읽고 현재 완료된 단계를 판별해줘. Azure에서 실제 상태를 조회해 문서와 비교하되 리소스를 변경하지 마. 다음 미완료 단계와 선행 조건만 제시해줘.
 ```
 
 </details>
@@ -172,7 +147,7 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다. **프롬프�
 | `reference/kubernetes/` | 상품 페이지 manifest - **그대로 사용** |
 | `templates/` | 증거 로그, 인계 문서 양식 |
 | `.devcontainer/` | Codespace 환경 정의 |
-| `scripts/` | workshop ID 생성과 `my-inputs.md` 초기화 |
+| `scripts/` | 워크샵 공용 값(`.env`) 초기화 |
 
 모든 Lab은 같은 순서를 따릅니다. 목표 → 왜 필요한가 → 시작 전에 → Step → 완료 체크리스트 → 문제가 생겼다면 → 다음 Lab.
 

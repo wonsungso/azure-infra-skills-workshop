@@ -19,7 +19,7 @@
 **사용 Skill:** `azure-enterprise-infra-planner`
 
 ```text
-승인된 infrastructure plan과 my-inputs.md를 읽어 Bicep을 생성 또는 갱신해줘. azure-enterprise-infra-planner의 검증 단계를 따라 Bicep build, 보안 검사, ARM validation 또는 what-if를 수행하고 실제 명령 결과와 실패 항목을 정리해줘. 배포는 하지 마. 검증되지 않은 결과는 예상으로 표시해줘.
+승인된 infrastructure plan과 .env를 읽어 Bicep을 생성 또는 갱신해줘. azure-enterprise-infra-planner의 검증 단계를 따라 Bicep build, 보안 검사, ARM validation 또는 what-if를 수행하고 실제 명령 결과와 실패 항목을 정리해줘. 배포는 하지 마. 검증되지 않은 결과는 예상으로 표시해줘.
 ```
 
 **확인할 것**

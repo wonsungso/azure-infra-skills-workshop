@@ -29,7 +29,7 @@ azure-quotas를 사용해 내 subscription에서 [region]의 Standard DSv5 famil
 
 - 기본 구성은 **10 vCPU**가 필요합니다. 여유가 있나요?
 - 부족하면 region을 바꾸거나 node 개수·SKU를 줄입니다.
-- 결정한 region·SKU·node 개수를 `my-inputs.md`에 기록합니다.
+- 결정한 region·SKU·node 개수를 `.env`에 기록합니다.
 
 > [!TIP]
 > 여기서 얻은 **실제 조회 결과**가 이후 프롬프트의 근거가 됩니다. Skill은 내 subscription의 용량을 추측하지 않습니다.
