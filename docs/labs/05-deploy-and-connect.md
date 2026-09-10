@@ -52,6 +52,10 @@ kubectl create namespace lab
 - system pool과 user pool이 설계대로 분리되어 있는가? (`kubectl get nodes -L kubernetes.azure.com/mode`)
 - `lab` namespace가 생성됐는가?
 
+성공하면 아래와 같은 결과를 보게 됩니다. `MODE` 열에 `system` 2대와 `user` 1대가 보이는 것이 Lab 02의 노드풀 분리 결정이 실제로 적용됐다는 증거입니다.
+
+<img src="../../img/lab05-nodes.png" alt="kubectl get nodes 결과 — system 2대와 user 1대가 모두 Ready 상태이고 lab namespace가 생성된 터미널 출력" width="760">
+
 > [!NOTE]
 > 지금 여러분은 클러스터를 만든 사람이므로 **모든 namespace에 쓸 수 있습니다.** 그래서 "다른 namespace 쓰기 거부"는 지금 검증할 수 없습니다. 대신 Lab 02에서 만든 최소 권한 매트릭스를 다시 보고, **팀원에게 `lab`만 허용하려면 어떤 역할을 어느 scope에 줘야 하는지**를 확인해 인계 문서에 적어두세요. 실제 팀에서는 이것이 다음 사람의 첫 질문입니다.
 

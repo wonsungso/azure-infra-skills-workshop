@@ -54,16 +54,30 @@ reference/kubernetes/lab-web.yaml을 검토해줘. ConfigMap으로 주입되는 
 > [!WARNING]
 > port-forward 성공은 "로컬에서 접근이 됐다"는 것만 증명합니다. 외부 공개나 클러스터 내부 DNS 통신이 된다는 증거로 기록하지 마세요.
 
+각 계층이 정상이면 아래와 같이 보입니다. **EndpointSlice의 `endpoints` 값이 Pod IP와 같은지**가 Service와 Pod가 실제로 연결됐다는 증거입니다.
+
+<img src="../../img/lab06-verify.png" alt="kubectl apply와 계층별 조회 결과 — ConfigMap/Deployment/Service 생성, Pod Running, EndpointSlice 연결, HTTP 200 응답" width="760">
+
 ## Step 3. 대시보드 누려보기 (10분)
 
-port-forward를 연 상태에서 브라우저로 접속해 **Contoso Mission Control** 화면을 확인하세요.
+port-forward를 연 상태에서 브라우저로 `http://127.0.0.1:8080` 에 접속해 **Contoso Mission Control** 화면을 확인하세요.
 
-화면의 `POD` 카드에 뜼는 이름과, 터미널에서 조회한 Pod 이름이 **같은지** 비교해 보세요. 같다면 화면이 정말로 여러분의 클러스터에서 오고 있다는 증거입니다.
+<img src="../../img/dashboard.png" alt="Contoso Mission Control 대시보드 — 실제 Pod 이름과 namespace가 표시된 화면" width="760">
+
+화면의 `POD` 카드에 뜨는 이름과, 터미널에서 조회한 Pod 이름이 **같은지** 비교해 보세요. 같다면 화면이 정말로 여러분의 클러스터에서 오고 있다는 증거입니다.
 
 어느 노드에 올라갔는지도 함께 확인해 두세요. `-o wide` 조회 결과의 노드 이름이 **user pool**에 속하는지가 Lab 02 설계 결정이 실제로 지켜졌다는 증거입니다.
 
 > [!TIP]
-> Lab 07을 진행한다면, Pod를 지우고 재생성된 뒤 대시보드를 새로고침해 보세요. **`POD` 카드의 이름이 바뀝니다.** 재생성이 눈으로 보이는 순간입니다.
+> Pod를 지우고 재생성된 뒤 대시보드를 새로고침해 보세요. **`POD` 카드의 이름이 바뀝니다.** 재생성이 눈으로 보이는 순간입니다.
+>
+> ```bash
+> kubectl delete pod -n lab -l app=lab-web
+> ```
+>
+> port-forward는 Pod가 바뀌면 끊어지므로 다시 실행해야 합니다.
+
+<img src="../../img/dashboard-after-restart.png" alt="Pod 재생성 후 같은 대시보드 — POD 카드의 이름만 다른 값으로 바뀐 화면" width="760">
 
 ## ✅ 완료 체크리스트
 

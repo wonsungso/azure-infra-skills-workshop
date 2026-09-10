@@ -42,9 +42,20 @@ azure-diagnostics를 사용해 lab namespace의 샘플 Deployment가 준비되�
 - 제시된 원인이 **실제 Events 문구**에 근거하는가, 아니면 일반론인가?
 - 기존 Pod는 아직 살아있는가? (Deployment는 새 Pod가 Ready가 되기 전까지 기존 Pod를 지우지 않습니다)
 
+실제로 실행하면 아래처럼 보입니다. 새 Pod는 `ImagePullBackOff`지만 **기존 Pod는 `1/1 Running`으로 남아 서비스가 계속 응답한다**는 점을 확인하세요.
+
+<img src="../../img/lab07-diagnose.png" alt="장애 주입 후 kubectl 출력 — 새 Pod는 ImagePullBackOff, 기존 Pod는 Running 상태이며 events에 이미지 pull 실패가 기록되고 rollout undo로 복구된 터미널 화면" width="760">
+
 ## Step 3. 승인 후 복구하고 재검증하기
 
 복구 변경(올바른 이미지로 되돌리기)을 승인한 뒤 적용하고, [Lab 06](06-run-sample-workload.md)의 계층별 확인을 다시 수행합니다.
+
+```bash
+kubectl rollout undo deployment/lab-web -n lab
+```
+
+> [!NOTE]
+> `rollout undo`로 복구하면 **대시보드의 Pod 이름은 바뀌지 않습니다.** 기존 Pod가 한 번도 죽지 않았기 때문입니다. 이름이 그대로인 것이 오히려 "무중단으로 막았다"는 증거입니다. 이름이 바뀌는 것을 보고 싶다면 [Lab 06](06-run-sample-workload.md)의 Pod 삭제 실험을 따로 해보세요.
 
 > [!WARNING]
 > 권한 확대, IP 제한 완화, namespace 삭제는 복구 수단이 아닙니다.
@@ -53,9 +64,9 @@ azure-diagnostics를 사용해 lab namespace의 샘플 Deployment가 준비되�
 
 - [ ] 장애를 주입하고 증상을 기록함
 - [ ] 원인을 실제 증거(Events/Pod 상태)로 설명함
+- [ ] 장애 중에도 기존 Pod가 살아 있어 서비스가 끊기지 않았음을 확인함
 - [ ] 복구 변경을 승인 후 적용함
 - [ ] 재검증으로 정상 상태를 다시 확인함
-- [ ] 대시보드를 새로고침해 Pod 이름이 바뀐 것을 확인함
 
 ## 🚧 문제가 생겼다면
 
