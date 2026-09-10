@@ -8,6 +8,20 @@ reference/infra/main.json
 # Local kube/az artifacts
 kubeconfig
 *.kubeconfig
+.azure/
+*.azcli
+
+# Secrets and locally filled parameter files — never commit
+.env
+.env.*
+*.secret
+*.secrets
+secrets.json
+*parameters.json
+*.pem
+*.key
+*.pfx
+*.p12
 
 # OS / editor noise
 .DS_Store

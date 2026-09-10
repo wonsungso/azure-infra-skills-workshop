@@ -1,3 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lab-web-content
+  namespace: lab
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Contoso Mission Control</title>
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{min-height:100vh;display:grid;place-items:center;padding:32px;
+           font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#eaf0ff;
+           background:radial-gradient(1200px 600px at 18% -10%,#2d4dc4 0%,transparent 55%),
+                      radial-gradient(900px 500px at 112% 8%,#a233b5 0%,transparent 50%),
+                      linear-gradient(160deg,#070d20 0%,#0d1633 60%,#101a3d 100%)}
+      .card{width:min(940px,100%);background:rgba(255,255,255,.06);
+            border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:38px 40px;
+            box-shadow:0 26px 70px rgba(0,0,0,.45)}
+      .tag{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;
+           letter-spacing:.14em;color:#9fe6c0;background:rgba(46,204,113,.12);
+           border:1px solid rgba(46,204,113,.35);border-radius:999px;padding:7px 15px}
+      .dot{width:9px;height:9px;border-radius:50%;background:#31e08a;
+           box-shadow:0 0 0 0 rgba(49,224,138,.7);animation:pulse 1.8s infinite}
+      @keyframes pulse{70%{box-shadow:0 0 0 13px rgba(49,224,138,0)}
+                      100%{box-shadow:0 0 0 0 rgba(49,224,138,0)}}
+      h1{margin:22px 0 12px;font-size:clamp(30px,5vw,46px);line-height:1.15;
+         background:linear-gradient(92deg,#ffffff,#8fd0ff 45%,#e59bff);
+         -webkit-background-clip:text;background-clip:text;color:transparent}
+      .sub{color:#a8b6d9;font-size:16px;line-height:1.75}
+      .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+            gap:14px;margin:30px 0 26px}
+      .item{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+            border-radius:14px;padding:16px 18px}
+      .item .k{font-size:11.5px;letter-spacing:.12em;color:#8ea3cc}
+      .item .v{margin-top:7px;font-size:17px;font-weight:600;color:#fff;word-break:break-all}
+      .ok{color:#5df0a6}
+      footer{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;
+             align-items:center;border-top:1px solid rgba(255,255,255,.12);
+             padding-top:18px;color:#8ea3cc;font-size:13px}
+      code{background:rgba(255,255,255,.1);padding:3px 8px;border-radius:6px;font-size:12px}
+    </style>
+    </head>
+    <body>
+    <div class="card">
+      <span class="tag"><span class="dot"></span>SERVICE ONLINE</span>
+      <h1>Contoso Mission Control</h1>
+      <p class="sub">이 화면이 보인다면, 여러분이 <strong>직접 설계하고 승인하고 배포한</strong> AKS 클러스터가<br>
+        지금 실제로 트래픽을 처리하고 있다는 뜻입니다.</p>
+      <div class="grid">
+        <div class="item"><div class="k">POD</div><div class="v" id="pod">…</div></div>
+        <div class="item"><div class="k">NAMESPACE</div><div class="v" id="ns">…</div></div>
+        <div class="item"><div class="k">노출 방식</div><div class="v">ClusterIP · 내부 전용</div></div>
+        <div class="item"><div class="k">상태</div><div class="v ok">✔ Ready</div></div>
+      </div>
+      <footer>
+        <span>Azure Skills 기반 AKS 워크샵 · Lab 06</span>
+        <span>어느 노드에 떠 있나요? <code>kubectl get pod -n lab -o wide</code></span>
+      </footer>
+    </div>
+    <script>
+      const fill = async (file, id) => {
+        const el = document.getElementById(id);
+        try {
+          const res = await fetch(file, {cache: 'no-store'});
+          el.textContent = (await res.text()).trim() || '—';
+        } catch { el.textContent = '—'; }
+      };
+      fill('pod-name.txt', 'pod');
+      fill('pod-namespace.txt', 'ns');
+    </script>
+    </body>
+    </html>
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,11 +97,30 @@ spec:
         runAsNonRoot: true
         runAsUser: 101
         runAsGroup: 101
+      volumes:
+        # ConfigMap(대시보드 HTML)과 Downward API(Pod 정보)를 한 디렉터리로 합쳐 서빙한다.
+        - name: web-content
+          projected:
+            sources:
+              - configMap:
+                  name: lab-web-content
+              - downwardAPI:
+                  items:
+                    - path: pod-name.txt
+                      fieldRef:
+                        fieldPath: metadata.name
+                    - path: pod-namespace.txt
+                      fieldRef:
+                        fieldPath: metadata.namespace
       containers:
         - name: web
           image: nginxinc/nginx-unprivileged:1.27-alpine
           ports:
             - containerPort: 8080
+          volumeMounts:
+            - name: web-content
+              mountPath: /usr/share/nginx/html
+              readOnly: true
           resources:
             requests:
               cpu: 50m
