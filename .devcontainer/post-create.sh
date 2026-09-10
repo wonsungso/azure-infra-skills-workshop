@@ -5,15 +5,21 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 BIN_DIR=/usr/local/bin
+SUDO=""
 if [ ! -w "$BIN_DIR" ]; then
-  BIN_DIR="$HOME/.local/bin"
-  mkdir -p "$BIN_DIR"
-  grep -qxF "export PATH=\"$BIN_DIR:\$PATH\"" "$HOME/.bashrc" 2>/dev/null \
-    || echo "export PATH=\"$BIN_DIR:\$PATH\"" >> "$HOME/.bashrc"
-  export PATH="$BIN_DIR:$PATH"
+  if sudo -n true 2>/dev/null; then
+    # 모든 셸에서 보이도록 PATH에 이미 있는 /usr/local/bin에 설치한다
+    SUDO=sudo
+  else
+    BIN_DIR="$HOME/.local/bin"
+    mkdir -p "$BIN_DIR"
+    grep -qxF "export PATH=\"$BIN_DIR:\$PATH\"" "$HOME/.bashrc" 2>/dev/null \
+      || echo "export PATH=\"$BIN_DIR:\$PATH\"" >> "$HOME/.bashrc"
+    export PATH="$BIN_DIR:$PATH"
+  fi
 fi
 
-az aks install-cli \
+$SUDO az aks install-cli \
   --install-location "$BIN_DIR/kubectl" \
   --kubelogin-install-location "$BIN_DIR/kubelogin"
 
