@@ -6,25 +6,27 @@
 
 이 워크샵의 진짜 목표는 AKS 자체를 마스터하는 것이 아니라, **Azure Skills를 활용해 인프라 작업을 안전하고 반복 가능하게 수행하는 감각**을 익히는 것입니다. AKS는 그 감각을 연습하기 위한 하나의 시나리오일 뿐입니다.
 
-<p align="center">
-  <img src="img/workshop-flow.png" alt="Azure Skills 기반 AKS 워크샵 전체 흐름: 준비(Lab 01) → 설계(Lab 02) → 구현·검증(Lab 03~04) → 실행(Lab 05~06) → 마무리(Lab 07~08)" width="100%">
-</p>
-
-<details>
-<summary>텍스트 기반 다이어그램으로 보기 (Mermaid)</summary>
-
 ```mermaid
-flowchart TB
-    A["<b>Lab 01</b> · 준비<br/>역할 · 입력값 · scope 확인"]
-    B["<b>Lab 02</b> · 설계<br/>AKS 설계 결정"]
-    C["<b>Lab 03</b><br/>계획 승인 + Bicep 생성"]
-    D["<b>Lab 04</b><br/>IaC 검증 + 배포 승인"]
-    E["<b>Lab 05</b><br/>배포 + 접속 확인"]
-    F["<b>Lab 06</b><br/>샘플 워크로드 검증"]
-    G["<b>Lab 07</b> · 선택<br/>진단과 복구"]
-    H["<b>Lab 08</b> · 마무리<br/>문서화 + 정리"]
+flowchart LR
+    subgraph PART1["1부 · 설계와 검증"]
+        direction TB
+        A["<b>Lab 01</b> · 준비<br/>역할 · 입력값 · scope 확인"]
+        B["<b>Lab 02</b> · 설계<br/>AKS 설계 결정"]
+        C["<b>Lab 03</b> · 구현<br/>계획 승인 + Bicep 생성"]
+        D["<b>Lab 04</b> · 검증<br/>IaC 검증 + 배포 승인"]
+        A --> B --> C --> D
+    end
 
-    A --> B --> C --> D --> E --> F --> G --> H
+    subgraph PART2["2부 · 실행과 마무리"]
+        direction TB
+        E["<b>Lab 05</b> · 배포<br/>배포 + 접속 확인"]
+        F["<b>Lab 06</b> · 실행<br/>샘플 워크로드 검증"]
+        G["<b>Lab 07</b> · 선택<br/>진단과 복구"]
+        H["<b>Lab 08</b> · 마무리<br/>문서화 + 정리"]
+        E --> F --> G --> H
+    end
+
+    D ==> E
 
     classDef prep fill:#E7F1FB,stroke:#0F6CBD,stroke-width:2px,color:#16233A
     classDef design fill:#F1EAFA,stroke:#8A57C2,stroke-width:2px,color:#16233A
@@ -39,10 +41,7 @@ flowchart TB
     class G,H wrap
 ```
 
-</details>
-
 모든 Lab은 겉보기엔 서로 다른 작업처럼 보이지만, 실제로는 **하나의 팀 전용 AKS 환경**을 처음부터 끝까지 이어서 운영하는 과정입니다. 앞 Lab의 결과물이 다음 Lab의 입력이 되므로, 순서를 건너뛰지 않고 위에서 아래로 따라가면 됩니다.
-
 
 ## 🧠 이 워크샵을 마치면 할 수 있는 것
 
