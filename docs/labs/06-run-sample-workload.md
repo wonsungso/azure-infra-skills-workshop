@@ -4,6 +4,8 @@
 
 🎯 이미지 빌드 없이 ConfigMap과 Downward API로 화면 올리기 / 계층별로 나눠 검증하기
 
+🧠 Skill 없이 도구만 사용합니다
+
 > 🎬 클러스터는 살아있습니다. 하지만 팀장이 보고 싶은 건 `kubectl get nodes` 결과가 아닙니다. **눈에 보이는 화면**을 올릴 차례입니다.
 
 ## 왜 필요한가요?
@@ -17,6 +19,8 @@
 - [Lab 05](05-deploy-and-connect.md)에서 `lab` namespace 접근을 확인했나요?
 
 ## Step 1. manifest 검토하기 (10분)
+
+> 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 reference/kubernetes/lab-web.yaml을 검토해줘. ConfigMap으로 주입되는 index.html, projected volume이 ConfigMap과 Downward API를 합치는 방식, namespace, nodeSelector, non-root 보안 설정, requests/limits, readiness/liveness, ClusterIP Service를 설명하고 적용 대상과 검증 순서를 제시해줘. 적용하지 마.

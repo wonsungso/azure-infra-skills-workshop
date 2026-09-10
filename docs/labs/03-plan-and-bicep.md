@@ -4,6 +4,8 @@
 
 🎯 설계 결정을 승인 가능한 계획 문서로 / 승인된 계획을 Bicep 코드로
 
+🧠 `azure-enterprise-infra-planner`
+
 > 🎬 팀장의 첫 번째 조건을 기억하세요 - **클릭이 아니라 승인 기반으로.** 계획을 먼저 승인받고, 그제서야 코드를 만듭니다.
 
 ## 왜 필요한가요?
@@ -16,9 +18,9 @@
 
 ## Step 1. 인프라 계획 만들고 승인하기 (35분)
 
-**사용 Skill:** `azure-enterprise-infra-planner`
-
 `.env`의 값으로 대괄호를 바꿔 실행합니다.
+
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 azure-enterprise-infra-planner를 사용해 [resource-group]에 [aks-name] AKS를 위한 인프라 계획을 작성해줘. azure-kubernetes의 Day-0 검토와 azure-rbac의 least privilege 검토를 반영해줘. public API server의 authorized IP ranges는 [egress-ip-cidr]만 사용하고, Entra와 Azure RBAC for Kubernetes를 사용하며 local accounts는 비활성화해줘. system/user node pool 분리, Azure CNI Overlay + Cilium, load balancer egress, 비중첩 CIDR을 포함해줘. 대안, 위험, 비용 요인을 보여주고 계획 승인 전에는 멈춰.
@@ -43,10 +45,10 @@ azure-enterprise-infra-planner를 사용해 [resource-group]에 [aks-name] AKS�
 
 ## Step 2. 승인된 계획으로 Bicep 생성하기 (20분)
 
-**사용 Skill:** `azure-enterprise-infra-planner`
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-승인된 infrastructure plan과 공통 입력표를 읽어 Bicep을 생성 또는 갱신해줘. 기존 foundation 자원은 참조하고, 변경 대상과 생성 파일을 설명해줘. 검증과 배포는 아직 하지 마.
+승인된 infrastructure plan과 .env를 읽어 Bicep을 생성 또는 갱신해줘. 기존 foundation 자원은 참조하고, 변경 대상과 생성 파일을 설명해줘. 검증과 배포는 아직 하지 마.
 ```
 
 **확인할 것**
@@ -79,7 +81,7 @@ azure-enterprise-infra-planner를 사용해 [resource-group]에 [aks-name] AKS�
 | 증상 | 원인일 가능성 | 해야 할 일 |
 | --- | --- | --- |
 | 계획에 없던 자원이 생성 목록에 있다 | 기존 자원 참조가 누락됨 | "기존 자원은 참조만" 문구를 강조해 재요청 |
-| 매개변수가 계획과 다르다 | 입력표 값이 최신이 아님 | 입력표를 갱신하고 재생성 요청 |
+| 매개변수가 계획과 다르다 | `.env` 값이 최신이 아님 | `.env`를 갱신하고 재생성 요청 |
 | 승인자가 불명확하다 | 팀 역할 미정 | Lab 01의 역할 정리로 돌아가기 |
 
 ## 다음 Lab

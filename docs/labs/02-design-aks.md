@@ -4,6 +4,8 @@
 
 🎯 quota 확인 / Day-0 결정(네트워크·node pool·접근) / least privilege 매트릭스
 
+🧠 `azure-quotas` · `azure-kubernetes` · `azure-rbac`
+
 > 🎬 권한과 범위는 확인했습니다. 이제 **무엇을 만들 것인가**를 정합니다. 여기서 잘못 정하면 클러스터를 처음부터 다시 만들어야 합니다.
 
 ## 왜 필요한가요?
@@ -13,13 +15,13 @@ AKS는 만들고 나면 바꾸기 어려운 설정(네트워크 플러그인, CI
 ## 시작 전에
 
 - [Lab 01](01-orientation-and-setup.md)에서 scope 확인을 마쳤나요?
-- 입력표에 워크샵 ID, subscription, egress IP가 있나요?
+- `.env`에 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워져 있나요?
 
 ## Step 1. quota와 용량 확인하기 (10분)
 
-**사용 Skill:** `azure-quotas`
-
 배포 실패의 가장 흔한 원인이 quota 부족입니다. **배포 직전이 아니라 지금** 확인하면 30분을 아낍니다.
+
+> 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 azure-quotas를 사용해 내 subscription에서 [region]의 Standard DSv5 family vCPU quota와 현재 사용량을 확인해줘. AKS node 3대(Standard_D4s_v5 2대 + Standard_D2s_v5 1대)를 만들 수 있는지 판단해줘. 변경은 하지 마.
@@ -36,7 +38,7 @@ azure-quotas를 사용해 내 subscription에서 [region]의 Standard DSv5 famil
 
 ## Step 2. Day-0 결정 검토하기 (20분)
 
-**사용 Skill:** `azure-kubernetes`
+> 🧠 **Skill** `azure-kubernetes` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 azure-kubernetes를 사용해 교육용 AKS의 Day-0 선택을 검토해줘. Standard 운영 모드, system/user pool 분리, Azure CNI Overlay + Cilium, load balancer egress, public API authorized IP ranges를 기준으로 대안과 위험을 표로 정리해줘. 리소스 변경은 하지 마.
@@ -53,7 +55,7 @@ azure-kubernetes를 사용해 교육용 AKS의 Day-0 선택을 검토해줘. Sta
 
 ## Step 3. least privilege 매트릭스 만들기 (15분)
 
-**사용 Skill:** `azure-rbac`
+> 🧠 **Skill** `azure-rbac` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 azure-rbac을 사용해 이 교육용 AKS의 least privilege 매트릭스를 작성해줘. Azure 리소스 배포자, 역할 할당자, AKS control-plane managed identity, lab namespace 사용자를 분리하고 scope와 필요한 작업을 표로 보여줘. 권한을 변경하지 마.
@@ -81,7 +83,7 @@ azure-rbac을 사용해 이 교육용 AKS의 least privilege 매트릭스를 작
 
 - [ ] quota를 조회해 region·SKU·node 개수를 결정했다
 - [ ] Day-0 결정을 스스로 설명할 수 있다
-- [ ] 결정한 값을 입력표에 기록했다
+- [ ] 결정한 값을 `.env`에 기록했다
 - [ ] least privilege 매트릭스를 증거 로그에 연결했다
 - [ ] 아직 아무것도 생성하지 않았다
 

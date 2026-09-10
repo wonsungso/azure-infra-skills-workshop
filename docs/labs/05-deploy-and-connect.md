@@ -4,6 +4,8 @@
 
 🎯 배포 실행 후 확인할 것 / Entra 인증 접속과 least privilege 검증
 
+🧠 `azure-enterprise-infra-planner` · `azure-resource-lookup`
+
 > 🎬 승인 완료. 문서 속 설계가 **실제 Azure 리소스**로 바뀝니다. 지금부터 진짜 비용이 발생합니다.
 
 ## 왜 필요한가요?
@@ -16,7 +18,7 @@
 
 ## Step 1. 클러스터 배포 관찰하기 (25분)
 
-**사용 Skill:** `azure-enterprise-infra-planner`
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 승인된 계획을 대상으로 azure-enterprise-infra-planner의 배포 단계를 진행해줘. 배포 진행 상태와 생성된 자원을 기록하고, 실패하면 실제 오류를 분류해줘. 승인 범위를 벗어난 변경은 하지 마.
@@ -40,7 +42,7 @@
 
 ## Step 2. 접속하고 `lab` namespace 만들기 (20분)
 
-**사용 Skill:** `azure-resource-lookup`
+> 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 azure-resource-lookup을 사용해 [aks-name]의 실제 상태와 node resource group을 읽기 전용으로 확인해줘. 이후 Entra 기반으로 클러스터에 접속하는 데 필요한 점검 항목을 제시해줘. 역할을 변경하지 마.

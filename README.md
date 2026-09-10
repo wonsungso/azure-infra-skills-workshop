@@ -10,7 +10,7 @@
 > 2. **왜 그렇게 만들었는지 남기세요.** 다음 사람이 이어받을 수 있게.
 > 3. **동작한다는 걸 증명하세요.** 실제로 트래픽을 처리하는 화면으로.
 
-무기는 CLI 암기가 아니라 **Azure Skills**입니다. Skill이 대안·위험·비용을 정리해 제안하면, 여러분은 **검토하고 승인하고 결과를 조회로 검증**합니다. AKS는 그 감각을 연습하는 무대일 뿐입니다.
+우리의 무기는 CLI 암기가 아니라 **Azure Skills**입니다. Skill이 대안·위험·비용을 정리해 제안하면, 여러분은 **검토하고 승인하고 결과를 조회로 검증**합니다.
 
 ## 🏁 6시간 뒤 도달할 화면
 
@@ -55,7 +55,7 @@ flowchart LR
 
 | Lab | 시간 | 주 Skill | 다음 Lab에 넘길 것 |
 | --- | --- | --- | --- |
-| [01. 워크샵 시작하기](docs/labs/01-orientation-and-setup.md) | 30분 | `azure-resource-lookup` | 입력표, 확인된 scope |
+| [01. 워크샵 시작하기](docs/labs/01-orientation-and-setup.md) | 30분 | `azure-resource-lookup` | `.env`, 확인된 scope |
 | [02. AKS 설계 결정하기](docs/labs/02-design-aks.md) | 45분 | `azure-quotas`, `azure-kubernetes`, `azure-rbac` | quota 확인 결과, Day-0 결정표 |
 | [03. 계획 승인 + Bicep 생성](docs/labs/03-plan-and-bicep.md) | 55분 | `azure-enterprise-infra-planner` | 승인된 계획, Bicep |
 | [04. IaC 검증 + 배포 승인](docs/labs/04-validate-and-approve.md) | 45분 | `azure-enterprise-infra-planner` | 검증 증거, 배포 승인 |
@@ -63,8 +63,6 @@ flowchart LR
 | [06. 상품 페이지 배포](docs/labs/06-run-sample-workload.md) | 40분 | 도구 실행 | 동작하는 상품 페이지 |
 | [07. 진단과 복구 (선택)](docs/labs/07-diagnose-and-recover.md) | 30분 | `azure-diagnostics` | 원인·복구 기록 |
 | [08. 문서화 + 정리](docs/labs/08-document-and-cleanup.md) | 50분 | `azure-resource-visualizer` | 인계 문서, 삭제 증거 |
-
-실습 시간만 더하면 약 5시간 40분입니다. 시간이 부족하면 Lab 07을 생략하고 Lab 08의 정리 시간을 확보하세요.
 
 ## 🚀 시작하기
 
@@ -102,6 +100,8 @@ az version && az bicep version && kubectl version --client && kubelogin --versio
 <summary>진행이 중간에 끊겼다면</summary>
 
 새 세션에서 아래 프롬프트로 현재 상태부터 이어갑니다.
+
+> 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 이 저장소의 .env와 증거 로그를 읽고 현재 완료된 단계를 판별해줘. Azure에서 실제 상태를 조회해 문서와 비교하되 리소스를 변경하지 마. 다음 미완료 단계와 선행 조건만 제시해줘.

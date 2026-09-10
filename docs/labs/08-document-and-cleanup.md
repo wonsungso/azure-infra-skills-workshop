@@ -4,6 +4,8 @@
 
 🎯 관측된 실제 상태로 인계 문서 만들기 / 승인된 절차로 정리하기
 
+🧠 `azure-resource-lookup` · `azure-resource-visualizer`
+
 > 🎬 화면까지 띄웠으니 끝일까요? 팀장의 두 번째 조건 - **다음 사람이 나 없이도 운영할 수 있을 때** 미션이 완료됩니다.
 
 ## 왜 필요한가요?
@@ -16,7 +18,7 @@ Azure Resource Manager 그림만으로는 Kubernetes 내부의 Pod/Service 관�
 
 ## Step 1. 실제 상태 문서화하기 (25분)
 
-**사용 Skill:** `azure-resource-lookup`, `azure-resource-visualizer`
+> 🧠 **Skill** `azure-resource-lookup`, `azure-resource-visualizer` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 azure-resource-lookup과 azure-resource-visualizer를 사용해 [resource-group]과 [node-resource-group]의 실제 Azure 리소스와 관계를 조사하고 Mermaid 문서를 작성해줘. Kubernetes Deployment, Pod, Service 관계는 kubectl 증거를 별도 섹션으로 작성해줘. 관측 사실, 설계값, 추정, 미검증 항목을 구분해줘. 리소스를 변경하지 마.
@@ -27,6 +29,8 @@ azure-resource-lookup과 azure-resource-visualizer를 사용해 [resource-group]
 ### Azure 공식 아이콘으로 그림 만들기
 
 Mermaid는 관계를 보여주지만 아이콘이 없어 밋밋합니다. 조회 결과를 그대로 써서 **Azure 공식 아이콘이 들어간 SVG**를 함께 만듭니다.
+
+> 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 방금 조회한 실제 리소스로 assets/azure-icons/README.md의 스펙 형식에 맞는 JSON을 만들어줘.
@@ -58,7 +62,7 @@ bash scripts/build-architecture-svg.sh <만든 스펙>.json img/my-architecture.
 
 ## Step 2. 제출하고 정리하기 (25분)
 
-**사용 Skill:** `azure-resource-lookup`
+> 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 azure-resource-lookup을 사용해 [resource-group]과 [node-resource-group]의 현재 리소스를 읽기 전용으로 확인해줘. 삭제 전에 대상과 의존 자원을 표로 보여주고, 실제 삭제 작업은 명시적 승인 전에는 수행하지 마.

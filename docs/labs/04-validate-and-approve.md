@@ -4,6 +4,8 @@
 
 🎯 배포 전 "검증"의 실제 의미 / 배포 승인이 계획 승인과 별개인 이유
 
+🧠 `azure-enterprise-infra-planner`
+
 > 🎬 코드는 나왔습니다. 배포 버튼을 누르기 전에 이 코드가 **정말 내 설계대로인지** 증명합니다. 1부의 마지막 관문입니다.
 
 ## 왜 필요한가요?
@@ -16,7 +18,7 @@
 
 ## Step 1. IaC를 실제로 검증하기 (25분)
 
-**사용 Skill:** `azure-enterprise-infra-planner`
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 승인된 infrastructure plan과 .env를 읽어 Bicep을 생성 또는 갱신해줘. azure-enterprise-infra-planner의 검증 단계를 따라 Bicep build, 보안 검사, ARM validation 또는 what-if를 수행하고 실제 명령 결과와 실패 항목을 정리해줘. 배포는 하지 마. 검증되지 않은 결과는 예상으로 표시해줘.
@@ -32,7 +34,7 @@
 
 ## Step 2. 배포 전에 영향 다시 확인하고 승인받기 (20분)
 
-**사용 Skill:** `azure-enterprise-infra-planner`
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 승인된 계획과 검증 증거를 읽어줘. 배포 대상, 생성 또는 변경될 자원, 권한 요구, 비용 및 삭제 책임을 요약한 뒤 명시적 배포 승인을 요청해줘. 승인을 받기 전에는 Azure 리소스를 생성하거나 변경하지 마.
@@ -40,7 +42,7 @@
 
 **확인할 것**
 
-- 배포 대상(resource group, region)이 입력표와 같은가?
+- 배포 대상(resource group, region)이 `.env`와 같은가?
 - 예상 비용과 삭제 책임자가 명확한가?
 - 승인자, 승인 시각을 증거 로그에 남겼는가?
 

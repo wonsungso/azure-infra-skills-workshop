@@ -4,6 +4,8 @@
 
 🎯 증거(Events·Pod 상태·이미지 참조)만으로 원인 판단 / 승인 후 복구
 
+🧠 `azure-diagnostics`
+
 > 🎬 데모를 앞두고 무언가 이상합니다. 가장 위험한 건 **추측으로 고치는 것**입니다. 근거를 먼저 모읍니다.
 
 ## 왜 필요한가요?
@@ -28,7 +30,7 @@ kubectl set image deployment/lab-web web=nginxinc/nginx-unprivileged:does-not-ex
 
 ## Step 2. 증거로 원인 분석하기
 
-**사용 Skill:** `azure-diagnostics`
+> 🧠 **Skill** `azure-diagnostics` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 azure-diagnostics를 사용해 lab namespace의 샘플 Deployment가 준비되지 않는 원인을 읽기 중심으로 분석해줘. Events, Pod 상태, 이미지 참조를 근거로 원인을 제시하고 영향 범위와 복구 변경을 설명한 뒤 적용 승인 전에는 멈춰.

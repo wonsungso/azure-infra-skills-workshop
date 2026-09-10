@@ -4,6 +4,8 @@
 
 🎯 Skill·도구·사람의 역할 구분 / 입력값 확정 / 내 Azure 범위를 읽기 전용으로 확인
 
+🧠 `azure-resource-lookup`
+
 > 🎬 팀장의 요청을 방금 받았습니다. 서두르기 전에 **내가 무엇을 건드릴 수 있는 사람인지**부터 확인합니다.
 
 ## 왜 필요한가요?
@@ -67,7 +69,7 @@ curl -s https://api.ipify.org
 
 ## Step 3. 내 Azure 범위 확인하기 (15분)
 
-**사용 Skill:** `azure-resource-lookup`
+> 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
 azure-resource-lookup을 사용해 내 subscription과 [resource-group]을 읽기 전용으로 확인해줘. 리소스를 생성·변경·삭제하지 말고, 접근 불가 항목은 권한 부족으로 구분해줘.
@@ -100,7 +102,7 @@ azure-resource-lookup을 사용해 내 subscription과 [resource-group]을 읽�
 
 | 증상 | 해야 할 일 |
 | --- | --- |
-| 조회 결과가 입력표와 다름 | `az account show`로 현재 subscription 확인 후 정정 |
+| 조회 결과가 `.env`와 다름 | `az account show`로 현재 subscription 확인 후 정정 |
 | subscription이 여러 개라 헷갈림 | `az account list -o table` → `az account set --subscription <id>` |
 | "권한이 없습니다" | 권한을 스스로 올리지 말고, 권한이 있는 다른 subscription·그룹으로 진행 |
 | Skill이 리소스를 만들려 함 | "읽기 전용"을 다시 강조해 재요청 |
