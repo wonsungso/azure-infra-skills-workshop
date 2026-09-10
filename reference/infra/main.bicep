@@ -1,14 +1,13 @@
-@description('AKS cluster base name; a unique suffix is appended automatically to avoid name/DNS collisions across teams and regions')
-param aksName string
+@description('Six lowercase alphanumeric characters shared by every resource in this workshop, including the resource group name you create beforehand. Generate once and reuse everywhere.')
+@minLength(6)
+@maxLength(6)
+param workshopId string
+
+@description('Base name placed before the workshop ID')
+param namePrefix string = 'aks-lab'
 
 @description('Azure region')
 param location string = resourceGroup().location
-
-@description('DNS prefix base; a unique suffix is appended automatically because this must be unique within the region')
-param dnsPrefix string
-
-@description('Existing delegated node subnet resource ID')
-param nodeSubnetResourceId string
 
 @description('Microsoft Entra tenant ID')
 param tenantId string
@@ -16,32 +15,57 @@ param tenantId string
 @description('Trusted API server egress IP ranges')
 param authorizedIpRanges array
 
+@description('Address space for the workshop VNet')
+param vnetAddressPrefix string = '10.60.0.0/16'
+
+@description('Address range for the AKS node subnet')
+param nodeSubnetPrefix string = '10.60.0.0/24'
+
 @description('Overlay pod address range')
-param podCidr string
+param podCidr string = '10.245.0.0/16'
 
 @description('Service address range')
-param serviceCidr string
+param serviceCidr string = '10.1.48.0/20'
 
 @description('DNS service IP within serviceCidr')
-param dnsServiceIp string
+param dnsServiceIp string = '10.1.48.10'
 
-@description('Rehearsed system pool VM SKU')
-param systemVmSize string
+@description('System pool VM SKU')
+param systemVmSize string = 'Standard_D4s_v5'
 
-@description('Rehearsed user pool VM SKU')
-param userVmSize string
+@description('User pool VM SKU')
+param userVmSize string = 'Standard_D2s_v5'
 
-@description('Only for restricted test subscriptions where Microsoft.Authorization role assignment calls are blocked: disables Azure RBAC for Kubernetes and re-enables local accounts so `az aks get-credentials --admin` works without a role assignment. Must stay false for actual workshop delivery.')
+@description('Only for restricted subscriptions where Microsoft.Authorization role assignment calls are blocked: disables Azure RBAC for Kubernetes and re-enables local accounts so `az aks get-credentials --admin` works. Keep false for normal use.')
 param testingMode bool = false
 
-@description('Deterministic per-resource-group suffix appended to name-collision-prone resources')
-var uniqueSuffix = uniqueString(resourceGroup().id, aksName)
+var vnetName = 'vnet-${namePrefix}-${workshopId}'
+var subnetName = 'snet-nodes'
+var aksName = '${namePrefix}-${workshopId}'
+var dnsPrefix = toLower(replace('${namePrefix}${workshopId}', '-', ''))
 
-var resourceName = '${aksName}-${uniqueSuffix}'
-var resolvedDnsPrefix = toLower('${dnsPrefix}${uniqueSuffix}')
+resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
+  name: vnetName
+  location: location
+  properties: {
+    addressSpace: {
+      addressPrefixes: [
+        vnetAddressPrefix
+      ]
+    }
+    subnets: [
+      {
+        name: subnetName
+        properties: {
+          addressPrefix: nodeSubnetPrefix
+        }
+      }
+    ]
+  }
+}
 
 resource aks 'Microsoft.ContainerService/managedClusters@2024-10-01' = {
-  name: resourceName
+  name: aksName
   location: location
   identity: {
     type: 'SystemAssigned'
@@ -51,7 +75,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2024-10-01' = {
     tier: 'Free'
   }
   properties: {
-    dnsPrefix: resolvedDnsPrefix
+    dnsPrefix: dnsPrefix
     enableRBAC: true
     disableLocalAccounts: !testingMode
     aadProfile: {
@@ -70,7 +94,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2024-10-01' = {
         osType: 'Linux'
         mode: 'System'
         type: 'VirtualMachineScaleSets'
-        vnetSubnetID: nodeSubnetResourceId
+        vnetSubnetID: vnet.properties.subnets[0].id
         nodeTaints: [
           'CriticalAddonsOnly=true:NoSchedule'
         ]
@@ -82,7 +106,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2024-10-01' = {
         osType: 'Linux'
         mode: 'User'
         type: 'VirtualMachineScaleSets'
-        vnetSubnetID: nodeSubnetResourceId
+        vnetSubnetID: vnet.properties.subnets[0].id
       }
     ]
     networkProfile: {
@@ -97,9 +121,8 @@ resource aks 'Microsoft.ContainerService/managedClusters@2024-10-01' = {
   }
 }
 
-
-output aksId string = aks.id
-output aksResourceName string = resourceName
-output aksDnsPrefix string = resolvedDnsPrefix
-output uniqueSuffix string = uniqueSuffix
-
+output workshopId string = workshopId
+output vnetName string = vnetName
+output aksResourceName string = aksName
+output aksDnsPrefix string = dnsPrefix
+output nodeResourceGroup string = aks.properties.nodeResourceGroup

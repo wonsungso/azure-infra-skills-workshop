@@ -26,3 +26,6 @@ secrets.json
 # OS / editor noise
 .DS_Store
 Thumbs.db
+
+# 참가자가 로컬에서 채우는 입력값 메모 - 커밋 금지
+my-*.md

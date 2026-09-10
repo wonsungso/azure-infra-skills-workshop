@@ -6,7 +6,7 @@
 
 **민감한 정보를 이 저장소에 절대 커밋하지 마세요.**
 
-- API 키, 토큰, 자격 증명
+- API 키, 토큰, credentials
 - 개인용 액세스 토큰(PAT)
 - 암호가 포함된 데이터베이스 연결 문자열
 - 환경별 구성 값
@@ -17,24 +17,24 @@
 
 | 값 | 어디서 새어 나오나 | 대신 쓸 것 |
 | --- | --- | --- |
-| 구독 ID, 테넌트 ID, 사용자/객체 ID | `az account show`, `az deployment` 출력 | `<subscription-id>`, `<tenant-id>` |
-| 개인 공인 출구 IP | Lab 01의 IP 조회, `authorizedIpRanges` | `<your-ip>/32` |
+| subscription ID, tenant ID, 사용자/객체 ID | `az account show`, `az deployment` 출력 | `<subscription-id>`, `<tenant-id>` |
+| 개인 egress IP | Lab 01의 IP 조회, `authorizedIpRanges` | `<your-ip>/32` |
 | kubeconfig 내용, 클러스터 인증서, 토큰 | `az aks get-credentials`, `kubectl config view` | 절대 붙여넣지 않음 |
 | AKS FQDN, node resource group 실명 | `az aks show` 출력 | `<aks-fqdn>`, `MC_<rg>_<aks>_<region>` |
 | 로그인 계정 이메일(UPN) | `az account show`, 오류 메시지 | `<user>@<tenant>` |
 
 > [!IMPORTANT]
-> `kubectl config view`는 기본적으로 자격 증명을 출력합니다. 문서나 이슈에 붙여넣어야 한다면 반드시 `kubectl config view --raw=false --minify` 수준으로 줄이고, 그래도 남는 인증 필드는 직접 지우세요. 더 안전한 방법은 붙여넣지 않는 것입니다.
+> `kubectl config view`는 기본적으로 credentials를 출력합니다. 문서나 이슈에 붙여넣어야 한다면 반드시 `kubectl config view --raw=false --minify` 수준으로 줄이고, 그래도 남는 인증 필드는 직접 지우세요. 더 안전한 방법은 붙여넣지 않는 것입니다.
 
 ### 문서와 템플릿에 값을 기록할 때
 
-- [입력표](templates/team-inputs.md), [증거 로그](templates/evidence-log.md), [체크포인트](templates/checkpoint.md), [인계 문서](templates/handoff-template.md)는 **참가자가 자기 환경에서 로컬로 채우는 양식**입니다. 실제 값을 채운 상태로 커밋하지 마세요.
+- [증거 로그](templates/evidence-log.md), [인계 문서](templates/handoff-template.md), 그리고 Lab 01에서 만드는 `my-inputs.md`는 **참가자가 자기 환경에서 로컬로 채우는 양식**입니다. 실제 값을 채운 상태로 커밋하지 마세요. `my-*.md`는 `.gitignore`에 등록돼 있습니다.
 - 저장소에 커밋되는 것은 **자리 표시자가 들어간 빈 양식**뿐이어야 합니다.
 - 실제 값이 필요한 예시는 `<subscription-id>` 처럼 꺾쇠 자리 표시자를 쓰거나, 형태만 알 수 있게 마스킹합니다(예: `10.245.x.x`).
 
 ### 스크린샷과 터미널 출력
 
-- 스크린샷을 추가하기 전에 **구독 ID, 계정 이메일, IP, 토큰이 화면에 없는지** 확인하고 필요하면 가립니다.
+- 스크린샷을 추가하기 전에 **subscription ID, 계정 이메일, IP, 토큰이 화면에 없는지** 확인하고 필요하면 가립니다.
 - 터미널 캡처는 프롬프트 줄(사용자명·호스트명)이 포함되기 쉽습니다. 잘라내거나 마스킹하세요.
 - 브라우저 캡처는 주소 표시줄과 확장 프로그램 배지에 정보가 노출될 수 있으므로 콘텐츠 영역만 캡처합니다.
 
@@ -57,7 +57,7 @@ if [ -n "$hits" ]; then printf '%s\n' "$hits"; echo "확인 필요: 커밋하지
 > [!NOTE]
 > 종료 코드로 판정하지 마세요. `xargs`는 `grep`이 "일치 없음(1)"을 반환해도 `123`을 돌려주기 때문에, 종료 코드만 보면 잘못 판단합니다. **출력이 비어 있는지**로 판정해야 합니다.
 
-무언가 걸리면 **커밋하지 말고 사용자에게 먼저 알립니다.** 이미 커밋된 뒤라면 파일 수정만으로는 히스토리에서 지워지지 않으므로, 해당 자격 증명을 **폐기(rotate)** 하는 것이 우선입니다.
+무언가 걸리면 **커밋하지 말고 사용자에게 먼저 알립니다.** 이미 커밋된 뒤라면 파일 수정만으로는 히스토리에서 지워지지 않으므로, 해당 credentials를 **폐기(rotate)** 하는 것이 우선입니다.
 
 > [!WARNING]
 > 에이전트는 사용자의 비밀값을 대화로 요청하지 않습니다. 비밀번호, 토큰, 연결 문자열이 필요하면 사용자가 터미널이나 환경 변수에 직접 입력하도록 안내하고, 그 값을 다시 출력하거나 파일에 쓰지 않습니다.
@@ -65,10 +65,10 @@ if [ -n "$hits" ]; then printf '%s\n' "$hits"; echo "확인 필요: 커밋하지
 ## ☁️ Azure 작업 규칙
 
 - **읽기와 쓰기를 구분합니다.** 조회는 자유롭게, 생성·변경·삭제는 대상과 영향을 확인한 뒤 사용자 승인을 받고 수행합니다.
-- **비용이 발생하는 리소스**(AKS 노드 등)를 만들었다면 반드시 사용자에게 알리고, 정리 방법을 함께 안내합니다.
+- **비용이 발생하는 리소스**(AKS node 등)를 만들었다면 반드시 사용자에게 알리고, 정리 방법을 함께 안내합니다.
 - 접속 오류를 해결하려고 `authorizedIpRanges`에 `0.0.0.0/0`을 넣거나 허용 목록을 비우지 않습니다.
 - 권한 문제를 우회하려고 사용자에게 Owner나 cluster-admin을 부여하도록 제안하지 않습니다.
-- `reference/infra/main.bicep`의 `testingMode`는 기본값 `false`를 유지합니다. 역할 할당이 차단된 제한 구독에서 테스트할 때만 예외적으로 사용합니다.
+- `reference/infra/main.bicep`의 `testingMode`는 기본값 `false`를 유지합니다. 역할 할당이 차단된 제한 subscription에서 테스트할 때만 예외적으로 사용합니다.
 
 ## 📋 저장소 가이드라인
 
@@ -79,6 +79,20 @@ if [ -n "$hits" ]; then printf '%s\n' "$hits"; echo "확인 필요: 커밋하지
 - 참가자가 **강사 없이 혼자서** Lab 01부터 Lab 08까지 순서대로 완주할 수 있어야 합니다
 - 각 Lab은 앞 Lab의 산출물을 입력으로 사용하는 하나의 연속된 흐름입니다
 - AKS는 소재일 뿐이고, 핵심은 "계획 승인 → 코드 → 검증 → 배포 승인 → 배포"라는 안전한 절차입니다
+- 실행 환경은 **GitHub Codespaces**가 기본입니다. 도구 설치는 `.devcontainer/`가 담당하므로, Lab 문서에 설치 절차를 다시 쓰지 않습니다
+- 프롬프트와 입력값은 **해당 Lab 본문 안에** 둡니다. 별도의 프롬프트 모음 파일이나 입력표 파일을 다시 만들지 않습니다
+
+### 용어 표기
+
+Azure·Kubernetes 기술 용어는 **영어를 그대로** 씁니다. 번역하지 않습니다.
+
+| 쓰기 | 쓰지 않기 |
+| --- | --- |
+| egress IP | 출구 IP, 공인 출구 IP |
+| authorized IP ranges | 허용 IP 목록 |
+| subscription, tenant, region | 구독, 테넌트, 리전 |
+| resource group, node, node pool | 리소스 그룹, 노드, 노드풀 |
+| quota, credentials, manifest | 쿼터, 자격 증명, 매니페스트 |
 
 ### 콘텐츠 규칙
 

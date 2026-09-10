@@ -10,65 +10,133 @@ data:
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Contoso Mission Control</title>
+    <title>Contoso Shop</title>
     <style>
       *{box-sizing:border-box;margin:0;padding:0}
-      body{min-height:100vh;display:grid;place-items:center;padding:32px;
-           font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#eaf0ff;
-           background:radial-gradient(1200px 600px at 18% -10%,#2d4dc4 0%,transparent 55%),
-                      radial-gradient(900px 500px at 112% 8%,#a233b5 0%,transparent 50%),
-                      linear-gradient(160deg,#070d20 0%,#0d1633 60%,#101a3d 100%)}
-      .card{width:min(940px,100%);background:rgba(255,255,255,.06);
-            border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:38px 40px;
-            box-shadow:0 26px 70px rgba(0,0,0,.45)}
-      .tag{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;
-           letter-spacing:.14em;color:#9fe6c0;background:rgba(46,204,113,.12);
-           border:1px solid rgba(46,204,113,.35);border-radius:999px;padding:7px 15px}
-      .dot{width:9px;height:9px;border-radius:50%;background:#31e08a;
-           box-shadow:0 0 0 0 rgba(49,224,138,.7);animation:pulse 1.8s infinite}
-      @keyframes pulse{70%{box-shadow:0 0 0 13px rgba(49,224,138,0)}
-                      100%{box-shadow:0 0 0 0 rgba(49,224,138,0)}}
-      h1{margin:22px 0 12px;font-size:clamp(30px,5vw,46px);line-height:1.15;
-         background:linear-gradient(92deg,#ffffff,#8fd0ff 45%,#e59bff);
-         -webkit-background-clip:text;background-clip:text;color:transparent}
-      .sub{color:#a8b6d9;font-size:16px;line-height:1.75}
-      .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-            gap:14px;margin:30px 0 26px}
-      .item{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
-            border-radius:14px;padding:16px 18px}
-      .item .k{font-size:11.5px;letter-spacing:.12em;color:#8ea3cc}
-      .item .v{margin-top:7px;font-size:17px;font-weight:600;color:#fff;word-break:break-all}
-      .ok{color:#5df0a6}
-      footer{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;
-             align-items:center;border-top:1px solid rgba(255,255,255,.12);
-             padding-top:18px;color:#8ea3cc;font-size:13px}
-      code{background:rgba(255,255,255,.1);padding:3px 8px;border-radius:6px;font-size:12px}
+      body{background:#fff;color:#111;
+           font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+           -webkit-font-smoothing:antialiased}
+      .promo{background:#111;color:#fff;text-align:center;
+             font-size:12px;letter-spacing:.06em;padding:9px}
+      header{display:flex;align-items:baseline;gap:26px;
+             padding:26px 40px;border-bottom:1px solid #ececec}
+      .logo{font-size:19px;font-weight:700;letter-spacing:-.02em}
+      .logo em{font-style:normal;font-weight:400;color:#8a8a8a}
+      nav{display:flex;gap:20px;font-size:13.5px;color:#555}
+      .cart{margin-left:auto;font-size:13px;color:#8a8a8a}
+      .hero{padding:64px 40px 52px;max-width:940px}
+      .hero p{font-size:clamp(24px,3.4vw,36px);line-height:1.35;
+              letter-spacing:-.02em;font-weight:400}
+      .hero span{border-bottom:2px solid #111;padding-bottom:2px}
+      section.cat{padding:0 40px 62px}
+      .cat h2{font-size:15px;font-weight:600;letter-spacing:.02em;
+              padding-bottom:14px;border-bottom:1px solid #ececec;margin-bottom:26px}
+      .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:34px}
+      .tile{display:block}
+      .art{position:relative;height:190px;border-radius:3px;overflow:hidden}
+      .art i{position:absolute;background:#111;display:block}
+      .t1{background:#EFEAE2}.t2{background:#E7EDEE}.t3{background:#F1ECF3}
+      .t4{background:#EDEFE8}.t5{background:#F3E9E6}.t6{background:#E9EDF3}
+      .name{margin-top:13px;font-size:14px;font-weight:500}
+      .price{margin-top:3px;font-size:13px;color:#7b7b7b}
+      footer{border-top:1px solid #ececec;margin:0 40px;padding:26px 0 54px;
+             font-size:12.5px;color:#7b7b7b;line-height:1.9}
+      code{background:#f4f4f4;padding:2px 7px;border-radius:3px;color:#111}
     </style>
     </head>
     <body>
-    <div class="card">
-      <span class="tag"><span class="dot"></span>SERVICE ONLINE</span>
-      <h1>Contoso Mission Control</h1>
-      <p class="sub">이 화면이 보인다면, 여러분이 <strong>직접 설계하고 승인하고 배포한</strong> AKS 클러스터가<br>
-        지금 실제로 트래픽을 처리하고 있다는 뜻입니다.</p>
-      <div class="grid">
-        <div class="item"><div class="k">POD</div><div class="v" id="pod">…</div></div>
-        <div class="item"><div class="k">NAMESPACE</div><div class="v" id="ns">…</div></div>
-        <div class="item"><div class="k">노출 방식</div><div class="v">ClusterIP · 내부 전용</div></div>
-        <div class="item"><div class="k">상태</div><div class="v ok">✔ Ready</div></div>
-      </div>
-      <footer>
-        <span>Azure Skills 기반 AKS 워크샵 · Lab 06</span>
-        <span>어느 노드에 떠 있나요? <code>kubectl get pod -n lab -o wide</code></span>
-      </footer>
+    <div class="promo">₩199,000 이상 구매 시 무료 배송</div>
+
+    <header>
+      <div class="logo">Contoso <em>Shop</em></div>
+      <nav><span>Stuff</span><span>Projects</span><span>About</span></nav>
+      <span class="cart">Cart (0)</span>
+    </header>
+
+    <div class="hero">
+      <p>단순하고 오래 쓰는 물건을 만듭니다.<br>그래서 매일이 조금 더 <span>밝아지도록</span>.</p>
     </div>
+
+    <section class="cat">
+      <h2>Lighting</h2>
+      <div class="row">
+        <div class="tile">
+          <div class="art t1">
+            <i style="left:calc(50% - 1px);top:34px;width:2px;height:44px"></i>
+            <i style="left:calc(50% - 44px);top:78px;width:88px;height:44px;border-radius:88px 88px 0 0"></i>
+          </div>
+          <div class="name">듄 라이트 DL-12</div>
+          <div class="price">₩250,000 부터</div>
+        </div>
+        <div class="tile">
+          <div class="art t2">
+            <i style="left:44px;top:38px;width:2px;height:90px"></i>
+            <i style="left:44px;top:38px;width:84px;height:2px"></i>
+            <i style="left:116px;top:40px;width:24px;height:24px;border-radius:50%"></i>
+            <i style="left:30px;top:128px;width:30px;height:3px"></i>
+          </div>
+          <div class="name">크레인 라이트</div>
+          <div class="price">₩310,000 부터</div>
+        </div>
+        <div class="tile">
+          <div class="art t3">
+            <i style="left:calc(50% - 52px);top:44px;width:104px;height:52px;border-radius:104px 104px 0 0"></i>
+            <i style="left:calc(50% - 7px);top:104px;width:14px;height:14px;border-radius:50%"></i>
+          </div>
+          <div class="name">스윙 돔 라이트</div>
+          <div class="price">₩285,000 부터</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cat">
+      <h2>Objects</h2>
+      <div class="row">
+        <div class="tile">
+          <div class="art t4">
+            <i style="left:calc(50% - 40px);top:52px;width:80px;height:80px;border-radius:50%;background:transparent;border:3px solid #111"></i>
+            <i style="left:calc(50% - 1px);top:70px;width:2px;height:26px"></i>
+            <i style="left:calc(50% - 1px);top:92px;width:24px;height:2px"></i>
+          </div>
+          <div class="name">워치 클록</div>
+          <div class="price">₩150,000</div>
+        </div>
+        <div class="tile">
+          <div class="art t5">
+            <i style="left:calc(50% - 11px);top:44px;width:22px;height:90px;border-radius:11px"></i>
+            <i style="left:calc(50% - 40px);top:86px;width:29px;height:18px;border-radius:9px 0 0 9px"></i>
+            <i style="left:calc(50% - 40px);top:66px;width:18px;height:32px;border-radius:9px 9px 0 0"></i>
+            <i style="left:calc(50% + 11px);top:74px;width:29px;height:18px;border-radius:0 9px 9px 0"></i>
+            <i style="left:calc(50% + 22px);top:56px;width:18px;height:30px;border-radius:9px 9px 0 0"></i>
+          </div>
+          <div class="name">캑터스 캐치올</div>
+          <div class="price">₩199,000 부터</div>
+        </div>
+        <div class="tile">
+          <div class="art t6">
+            <i style="left:calc(50% - 40px);top:58px;width:80px;height:40px;border-radius:0 0 40px 40px"></i>
+            <i style="left:calc(50% - 40px);top:54px;width:80px;height:4px"></i>
+            <i style="left:calc(50% - 26px);top:126px;width:52px;height:3px"></i>
+          </div>
+          <div class="name">돔 보울</div>
+          <div class="price">₩120,000</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Contoso, Inc. - 커머스팀 신규 서비스<br>
+      이 응답을 처리한 Pod <code id="pod">…</code> · namespace <code id="ns">…</code>
+      &nbsp;|&nbsp; Pod를 다시 만들면 이 이름이 바뀝니다.
+    </footer>
+
     <script>
       const fill = async (file, id) => {
         const el = document.getElementById(id);
         try {
           const res = await fetch(file, {cache: 'no-store'});
-          el.textContent = (await res.text()).trim() || '—';
-        } catch { el.textContent = '—'; }
+          el.textContent = (await res.text()).trim() || '-';
+        } catch { el.textContent = '-'; }
       };
       fill('pod-name.txt', 'pod');
       fill('pod-namespace.txt', 'ns');
@@ -98,7 +166,7 @@ spec:
         runAsUser: 101
         runAsGroup: 101
       volumes:
-        # ConfigMap(대시보드 HTML)과 Downward API(Pod 정보)를 한 디렉터리로 합쳐 서빙한다.
+        # ConfigMap(상품 페이지)과 Downward API(Pod 정보)를 한 디렉터리로 합쳐 서빙한다.
         - name: web-content
           projected:
             sources:
