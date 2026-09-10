@@ -24,6 +24,25 @@ azure-resource-lookup과 azure-resource-visualizer를 사용해 [resource-group]
 
 **확인할 것:** cluster resource group과 node resource group을 모두 조사했는지, Kubernetes 증거(Pod/Service/EndpointSlice)를 Azure ARM 그림과 별도 섹션으로 나눴는지.
 
+### Azure 공식 아이콘으로 그림 만들기
+
+Mermaid는 관계를 보여주지만 아이콘이 없어 밋밋합니다. 조회 결과를 그대로 써서 **Azure 공식 아이콘이 들어간 SVG**를 함께 만듭니다.
+
+```text
+방금 조회한 실제 리소스로 assets/azure-icons/README.md의 스펙 형식에 맞는 JSON을 만들어줘.
+레이어는 Resource group, Network, Compute로 나누고 label에는 실제 리소스 이름을, sub에는 실제 SKU나 CIDR을 넣어줘.
+추측한 값은 넣지 말고 조회로 확인한 것만 써줘. 그런 다음 아래를 실행해줘.
+
+bash scripts/build-architecture-svg.sh <만든 스펙>.json img/my-architecture.svg
+```
+
+<img src="../../img/example-architecture.svg" alt="Azure 공식 아이콘으로 그린 아키텍처 예시 - Resource group, Network, Compute 세 레이어에 각 리소스 이름과 SKU가 표기된 그림" width="620">
+
+위는 [예시 스펙](../../assets/azure-icons/example-architecture.json)으로 만든 결과입니다. 아이콘은 SVG 안에 인라인되므로 파일 하나만 인계 문서에 넣으면 됩니다.
+
+> [!NOTE]
+> 아이콘은 Microsoft가 배포하는 공식 Azure architecture icons입니다. 아키텍처 다이어그램과 교육 자료 용도로만 쓸 수 있고, 자르거나 회전하거나 변형하면 안 됩니다. 자세한 조건은 [assets/azure-icons/README.md](../../assets/azure-icons/README.md)에 있습니다.
+
 [인계 양식](../../templates/handoff-template.md)에 관측/설계/추정/미검증을 구분해서 채웁니다.
 
 <details>

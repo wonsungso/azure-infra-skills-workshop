@@ -1,0 +1,27 @@
+{
+  "title": "Contoso Shop - AKS 워크샵 아키텍처 (예시)",
+  "layers": [
+    {
+      "label": "Resource group",
+      "nodes": [
+        { "icon": "resource-group", "label": "rg-aks-lab-<ID>", "sub": "koreacentral" }
+      ]
+    },
+    {
+      "label": "Network",
+      "nodes": [
+        { "icon": "vnet", "label": "vnet-aks-lab-<ID>", "sub": "10.60.0.0/16" },
+        { "icon": "subnet", "label": "snet-nodes", "sub": "10.60.0.0/24" },
+        { "icon": "public-ip", "label": "outbound IP", "sub": "load balancer egress" }
+      ]
+    },
+    {
+      "label": "Compute",
+      "nodes": [
+        { "icon": "aks", "label": "aks-lab-<ID>", "sub": "Standard, CNI Overlay" },
+        { "icon": "load-balancer", "label": "kubernetes", "sub": "outbound only" },
+        { "icon": "managed-identity", "label": "control plane", "sub": "system-assigned" }
+      ]
+    }
+  ]
+}
