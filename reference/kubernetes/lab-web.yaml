@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-web
+  namespace: lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lab-web
+  template:
+    metadata:
+      labels:
+        app: lab-web
+    spec:
+      nodeSelector:
+        kubernetes.azure.com/mode: user
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+      containers:
+        - name: web
+          image: nginxinc/nginx-unprivileged:1.27-alpine
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lab-web
+  namespace: lab
+spec:
+  type: ClusterIP
+  selector:
+    app: lab-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080

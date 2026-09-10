@@ -1,0 +1,14 @@
+# Local E2E test scratch files
+.e2e-test/
+
+# Bicep build output
+*.bicep.json
+reference/infra/main.json
+
+# Local kube/az artifacts
+kubeconfig
+*.kubeconfig
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
