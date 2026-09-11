@@ -53,16 +53,16 @@ flowchart LR
 
 앞 Lab의 결과물이 다음 Lab의 입력입니다. 순서를 건너뛰지 마세요.
 
-| Lab | 시간 | 주 Skill | 다음 Lab에 넘길 것 |
-| --- | --- | --- | --- |
-| [01. 워크샵 시작하기](docs/labs/01-orientation-and-setup.md) | 30분 | `azure-resource-lookup` | `.env`, 확인된 scope |
-| [02. AKS 설계 결정하기](docs/labs/02-design-aks.md) | 45분 | `azure-quotas`, `azure-kubernetes`, `azure-rbac` | quota 확인 결과, Day-0 결정표 |
-| [03. 계획 승인 + Bicep 생성](docs/labs/03-plan-and-bicep.md) | 55분 | `azure-enterprise-infra-planner` | 승인된 계획, Bicep |
-| [04. IaC 검증 + 배포 승인](docs/labs/04-validate-and-approve.md) | 45분 | `azure-enterprise-infra-planner` | 검증 증거, 배포 승인 |
-| [05. AKS 배포 + 접속 확인](docs/labs/05-deploy-and-connect.md) | 45분 | `azure-resource-lookup` | Ready 클러스터, `lab` namespace |
-| [06. 상품 페이지 배포](docs/labs/06-run-sample-workload.md) | 40분 | 도구 실행 | 동작하는 상품 페이지 |
-| [07. 진단과 복구 (선택)](docs/labs/07-diagnose-and-recover.md) | 30분 | `azure-diagnostics` | 원인·복구 기록 |
-| [08. 문서화 + 정리](docs/labs/08-document-and-cleanup.md) | 50분 | `azure-resource-visualizer` | 인계 문서, 삭제 증거 |
+| Lab | 주 Skill | 다음 Lab에 넘길 것 |
+| --- | --- | --- |
+| [01. 워크샵 시작하기](docs/labs/01-orientation-and-setup.md) | `azure-resource-lookup` | `.env`, 확인된 scope |
+| [02. AKS 설계 결정하기](docs/labs/02-design-aks.md) | `azure-quotas`, `azure-kubernetes`, `azure-rbac` | quota 확인 결과, Day-0 결정표 |
+| [03. 계획 승인 + Bicep 생성](docs/labs/03-plan-and-bicep.md) | `azure-enterprise-infra-planner` | 승인된 계획, Bicep |
+| [04. IaC 검증 + 배포 승인](docs/labs/04-validate-and-approve.md) | `azure-enterprise-infra-planner` | 검증 증거, 배포 승인 |
+| [05. AKS 배포 + 접속 확인](docs/labs/05-deploy-and-connect.md) | `azure-resource-lookup` | Ready 클러스터, `lab` namespace |
+| [06. 상품 페이지 배포](docs/labs/06-run-sample-workload.md) | 도구 실행 | 동작하는 상품 페이지 |
+| [07. 진단과 복구 (선택)](docs/labs/07-diagnose-and-recover.md) | `azure-diagnostics` | 원인·복구 기록 |
+| [08. 문서화 + 정리](docs/labs/08-document-and-cleanup.md) | `azure-resource-visualizer` | 인계 문서, 삭제 증거 |
 
 ## 🚀 시작하기
 
