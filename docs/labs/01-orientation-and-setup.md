@@ -117,7 +117,7 @@ cat .env
 먼저 **빠른 방법**으로 확인합니다. 단순 조회는 CLI가 몇 초면 끝납니다.
 
 ```bash
-bash scripts/add-report.sh --run "Lab 01 Step 5 · 내 Azure 범위" "az CLI" -- az account show -o table
+bash scripts/add-report.sh --run env "구독과 범위 확인" "az CLI" -- az account show --query "{subscription:name, state:state, tenant:tenantDefaultDomain}" -o table
 ```
 
 결과를 출력하면서 동시에 저장소 루트의 `infra-report.md`에 명령과 출력을 그대로 남깁니다.

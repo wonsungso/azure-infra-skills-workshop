@@ -22,7 +22,7 @@
 존재하지 않는 이미지 태그로 바꿔 Pod가 뜨지 못하게 만듭니다.
 
 ```bash
-bash scripts/add-report.sh --run "Lab 07 Step 1 · 장애 주입" "kubectl" -- \
+bash scripts/add-report.sh --run incident "장애 주입" "kubectl" -- \
   kubectl set image deployment/lab-web web=nginxinc/nginx-unprivileged:does-not-exist -n lab
 ```
 
@@ -61,7 +61,7 @@ azure-diagnostics Skill을 사용해 저장소 루트의 .env에서 RESOURCE_GRO
 복구 변경(올바른 이미지로 되돌리기)을 승인한 뒤 적용하고, [Lab 06](06-run-sample-workload.md)의 계층별 확인을 다시 수행합니다.
 
 ```bash
-bash scripts/add-report.sh --run "Lab 07 Step 3 · rollout undo 복구" "kubectl" -- \
+bash scripts/add-report.sh --run incident "rollout undo 복구" "kubectl" -- \
   kubectl rollout undo deployment/lab-web -n lab
 ```
 

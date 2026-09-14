@@ -26,10 +26,10 @@ AKS는 만들고 나면 바꾸기 어려운 설정(네트워크 플러그인, CI
 ```bash
 set -a; . ./.env; set +a
 SCOPE="/subscriptions/$SUBSCRIPTION_ID/providers/Microsoft.Compute/locations/$REGION"
-bash scripts/add-report.sh --run "Lab 02 Step 1 · DSv5 family quota" "az CLI" -- \
+bash scripts/add-report.sh --run capacity "DSv5 family vCPU quota" "az CLI" -- \
   az quota show --resource-name standardDSv5Family --scope "$SCOPE" \
     --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
-bash scripts/add-report.sh --run "Lab 02 Step 1 · Total Regional vCPU quota" "az CLI" -- \
+bash scripts/add-report.sh --run capacity "Total Regional vCPU quota" "az CLI" -- \
   az quota show --resource-name cores --scope "$SCOPE" \
     --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
 ```

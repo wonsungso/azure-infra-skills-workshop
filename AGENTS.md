@@ -75,7 +75,7 @@ grep -rqF "$(az account show --query id -o tsv)" . && echo "실제 유출" || ec
 채팅에 보여준 **표·목록·설명을 그대로** 넣습니다. 한 줄 요약으로 줄이지 않습니다.
 
 ```bash
-bash scripts/add-report.sh "<Lab NN Step N · 한 줄 제목>" "<쓴 Skill 또는 도구>" <<'EOF'
+bash scripts/add-report.sh <장> "<한 줄 제목>" "<쓴 Skill 또는 도구>" <<'EOF'
 <답변에 쓴 markdown 본문 그대로>
 EOF
 ```
@@ -83,8 +83,23 @@ EOF
 Azure를 조회하는 단계는 명령과 출력을 그대로 남기는 쪽이 정확합니다.
 
 ```bash
-bash scripts/add-report.sh --run "<Lab NN Step N · 제목>" "<도구>" -- <명령...>
+bash scripts/add-report.sh --run <장> "<제목>" "<도구>" -- <명령...>
 ```
+
+장은 작업 성격에 맞춰 고릅니다. Lab 번호가 아니라 **보고서에서 그 내용이 있어야 할 자리**로 봅니다.
+
+| 장 | 들어갈 내용 |
+| --- | --- |
+| `env` | subscription·scope 확인, 접근 경로 |
+| `capacity` | quota와 용량 판정 |
+| `design` | Day-0 선택과 CIDR·SKU 결정 |
+| `access` | 역할과 scope, least privilege |
+| `plan` | 인프라 계획, 승인, 생성된 IaC |
+| `validate` | build, 보안 검사, what-if 결과 |
+| `deploy` | 배포 결과와 생성된 자원 |
+| `workload` | 샘플 워크로드와 계층별 검증 |
+| `incident` | 장애 증상, 원인, 복구 |
+| `cleanup` | 삭제 대상, 승인, 잔여 자원 |
 
 - 결론은 **판단과 근거가 드러나게** 씁니다. "확인했습니다" 같은 내용 없는 문장은 남기지 않습니다.
 - 조회 결과가 **검증되지 않은 추정**이면 본문에 그렇게 적습니다.

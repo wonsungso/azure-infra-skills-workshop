@@ -1,81 +1,209 @@
 #!/usr/bin/env bash
-# Skill과 도구가 만들어낸 결과를 infra-report.md에 섹션으로 덧붙인다.
-# 본문 기록:  bash scripts/add-report.sh "<제목>" "<Skill 또는 도구>" <<'EOF'
-#               <markdown 본문>
-#             EOF
-# 명령 기록:  bash scripts/add-report.sh --run "<제목>" "<도구>" -- <명령...>
+# Lab 결과를 infra-report.md의 정해진 장에 채워 넣는다.
+# 본문:  bash scripts/add-report.sh <장> "<제목>" "<Skill 또는 도구>" <<'EOF'
+#          <markdown 본문>
+#        EOF
+# 명령:  bash scripts/add-report.sh --run <장> "<제목>" "<도구>" -- <명령...>
 set -uo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 REPORT=infra-report.md
-USAGE='사용법:
-  bash scripts/add-report.sh "<제목>" "<Skill 또는 도구>" < 본문
-  bash scripts/add-report.sh --run "<제목>" "<도구>" -- <명령...>'
+FOLD_AFTER=12   # 출력이 이보다 길면 접어 둔다
+
+SECTION_KEYS=(env capacity design access plan validate deploy workload incident cleanup)
+section_title() {
+  case $1 in
+    env)      echo "환경과 범위" ;;
+    capacity) echo "용량 검토" ;;
+    design)   echo "설계 결정" ;;
+    access)   echo "권한 설계" ;;
+    plan)     echo "인프라 계획과 코드" ;;
+    validate) echo "배포 전 검증" ;;
+    deploy)   echo "배포 결과" ;;
+    workload) echo "워크로드" ;;
+    incident) echo "장애와 복구" ;;
+    cleanup)  echo "정리와 인계" ;;
+    *) return 1 ;;
+  esac
+}
+
+USAGE="사용법:
+  bash scripts/add-report.sh <장> \"<제목>\" \"<Skill 또는 도구>\" < 본문
+  bash scripts/add-report.sh --run <장> \"<제목>\" \"<도구>\" -- <명령...>
+
+<장>: ${SECTION_KEYS[*]}"
 
 RUN_MODE=0
 if [ "${1:-}" = "--run" ]; then RUN_MODE=1; shift; fi
 
-TITLE=${1:-}
-TOOL=${2:-}
-[ -n "$TITLE" ] && [ -n "$TOOL" ] || { echo "$USAGE" >&2; exit 2; }
+SECTION=${1:-}; TITLE=${2:-}; TOOL=${3:-}
+if ! section_title "$SECTION" >/dev/null 2>&1 || [ -z "$TITLE" ] || [ -z "$TOOL" ]; then
+  echo "$USAGE" >&2; exit 2
+fi
 
-# 화면 공유나 이슈에 그대로 붙여넣어도 안전하도록 식별자를 가린다
+# 화면 공유나 이슈에 붙여넣어도 안전하도록 식별자를 가린다.
+# Pod·Service CIDR 같은 사설 대역은 설계값이므로 남긴다.
 redact() {
-  sed -E \
-    -e 's/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/<subscription-id>/g' \
-    -e 's/([0-9]{1,3}\.){3}[0-9]{1,3}/<ip>/g' \
-    -e 's/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+/<user>/g' \
-    -e 's/[A-Za-z0-9-]+\.onmicrosoft\.com/<tenant>/g'
+  awk '
+    function scrub_ip(s,   out, ip) {
+      out = ""
+      while (match(s, /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/)) {
+        ip = substr(s, RSTART, RLENGTH)
+        out = out substr(s, 1, RSTART - 1)
+        if (ip ~ /^10\./ || ip ~ /^192\.168\./ || ip ~ /^172\.(1[6-9]|2[0-9]|3[01])\./)
+          out = out ip
+        else
+          out = out "<ip>"
+        s = substr(s, RSTART + RLENGTH)
+      }
+      return out s
+    }
+    {
+      gsub(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/, "<id>")
+      gsub(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+/, "<user>")
+      gsub(/[A-Za-z0-9-]+\.onmicrosoft\.com/, "<tenant>")
+      print scrub_ip($0)
+    }
+  '
+}
+
+# 보고서의 명령을 그대로 복사해 쓸 수 있도록 공백·특수문자 인자는 감싼다
+quote_args() {
+  local a out=""
+  for a in "$@"; do
+    case $a in
+      *[!A-Za-z0-9_./:=-]*) out="$out\"$a\" " ;;
+      *)                    out="$out$a " ;;
+    esac
+  done
+  printf '%s' "${out% }"
+}
+
+env_value() { grep -E "^$1=" .env 2>/dev/null | head -1 | cut -d= -f2- ; }
+code_or_dash() { local v; v=$(env_value "$1"); [ -n "$v" ] && printf '`%s`' "$v" || printf '—'; }
+text_or_dash() { local v; v=$(env_value "$1"); [ -n "$v" ] && printf '%s' "$v" || printf '—'; }
+
+build_meta() {
+  cat <<EOF
+| 항목 | 내용 |
+| --- | --- |
+| 대상 클러스터 | $(code_or_dash AKS_NAME) |
+| Resource group | $(code_or_dash RESOURCE_GROUP) |
+| Region | $(text_or_dash REGION) |
+| 최종 갱신 | $(date '+%Y-%m-%d %H:%M') |
+EOF
+}
+
+build_summary() {
+  cat <<EOF
+| 구성 항목 | 값 | 정해진 곳 |
+| --- | --- | --- |
+| VNet | $(code_or_dash VNET_NAME) | Lab 03 |
+| Node resource group | $(code_or_dash NODE_RESOURCE_GROUP) | Lab 05 배포 output |
+| System node SKU | $(text_or_dash SYSTEM_VM_SIZE) | Lab 02 |
+| User node SKU | $(text_or_dash USER_VM_SIZE) | Lab 02 |
+| Pod CIDR | $(text_or_dash POD_CIDR) | Lab 02 |
+| Service CIDR | $(text_or_dash SERVICE_CIDR) | Lab 02 |
+| DNS service IP | $(text_or_dash DNS_SERVICE_IP) | Lab 02 |
+| API server 허용 대역 | $(text_or_dash EGRESS_IP_CIDR) | Lab 01 |
+| 워크로드 namespace | $(code_or_dash NAMESPACE) | Lab 05 |
+EOF
 }
 
 if [ ! -f "$REPORT" ]; then
-  cat > "$REPORT" <<'EOF'
-# 인프라 보고서
-
-Lab을 진행하는 동안 Skill과 도구가 내놓은 조사·검토·결정 결과가 순서대로 쌓입니다.
-`scripts/add-report.sh`가 덧붙이며, 커밋되지 않습니다(.gitignore).
-
-subscription·tenant ID, IP, 계정 이메일은 기록될 때 자동으로 가려집니다.
-Lab 08의 인계 문서는 이 보고서를 근거로 작성합니다.
-EOF
+  {
+    printf '# AKS 인프라 구성 보고서\n\n'
+    printf '<!-- meta:begin -->\n<!-- meta:end -->\n\n'
+    printf '## 구성 요약\n\n'
+    printf '<!-- summary:begin -->\n<!-- summary:end -->\n\n'
+    printf '## 목차\n\n'
+    printf '<!-- toc:begin -->\n<!-- toc:end -->\n'
+    n=0
+    for k in "${SECTION_KEYS[@]}"; do
+      n=$((n+1))
+      printf '\n## %d. %s\n\n' "$n" "$(section_title "$k")"
+      printf '<!-- section:%s -->\n' "$k"
+      printf '기록되지 않았습니다.\n'
+      printf '<!-- end:%s -->\n' "$k"
+    done
+    printf '\n---\n\n'
+    printf '이 보고서는 Lab을 진행하는 동안 `scripts/add-report.sh`가 채웁니다.\n'
+    printf 'subscription·tenant ID, 공인 IP, 계정 이메일은 기록될 때 가려집니다. 커밋되지 않습니다(.gitignore).\n'
+  } > "$REPORT"
 fi
 
 STAMP=$(date '+%Y-%m-%d %H:%M')
 
 if [ "$RUN_MODE" -eq 1 ]; then
-  [ "${3:-}" = "--" ] || { echo "$USAGE" >&2; exit 2; }
-  shift 3
+  [ "${4:-}" = "--" ] || { echo "$USAGE" >&2; exit 2; }
+  shift 4
   [ $# -gt 0 ] || { echo "실행할 명령이 없습니다" >&2; exit 2; }
-
   OUT=$("$@" 2>&1); CODE=$?
   [ "$CODE" -eq 0 ] && STATUS=관측 || STATUS="실패(exit $CODE)"
+  CLEAN_OUT=$(printf '%s' "$OUT" | redact)
+  CLEAN_CMD=$(quote_args "$@" | redact)
+  LINES=$(printf '%s\n' "$CLEAN_OUT" | wc -l)
 
-  {
-    printf '\n## %s\n\n' "$TITLE"
-    printf '`%s` · %s · %s\n\n' "$TOOL" "$STAMP" "$STATUS"
-    printf '```bash\n%s\n```\n\n' "$(printf '%s ' "$@" | sed 's/[[:space:]]*$//' | redact)"
-    printf '```text\n%s\n```\n' "$(printf '%s' "$OUT" | redact)"
-  } >> "$REPORT"
+  if [ "$LINES" -gt "$FOLD_AFTER" ]; then
+    RESULT_BLOCK=$(printf '<details>\n<summary>실행 결과 %s줄</summary>\n\n```text\n%s\n```\n\n</details>' "$LINES" "$CLEAN_OUT")
+  else
+    RESULT_BLOCK=$(printf '```text\n%s\n```' "$CLEAN_OUT")
+  fi
 
+  ENTRY=$(printf '### %s\n\n*%s · %s · %s*\n\n%s\n\n<details>\n<summary>실행한 명령</summary>\n\n```bash\n%s\n```\n\n</details>\n' \
+    "$TITLE" "$TOOL" "$STAMP" "$STATUS" "$RESULT_BLOCK" "$CLEAN_CMD")
+else
+  [ -t 0 ] && { echo "본문을 표준 입력으로 넘겨야 합니다." >&2; echo "$USAGE" >&2; exit 2; }
+  BODY=$(cat | redact)
+  [ -n "${BODY//[[:space:]]/}" ] || { echo "본문이 비어 있습니다" >&2; exit 2; }
+  ENTRY=$(printf '### %s\n\n*%s · %s*\n\n%s\n' "$TITLE" "$TOOL" "$STAMP" "$BODY")
+  CODE=0
+fi
+
+# -v는 값 안의 \를 escape로 해석하므로 본문은 환경변수로 넘긴다
+REPORT_ENTRY=$ENTRY awk -v key="$SECTION" '
+  $0 == "<!-- section:" key " -->" { print; inside=1; next }
+  $0 == "<!-- end:" key " -->"     { print ""; print ENVIRON["REPORT_ENTRY"]; print; inside=0; next }
+  inside && $0 == "기록되지 않았습니다." { next }
+  { print }
+' "$REPORT" > "$REPORT.tmp" && mv "$REPORT.tmp" "$REPORT"
+
+# 장별 기록 건수를 세어 목차를 다시 만든다
+build_toc() {
+  local n=0 key count
+  for key in "${SECTION_KEYS[@]}"; do
+    n=$((n+1))
+    count=$(awk -v k="$key" '
+      $0 == "<!-- section:" k " -->" { inside=1; next }
+      $0 == "<!-- end:" k " -->"     { inside=0 }
+      inside && /^### / { c++ }
+      END { print c+0 }
+    ' "$REPORT")
+    if [ "$count" -gt 0 ]; then
+      printf -- '- [%d. %s](#%d-%s) · %d건\n' "$n" "$(section_title "$key")" "$n" "$(section_title "$key" | tr ' ' '-')" "$count"
+    else
+      printf -- '- %d. %s · 기록 없음\n' "$n" "$(section_title "$key")"
+    fi
+  done
+}
+
+replace_block() {
+  local marker=$1
+  REPORT_BLOCK=$2 awk -v begin="<!-- ${marker}:begin -->" -v end="<!-- ${marker}:end -->" '
+    $0 == begin { print; print ""; print ENVIRON["REPORT_BLOCK"]; print ""; skip=1; next }
+    $0 == end   { skip=0 }
+    !skip
+  ' "$REPORT" > "$REPORT.tmp" && mv "$REPORT.tmp" "$REPORT"
+}
+
+replace_block meta "$(build_meta | redact)"
+replace_block summary "$(build_summary | redact)"
+replace_block toc "$(build_toc)"
+
+if [ "$RUN_MODE" -eq 1 ]; then
   printf '%s\n' "$OUT"
   echo ""
-  echo "[$STATUS] $REPORT 에 기록했습니다."
+  echo "[$STATUS] $REPORT · $(section_title "$SECTION") 에 기록했습니다."
   exit "$CODE"
 fi
-
-if [ -t 0 ]; then
-  echo "본문을 표준 입력으로 넘겨야 합니다." >&2
-  echo "$USAGE" >&2
-  exit 2
-fi
-
-BODY=$(cat | redact)
-[ -n "${BODY//[[:space:]]/}" ] || { echo "본문이 비어 있습니다" >&2; exit 2; }
-
-{
-  printf '\n## %s\n\n' "$TITLE"
-  printf '`%s` · %s\n\n' "$TOOL" "$STAMP"
-  printf '%s\n' "$BODY"
-} >> "$REPORT"
-
-echo "$REPORT 에 \"$TITLE\" 섹션을 추가했습니다."
+echo "$REPORT · $(section_title "$SECTION") 에 \"$TITLE\" 을(를) 추가했습니다."
