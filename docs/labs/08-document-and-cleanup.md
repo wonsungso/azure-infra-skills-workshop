@@ -28,7 +28,7 @@ azure-resource-lookup과 azure-resource-visualizer Skill을 사용해 저장소 
 
 ### Azure 공식 아이콘으로 그림 만들기
 
-Mermaid는 관계를 보여주지만 아이콘이 없어 밋밋합니다. 조회 결과를 그대로 써서 **Azure 공식 아이콘이 들어간 SVG**를 함께 만듭니다.
+Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 결과로 **Azure 공식 아이콘이 들어간 SVG**를 함께 만듭니다.
 
 > 📋 **아래 프롬프트를 복사해 실행**
 

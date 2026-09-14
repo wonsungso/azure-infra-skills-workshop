@@ -19,7 +19,7 @@ AKS는 만들고 나면 바꾸기 어려운 설정(네트워크 플러그인, CI
 
 ## Step 1. quota와 용량 확인하기
 
-배포 실패의 가장 흔한 원인이 quota 부족입니다. **배포 직전이 아니라 지금** 확인하면 30분을 아낍니다.
+배포 실패의 가장 흔한 원인이 quota 부족입니다. **배포 직전이 아니라 지금** 확인합니다.
 
 > 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
@@ -32,7 +32,7 @@ azure-quotas Skill을 사용해 저장소 루트의 .env에서 SUBSCRIPTION_ID�
 - 기본 구성은 **10 vCPU**가 필요합니다. 여유가 있나요?
 - 부족하면 region을 바꾸거나 node 개수·SKU를 줄입니다.
 
-`REGION`은 `koreacentral`로 이미 채워져 있습니다. **방금 본 quota 결과로 이 값이 맞는지 확인하세요.** 바꿔야 한다면, 그리고 SKU를 정했다면 아래로 `.env`에 반영합니다. 손으로 편집하지 말고 이 스크립트를 쓰세요. 없는 항목명을 쓰면 오타로 보고 멈춥니다.
+`REGION`은 `koreacentral`로 이미 채워져 있습니다. **방금 본 quota 결과로 이 값이 맞는지 확인하세요.** 결정한 값은 손으로 편집하지 말고 아래로 반영합니다.
 
 ```bash
 bash scripts/set-env.sh \
@@ -41,7 +41,7 @@ bash scripts/set-env.sh \
   USER_VM_SIZE Standard_D2s_v5
 ```
 
-위 값은 **예시일 뿐입니다.** 방금 조회한 내 quota 결과에 맞는 값을 넣으세요. region·SKU·node 개수는 기계가 대신 정해줄 수 없는 **사람의 판단**입니다. 여기서 얻은 실제 조회 결과가 이후 프롬프트의 근거가 됩니다.
+위 값은 **예시입니다.** region·SKU·node 개수는 기계가 대신 정해줄 수 없는 **사람의 판단**입니다.
 
 ## Step 2. Day-0 결정 검토하기
 
@@ -67,9 +67,7 @@ azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해�
 azure-enterprise-infra-planner Skill을 사용해 이 교육용 AKS의 least privilege 매트릭스를 작성해줘. Azure 리소스 배포자, 역할 할당자, AKS control-plane managed identity, lab namespace 사용자를 분리하고 scope와 필요한 작업을 표로 보여줘. 계획만 세우고 권한을 변경하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
-"리소스를 배포하는 권한"과 "남에게 역할을 부여하는 권한"은 다릅니다. **Azure 권한과 Kubernetes 내부 권한도 완전히 다른 시스템**입니다. 이 표가 있으면 나중에 "왜 안 되지?"에 바로 답할 수 있습니다.
-
-이 실습에서는 여러분이 만드는 사람이자 쓰는 사람입니다. 그래도 역할을 나누어 설계하는 이유는 실제 팀에서는 둘이 다른 사람이기 때문입니다. 이 표는 Lab 08 인계 문서에 그대로 들어갑니다.
+"리소스를 배포하는 권한"과 "남에게 역할을 부여하는 권한"은 다릅니다. **Azure 권한과 Kubernetes 내부 권한도 완전히 다른 시스템**입니다. 이 표는 Lab 08 인계 문서에 그대로 들어갑니다.
 
 **확인할 것** - 나에게 subscription Owner나 cluster-admin을 주는 제안이 없는지. 이 랩에서는 권한을 실제로 바꾸지 않습니다.
 

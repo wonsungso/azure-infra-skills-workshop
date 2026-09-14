@@ -53,8 +53,6 @@ azure-quotas, azure-kubernetes, azure-enterprise-infra-planner, azure-resource-l
 
 여섯 개가 모두 있어야 합니다.
 
-**Skill이 없는 채로 진행하면 안 됩니다.** 요청을 받은 에이전트는 Skill이 없어도 "대신 다른 방법으로 해봤다"며 그럴듯한 답을 내놓을 수 있습니다. 그 답에는 이 워크샵이 가르치려는 절차와 위험 판단이 빠져 있습니다.
-
 <details>
 <summary>🖐 <b>비어 있거나 로컬 VS Code로 진행한다면</b></summary>
 
@@ -71,35 +69,14 @@ done
 rm -rf "$tmp"
 ```
 
-Copilot Chat에서 플러그인으로 설치해도 됩니다. 이 경우 Skill이 워크샵 밖에서도 쓸 수 있게 됩니다.
-
-```text
-/plugin marketplace add microsoft/azure-skills
-```
-
-```text
-/plugin install azure@azure-skills
-```
-
 </details>
 
 ## Step 3. Azure에 로그인하기
 
-**이 단계는 사람이 직접 해야 합니다.** 로그인은 본인 계정의 credentials를 다루는 일이라 Skill이나 스크립트에 맡기지 않습니다.
-
-Codespace는 원격 컨테이너라 브라우저가 자동으로 열리지 않습니다. **device code 방식**을 씁니다.
+**이 단계는 사람이 직접 수행해야 합니다.** 로그인은 본인 계정의 credentials를 다루므로 Skill이나 스크립트에 맡기지 않습니다.
 
 ```bash
 az login --use-device-code
-```
-
-터미널에 나온 코드를 복사해, 함께 표시된 주소를 브라우저에서 열고 붙여넣습니다. 브라우저에서 인증이 끝나면 터미널이 알아서 다음으로 넘어갑니다.
-
-subscription이 여러 개라면 이 워크샵에서 쓸 것을 직접 고릅니다.
-
-```bash
-az account list --query "[].{name:name, id:id, default:isDefault}" -o table
-az account set --subscription "<사용할 subscription 이름 또는 id>"
 ```
 
 ## Step 4. 입력값 확인하기
@@ -120,13 +97,9 @@ cat .env
 | CIDR, VM SKU | **Lab 02에서 내가 결정** |
 | `NODE_RESOURCE_GROUP` | Lab 05 배포 후 output |
 
-자동으로 알 수 있는 값과 **사람이 결정해야 하는 값**을 구분하세요. CIDR과 SKU는 quota와 기존 네트워크를 보고 판단해야 해서 자동화할 수 없습니다. `REGION`은 바로 진행할 수 있도록 기본값을 놓았을 뿐이니, Lab 02에서 quota를 확인한 뒤 그대로 둘지 바꿀지 직접 정하세요.
+이후 Lab의 프롬프트는 이 값들을 **Skill이 `.env`에서 직접 읽어 씁니다.**
 
-이후 Lab의 프롬프트는 이 값들을 **Skill이 `.env`에서 직접 읽어 씁니다.** 프롬프트에 resource group 이름이나 region을 손으로 바꿔 넣을 필요가 없습니다.
-
-`EGRESS_IP_CIDR`은 내 PC가 아니라 **Codespace의 egress IP**입니다. AKS API server에 접근할 수 있는 유일한 주소가 되므로 반드시 Codespace 안에서 조회된 값이어야 합니다. Codespace를 중지했다가 다시 시작하면 이 IP가 바날 수 있으므로, Lab 05 이후 접속이 갑자기 안 되면 [`init-workshop.sh`](../../scripts/init-workshop.sh)를 다시 실행해 갱신하세요.
-
-비밀번호, token, kubeconfig 내용은 `.env`에 적지 않습니다. 이 파일은 `.gitignore` 대상이므로 커밋되지 않습니다.
+`EGRESS_IP_CIDR`은 내 PC가 아니라 **Codespace의 egress IP**입니다. AKS API server에 접근할 수 있는 유일한 주소가 되므로 반드시 Codespace 안에서 조회된 값이어야 합니다. Codespace를 중지했다가 다시 시작하면 이 IP가 바뀔 수 있으므로, Lab 05 이후 접속이 갑자기 안 되면 [`init-workshop.sh`](../../scripts/init-workshop.sh)를 다시 실행해 갱신하세요.
 
 ## Step 5. 내 Azure 범위 확인하기
 
@@ -136,7 +109,7 @@ cat .env
 bash scripts/log-evidence.sh "Lab 01 Step 5" "az CLI" -- az account show -o table
 ```
 
-결과를 보여주면서 동시에 저장소 루트의 `evidence-log.md`에 한 줄을 기록합니다. 따로 적을 필요가 없습니다. 파일이 없으면 머리말과 표를 포함해 새로 만들어집니다.
+결과를 출력하며 동시에 저장소 루트의 `evidence-log.md`에도 기록합니다. 
 
 그다음 resource group을 봅니다. Lab 05에서 배포와 함께 만들 것이므로 **지금 없어도 정상입니다.**
 
@@ -160,7 +133,7 @@ az group show -n "$RESOURCE_GROUP" -o table 2>/dev/null || echo "아직 없음 -
 azure-resource-lookup Skill로 저장소 루트의 .env를 읽어 SUBSCRIPTION_ID와 RESOURCE_GROUP을 확인하고, 그 resource group의 존재 여부만 확인해줘. 없으면 "없음", 접근이 막혀 있으면 권한 부족으로 구분해서 한 줄로 답해줘. 리소스를 만들거나 바꾸지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
-**Skill 응답은 CLI보다 느립니다.** 도구를 여러 번 호출하고 결과를 해석하기 때문입니다. 그만큼 값어치가 있는 질문에 써야 합니다.
+**Skill 응답은 CLI보다 느립니다.** 도구를 여러 번 호출하고 결과를 해석하기 때문입니다. 그만큼 더 복잡한 작업 혹은 질문에 써야 합니다.
 
 **단순 조회는 CLI, 판단·절차·위험 검토는 Skill.** 이 구분이 이번 Lab의 진짜 교훈입니다. Lab 02부터는 quota 판정과 Day-0 설계 검토처럼 CLI 한 줄로 대체할 수 없는 작업이 이어집니다.
 

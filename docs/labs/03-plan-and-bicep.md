@@ -18,8 +18,6 @@
 
 ## Step 1. 인프라 계획 만들고 승인하기
 
-프롬프트에 값을 직접 적지 않습니다. Skill이 `.env`를 읽어 쓰고, 비어 있는 값이 있으면 추측하지 않고 멈춥니다.
-
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
@@ -35,7 +33,7 @@ azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해�
    - Lab 02에서 결정한 region·SKU·node 개수·CIDR과 정확히 일치하는지
 3. 검토가 끝나면 승인 여부를 말로 명확히 표현합니다(예: "이 계획을 승인합니다").
 
-승인자는 여러분 자신입니다. 형식적인 절차처럼 보이지만, **"승인한다"고 말하기 전에 한 번 더 읽는 것**이 이 워크샵의 핵심 습관입니다. 실제 팀에서는 이 자리에 다른 사람이 앉습니다. 계획을 승인하기 전에는 다음 Step으로 진행하지 않습니다. 애매하면 질문을 더 하세요.
+승인자는 여러분 자신입니다. **계획을 승인하기 전에는 다음 Step으로 진행하지 않습니다.** 애매하면 질문을 더 하세요.
 
 **완료 기준:** `.azure/infrastructure-plan.json`(또는 동등한 계획 산출물)이 생성되고, 승인 여부와 승인 시각이 기록됩니다.
 
@@ -52,7 +50,7 @@ azure-enterprise-infra-planner Skill을 사용해 승인된 infrastructure plan�
 - 생성된 파일 목록과 위치
 - 매개변수(authorized IP ranges, CIDR, SKU 등)가 계획과 정확히 일치하는지
 
-[Bicep 기준본](../../reference/infra/main.bicep)을 열어 내가 받은 결과와 **비교**해 볼 수 있습니다. 다만 그대로 복사해서 쓰는 정답지가 아닙니다. 차이가 있다면 "왜 다른가"를 따져보는 것이 학습 포인트입니다.
+[Bicep 기준본](../../reference/infra/main.bicep)을 열어 내가 받은 결과와 **비교**해 볼 수 있습니다. 그대로 복사해 쓰는 정답지가 아니니, 차이가 있다면 "왜 다른가"를 따져보세요.
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>

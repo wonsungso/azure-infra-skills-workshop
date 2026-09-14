@@ -54,7 +54,6 @@ reference/kubernetes/lab-web.yaml을 검토해줘. ConfigMap으로 주입되는 
 > port-forward 성공은 "로컬에서 접근이 됐다"는 것만 증명합니다. 외부 공개나 클러스터 내부 DNS 통신이 된다는 증거로 기록하지 마세요.
 
 각 계층이 정상이면 아래와 같이 보입니다. **EndpointSlice의 `endpoints` 값이 Pod IP와 같은지**가 Service와 Pod가 실제로 연결됐다는 증거입니다.
-
 <img src="../../img/lab06-verify.png" alt="kubectl apply와 계층별 조회 결과 - ConfigMap/Deployment/Service 생성, Pod Running, EndpointSlice 연결, HTTP 200 응답" width="760">
 
 <details>
@@ -72,7 +71,7 @@ reference/kubernetes/lab-web.yaml을 검토해줘. ConfigMap으로 주입되는 
 
 port-forward를 연 상태에서 브라우저로 `http://127.0.0.1:8080` 에 접속해 **Contoso Shop** 화면을 확인하세요.
 
-Codespace에서는 port-forward를 시작하면 VS Code가 8080 포트를 자동으로 감지합니다. 하단 **포트(Ports) 패널**에서 지구본 아이콘을 누르면 브라우저로 열립니다. 이때 주소는 `127.0.0.1`이 아니라 `...app.github.dev` 형태입니다. 이것은 Codespace 내부로의 터널일 뿐이므로, 클러스터를 외부에 공개한 것이 아닙니다.
+Codespace에서는 하단 **포트(Ports) 패널**의 지구본 아이콘으로 열어도 됩니다. 주소가 `...app.github.dev` 형태로 바뀌지만, 이것은 Codespace 내부로의 터널일 뿐이므로 클러스터를 외부에 공개한 것이 아닙니다.
 
 <img src="../../img/shop.png" alt="Contoso Shop 상품 페이지 - 상품 카드 4개와 하단에 실제 Pod 이름이 표시된 화면" width="760">
 
