@@ -66,6 +66,10 @@ ls .github/skills
 
 여섯 개가 모두 있어야 합니다.
 
+Skill만으로는 부족합니다. `azure-enterprise-infra-planner`는 계획을 세우는 도중 **Azure 모범 사례와 Microsoft Learn 문서를 MCP 서버로 조회**합니다. 연결이 안 되면 Skill은 멈추지 않고 내장 참조 문서로 조용히 내려앉습니다. 계획은 나오지만 근거가 얙상해집니다.
+
+VS Code 왼쪽 아래 **톱니바 > MCP 서버**에서 `azure`와 `microsoft-learn`이 실행 중인지 확인하세요. 설정은 [`mcp.json`](../../.vscode/mcp.json)에 들어 있고, 멈추어 있으면 거기서 시작합니다. 처음 시작할 때는 패키지를 받아오느라 시간이 걸립니다.
+
 <details>
 <summary>🖐 <b>비어 있거나 로컬 VS Code로 진행한다면</b></summary>
 
@@ -135,7 +139,7 @@ az account show --query "{subscription:name, state:state, tenant:tenantDefaultDo
 
 이 명령은 화면에만 출력됩니다. 기록은 **프롬프트를 실행했을 때** 남습니다. 아래 Skill 프롬프트를 실행하면 **답변의 표와 설명이 그대로 저장소 루트의 `infra-report.md`에 섹션으로 추가됩니다.** [`AGENTS.md`](../../AGENTS.md)에 그렇게 지시돼 있어서입니다. Lab 08의 인계 문서가 이 보고서를 근거로 씁니다.
 
-그다음 resource group을 봅니다. Lab 05에서 배포와 함께 만들 것이므로 **지금 없어도 정상입니다.**
+그다음 resource group을 봅니다. [Lab 04](04-validate-and-approve.md)에서 직접 만들 것이므로 **지금 없어도 정상입니다.**
 
 ```bash
 set -a; . ./.env; set +a
