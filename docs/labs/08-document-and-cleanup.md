@@ -21,7 +21,7 @@ Azure Resource Manager 그림만으로는 Kubernetes 내부의 Pod/Service 관�
 > 🧠 **Skill** `azure-resource-lookup`, `azure-resource-visualizer` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-resource-lookup과 azure-resource-visualizer Skill을 사용해 저장소 루트의 .env에서 RESOURCE_GROUP과 NODE_RESOURCE_GROUP을 읽고, 그 두 그룹의 실제 Azure 리소스와 관계를 조사해 Mermaid 문서를 작성해줘. Kubernetes Deployment, Pod, Service 관계는 kubectl 증거를 별도 섹션으로 작성해줘. 관측 사실, 설계값, 추정, 미검증 항목을 구분해줘. 리소스를 변경하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-resource-lookup과 azure-resource-visualizer Skill을 사용해 저장소 루트의 .env에서 RESOURCE_GROUP과 NODE_RESOURCE_GROUP을 읽고, 그 두 그룹의 실제 Azure 리소스와 관계를 조사해 Mermaid 문서를 작성해줘. 저장소 루트의 evidence-log.md도 함께 읽어서 Lab 01부터 쌓인 결정과 관측 기록을 근거로 써줘. Kubernetes Deployment, Pod, Service 관계는 kubectl 증거를 별도 섹션으로 작성해줘. 관측 사실, 설계값, 추정, 미검증 항목을 구분하고, 증거 로그에 근거가 없는 항목은 미검증으로 표시해줘. 리소스를 변경하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
 **확인할 것:** cluster resource group과 node resource group을 모두 조사했는지, Kubernetes 증거(Pod/Service/EndpointSlice)를 Azure ARM 그림과 별도 섹션으로 나눴는지.
@@ -46,7 +46,7 @@ bash scripts/build-architecture-svg.sh <만든 스펙>.json img/my-architecture.
 
 아이콘은 Microsoft가 배포하는 공식 Azure architecture icons입니다. 아키텍처 다이어그램과 교육 자료 용도로만 쓸 수 있고, 자르거나 회전하거나 변형하면 안 됩니다. 자세한 조건은 [assets/azure-icons/README.md](../../assets/azure-icons/README.md)에 있습니다.
 
-[인계 양식](../../templates/handoff-template.md)에 관측/설계/추정/미검증을 구분해서 채웁니다.
+[인계 양식](../../templates/handoff-template.md)에 관측/설계/추정/미검증을 구분해서 채웁니다. Lab 01부터 쌓인 `evidence-log.md`가 그 근거입니다.
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>

@@ -21,10 +21,25 @@ AKS는 만들고 나면 바꾸기 어려운 설정(네트워크 플러그인, CI
 
 배포 실패의 가장 흔한 원인이 quota 부족입니다. **배포 직전이 아니라 지금** 확인합니다.
 
+숫자는 CLI로 먼저 가져옵니다. 조회와 동시에 증거로 남습니다.
+
+```bash
+set -a; . ./.env; set +a
+SCOPE="/subscriptions/$SUBSCRIPTION_ID/providers/Microsoft.Compute/locations/$REGION"
+bash scripts/log-evidence.sh "Lab 02 Step 1" "az CLI" -- \
+  az quota show --resource-name standardDSv5Family --scope "$SCOPE" \
+    --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
+bash scripts/log-evidence.sh "Lab 02 Step 1" "az CLI" -- \
+  az quota show --resource-name cores --scope "$SCOPE" \
+    --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
+```
+
+그다음 **충분한가**를 Skill에게 판단하게 합니다. 숫자 읽기가 아니라 region 대안까지 같이 봐야 하는 일입니다.
+
 > 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-quotas Skill을 사용해 저장소 루트의 .env에서 SUBSCRIPTION_ID와 REGION을 읽고, 해당 region의 Standard DSv5 family vCPU quota와 현재 사용량을 확인해줘. 어느 명령으로 확인했는지 같이 알려줘. AKS node 3대(Standard_D4s_v5 2대 + Standard_D2s_v5 1대)를 만들 수 있는지 판단해줘. 부족하면 대안 region도 같이 알려줘. Azure 리소스는 만들거나 바꾸지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-quotas Skill을 사용해 저장소 루트의 .env에서 SUBSCRIPTION_ID와 REGION을 읽고, 해당 region의 Standard DSv5 family vCPU와 Total Regional vCPU의 quota와 현재 사용량을 확인해줘. 장치명은 standardDSv5Family와 cores이고, 값은 properties.limit.value와 properties.usages.value에 있어. AKS node 3대(Standard_D4s_v5 2대 + Standard_D2s_v5 1대 = 10 vCPU)를 만들 수 있는지 판단하고, 부족하면 대안 region도 알려줘. 어느 명령으로 확인했는지 같이 알려줘. Azure 리소스는 만들거나 바꾸지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
 **확인할 것**
@@ -88,7 +103,7 @@ azure-enterprise-infra-planner Skill을 사용해 이 교육용 AKS의 least pri
 - [ ] quota를 조회해 region·SKU·node 개수를 결정했다
 - [ ] Day-0 결정을 스스로 설명할 수 있다
 - [ ] 결정한 값을 [`set-env.sh`](../../scripts/set-env.sh)로 `.env`에 반영했다
-- [ ] least privilege 매트릭스를 증거 로그에 연결했다
+- [ ] 세 Step의 결과가 `evidence-log.md`에 남았다
 - [ ] 아직 아무것도 생성하지 않았다
 
 ## 🚧 문제가 생겼다면
