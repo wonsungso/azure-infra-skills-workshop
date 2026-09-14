@@ -21,17 +21,15 @@ AKS는 만들고 나면 바꾸기 어려운 설정(네트워크 플러그인, CI
 
 배포 실패의 가장 흔한 원인이 quota 부족입니다. **배포 직전이 아니라 지금** 확인합니다.
 
-숫자는 CLI로 먼저 가져옵니다. 조회와 동시에 증거로 남습니다.
+숫자는 CLI로 먼저 가져옵니다. 단순 조회는 몇 초면 끝나고, 뒤의 판단을 검토할 기준이 됩니다.
 
 ```bash
 set -a; . ./.env; set +a
 SCOPE="/subscriptions/$SUBSCRIPTION_ID/providers/Microsoft.Compute/locations/$REGION"
-bash scripts/add-report.sh --run capacity "DSv5 family vCPU quota" "az CLI" -- \
-  az quota show --resource-name standardDSv5Family --scope "$SCOPE" \
-    --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
-bash scripts/add-report.sh --run capacity "Total Regional vCPU quota" "az CLI" -- \
-  az quota show --resource-name cores --scope "$SCOPE" \
-    --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
+az quota show --resource-name standardDSv5Family --scope "$SCOPE" \
+  --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
+az quota show --resource-name cores --scope "$SCOPE" \
+  --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
 ```
 
 그다음 **충분한가**를 Skill에게 판단하게 합니다. 숫자 읽기가 아니라 region 대안까지 같이 봐야 하는 일입니다.

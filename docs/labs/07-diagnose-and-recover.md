@@ -22,8 +22,7 @@
 존재하지 않는 이미지 태그로 바꿔 Pod가 뜨지 못하게 만듭니다.
 
 ```bash
-bash scripts/add-report.sh --run incident "장애 주입" "kubectl" -- \
-  kubectl set image deployment/lab-web web=nginxinc/nginx-unprivileged:does-not-exist -n lab
+kubectl set image deployment/lab-web web=nginxinc/nginx-unprivileged:does-not-exist -n lab
 ```
 
 지금 원인을 알고 있더라도, **다음 Step에서는 모르는 척하고 증거만으로 결론을 내리세요.** 아는 답을 확인하는 게 아니라, 증거를 읽는 순서를 연습하는 것이 목적입니다.
@@ -61,8 +60,7 @@ azure-diagnostics Skill을 사용해 저장소 루트의 .env에서 RESOURCE_GRO
 복구 변경(올바른 이미지로 되돌리기)을 승인한 뒤 적용하고, [Lab 06](06-run-sample-workload.md)의 계층별 확인을 다시 수행합니다.
 
 ```bash
-bash scripts/add-report.sh --run incident "rollout undo 복구" "kubectl" -- \
-  kubectl rollout undo deployment/lab-web -n lab
+kubectl rollout undo deployment/lab-web -n lab
 ```
 
 `rollout undo`로 복구하면 **페이지의 Pod 이름은 바뀌지 않습니다.** 기존 Pod가 한 번도 죽지 않았기 때문입니다. 이름이 그대로인 것이 오히려 "무중단으로 막았다"는 증거입니다.

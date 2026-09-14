@@ -117,12 +117,10 @@ cat .env
 먼저 **빠른 방법**으로 확인합니다. 단순 조회는 CLI가 몇 초면 끝납니다.
 
 ```bash
-bash scripts/add-report.sh --run env "구독과 범위 확인" "az CLI" -- az account show --query "{subscription:name, state:state, tenant:tenantDefaultDomain}" -o table
+az account show --query "{subscription:name, state:state, tenant:tenantDefaultDomain}" -o table
 ```
 
-결과를 출력하면서 동시에 저장소 루트의 `infra-report.md`에 명령과 출력을 그대로 남깁니다.
-
-앞으로 Skill 프롬프트를 실행하면 **답변의 표와 설명이 그대로 같은 문서에 섹션으로 추가됩니다.** 저장소 루트의 [`AGENTS.md`](../../AGENTS.md)에 그렇게 지시돼 있어서입니다. Lab 08의 인계 문서가 이 보고서를 근거로 씁니다.
+이 명령은 화면에만 출력됩니다. 기록은 **프롬프트를 실행했을 때** 남습니다. 아래 Skill 프롬프트를 실행하면 **답변의 표와 설명이 그대로 저장소 루트의 `infra-report.md`에 섹션으로 추가됩니다.** [`AGENTS.md`](../../AGENTS.md)에 그렇게 지시돼 있어서입니다. Lab 08의 인계 문서가 이 보고서를 근거로 씁니다.
 
 그다음 resource group을 봅니다. Lab 05에서 배포와 함께 만들 것이므로 **지금 없어도 정상입니다.**
 

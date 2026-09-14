@@ -58,7 +58,7 @@ azure-resource-lookup Skill을 사용해 저장소 루트의 .env에서 RESOURCE
 ```bash
 set -a; . ./.env; set +a
 az aks get-credentials --resource-group "$RESOURCE_GROUP" --name "$AKS_NAME"
-bash scripts/add-report.sh --run deploy "node pool 분리 확인" "kubectl" -- kubectl get nodes -L kubernetes.azure.com/mode
+kubectl get nodes -L kubernetes.azure.com/mode
 kubectl create namespace "$NAMESPACE"
 ```
 
