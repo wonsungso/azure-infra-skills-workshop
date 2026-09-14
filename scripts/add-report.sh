@@ -26,6 +26,27 @@ section_title() {
     *) return 1 ;;
   esac
 }
+section_icon() {
+  case $1 in
+    env) echo "🌐" ;; capacity) echo "📊" ;; design) echo "🧭" ;; access) echo "🔐" ;;
+    plan) echo "📐" ;; validate) echo "🔍" ;; deploy) echo "🚀" ;; workload) echo "📦" ;;
+    incident) echo "🚨" ;; cleanup) echo "🧹" ;;
+  esac
+}
+section_desc() {
+  case $1 in
+    env)      echo "subscription·scope 확인" ;;
+    capacity) echo "quota와 용량 판정" ;;
+    design)   echo "Day-0 선택과 CIDR·SKU" ;;
+    access)   echo "역할과 scope" ;;
+    plan)     echo "계획·승인·IaC" ;;
+    validate) echo "build·보안·what-if" ;;
+    deploy)   echo "배포 결과와 생성 자원" ;;
+    workload) echo "샘플 워크로드 검증" ;;
+    incident) echo "증상·원인·복구" ;;
+    cleanup)  echo "삭제와 인계 사항" ;;
+  esac
+}
 
 USAGE="사용법:
   bash scripts/add-report.sh <장> \"<제목>\" \"<Skill 또는 도구>\" < 본문
@@ -55,17 +76,17 @@ redact() {
         if (ip ~ /^(0|10)\./ || ip ~ /^192\.168\./ || ip ~ /^172\.(1[6-9]|2[0-9]|3[01])\./)
           out = out ip
         else
-          out = out "<ip>"
+          out = out "[ip]"
         s = substr(s, RSTART + RLENGTH)
       }
       return out s
     }
     {
-      gsub(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/, "<id>")
-      gsub(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+/, "<user>")
-      gsub(/[A-Za-z0-9-]+\.onmicrosoft\.com/, "<tenant>")
-      gsub(/[A-Za-z]:\\Users\\[^\\]+/, "<home>")
-      gsub(/\/(home|Users)\/[^\/ ]+/, "<home>")
+      gsub(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/, "[id]")
+      gsub(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+/, "[user]")
+      gsub(/[A-Za-z0-9-]+\.onmicrosoft\.com/, "[tenant]")
+      gsub(/[A-Za-z]:\\Users\\[^\\]+/, "[home]")
+      gsub(/\/(home|Users)\/[^\/ ]+/, "[home]")
       print scrub_ip($0)
     }
   '
@@ -93,14 +114,10 @@ code_or_dash() { local v; v=$(env_value "$1"); [ -n "$v" ] && printf '`%s`' "$v"
 text_or_dash() { local v; v=$(env_value "$1"); [ -n "$v" ] && printf '%s' "$v" || printf '—'; }
 
 build_meta() {
-  cat <<EOF
-| 항목 | 내용 |
-| --- | --- |
-| 대상 클러스터 | $(code_or_dash AKS_NAME) |
-| Resource group | $(code_or_dash RESOURCE_GROUP) |
-| Region | $(text_or_dash REGION) |
-| 최종 갱신 | $(date '+%Y-%m-%d %H:%M') |
-EOF
+  local rg aks region
+  rg=$(text_or_dash RESOURCE_GROUP); aks=$(text_or_dash AKS_NAME); region=$(text_or_dash REGION)
+  printf '**%s** · %s · `%s`\n\n' "$aks" "$region" "$rg"
+  printf '> 이 문서는 Lab을 진행하는 동안 자동으로 작성됩니다. 최종 갱신 %s\n' "$(date '+%Y-%m-%d %H:%M')"
 }
 
 build_summary() {
@@ -123,21 +140,20 @@ if [ ! -f "$REPORT" ]; then
   {
     printf '# AKS 인프라 구성 보고서\n\n'
     printf '<!-- meta:begin -->\n<!-- meta:end -->\n\n'
+    printf '## 진행 현황\n\n'
+    printf '<!-- toc:begin -->\n<!-- toc:end -->\n\n'
     printf '## 구성 요약\n\n'
-    printf '<!-- summary:begin -->\n<!-- summary:end -->\n\n'
-    printf '## 목차\n\n'
-    printf '<!-- toc:begin -->\n<!-- toc:end -->\n'
+    printf '<!-- summary:begin -->\n<!-- summary:end -->\n'
     n=0
     for k in "${SECTION_KEYS[@]}"; do
       n=$((n+1))
-      printf '\n## %d. %s\n\n' "$n" "$(section_title "$k")"
+      printf '\n---\n\n## %d. %s\n\n' "$n" "$(section_title "$k")"
       printf '<!-- section:%s -->\n' "$k"
-      printf '기록되지 않았습니다.\n'
+      printf '아직 기록되지 않았습니다.\n'
       printf '<!-- end:%s -->\n' "$k"
     done
     printf '\n---\n\n'
-    printf '이 보고서는 Lab을 진행하는 동안 `scripts/add-report.sh`가 채웁니다.\n'
-    printf 'subscription·tenant ID, 공인 IP, 계정 이메일은 기록될 때 가려집니다. 커밋되지 않습니다(.gitignore).\n'
+    printf '<sub>`scripts/add-report.sh`가 작성 · subscription·tenant ID와 공인 IP, 계정, 로컬 경로는 가려짐 · 커밋되지 않음(.gitignore)</sub>\n'
   } > "$REPORT"
 fi
 
@@ -148,7 +164,7 @@ if [ "$RUN_MODE" -eq 1 ]; then
   shift 4
   [ $# -gt 0 ] || { echo "실행할 명령이 없습니다" >&2; exit 2; }
   OUT=$("$@" 2>&1); CODE=$?
-  [ "$CODE" -eq 0 ] && STATUS=관측 || STATUS="실패(exit $CODE)"
+  if [ "$CODE" -eq 0 ]; then STATUS='🟢 관측'; else STATUS="🔴 실패 (exit $CODE)"; fi
   CLEAN_OUT=$(printf '%s' "$OUT" | drop_noise | redact)
   CLEAN_CMD=$(quote_args "$@" | redact)
   LINES=$(printf '%s\n' "$CLEAN_OUT" | wc -l)
@@ -159,13 +175,13 @@ if [ "$RUN_MODE" -eq 1 ]; then
     RESULT_BLOCK=$(printf '```text\n%s\n```' "$CLEAN_OUT")
   fi
 
-  ENTRY=$(printf '### %s\n\n*%s · %s · %s*\n\n%s\n\n<details>\n<summary>실행한 명령</summary>\n\n```bash\n%s\n```\n\n</details>\n' \
-    "$TITLE" "$TOOL" "$STAMP" "$STATUS" "$RESULT_BLOCK" "$CLEAN_CMD")
+  ENTRY=$(printf '### %s\n\n%s · `%s` · %s\n\n%s\n\n<details>\n<summary>실행한 명령</summary>\n\n```bash\n%s\n```\n\n</details>\n' \
+    "$TITLE" "$STATUS" "$TOOL" "$STAMP" "$RESULT_BLOCK" "$CLEAN_CMD")
 else
   [ -t 0 ] && { echo "본문을 표준 입력으로 넘겨야 합니다." >&2; echo "$USAGE" >&2; exit 2; }
   BODY=$(cat | redact)
   [ -n "${BODY//[[:space:]]/}" ] || { echo "본문이 비어 있습니다" >&2; exit 2; }
-  ENTRY=$(printf '### %s\n\n*%s · %s*\n\n%s\n' "$TITLE" "$TOOL" "$STAMP" "$BODY")
+  ENTRY=$(printf '### %s\n\n🔵 검토 · `%s` · %s\n\n%s\n' "$TITLE" "$TOOL" "$STAMP" "$BODY")
   CODE=0
 fi
 
@@ -173,13 +189,25 @@ fi
 REPORT_ENTRY=$ENTRY awk -v key="$SECTION" '
   $0 == "<!-- section:" key " -->" { print; inside=1; next }
   $0 == "<!-- end:" key " -->"     { print ""; print ENVIRON["REPORT_ENTRY"]; print; inside=0; next }
-  inside && $0 == "기록되지 않았습니다." { next }
+  inside && $0 == "아직 기록되지 않았습니다." { next }
   { print }
 ' "$REPORT" > "$REPORT.tmp" && mv "$REPORT.tmp" "$REPORT"
 
-# 장별 기록 건수를 세어 목차를 다시 만든다
+# 장별 기록 건수를 세어 현황표를 다시 만든다
 build_toc() {
-  local n=0 key count
+  local n=0 key count done_n=0 total=${#SECTION_KEYS[@]}
+  for key in "${SECTION_KEYS[@]}"; do
+    count=$(awk -v k="$key" '
+      $0 == "<!-- section:" k " -->" { inside=1; next }
+      $0 == "<!-- end:" k " -->"     { inside=0 }
+      inside && /^### / { c++ }
+      END { print c+0 }
+    ' "$REPORT")
+    [ "$count" -gt 0 ] && done_n=$((done_n+1))
+  done
+
+  printf '**%d / %d 장** 기록됨\n\n' "$done_n" "$total"
+  printf '| | 장 | 내용 | 기록 |\n| :-: | --- | --- | :-: |\n'
   for key in "${SECTION_KEYS[@]}"; do
     n=$((n+1))
     count=$(awk -v k="$key" '
@@ -189,9 +217,12 @@ build_toc() {
       END { print c+0 }
     ' "$REPORT")
     if [ "$count" -gt 0 ]; then
-      printf -- '- [%d. %s](#%d-%s) · %d건\n' "$n" "$(section_title "$key")" "$n" "$(section_title "$key" | tr ' ' '-')" "$count"
+      printf '| %s | [%d. %s](#%d-%s) | %s | **%d** |\n' \
+        "$(section_icon "$key")" "$n" "$(section_title "$key")" \
+        "$n" "$(section_title "$key" | tr ' ' '-')" "$(section_desc "$key")" "$count"
     else
-      printf -- '- %d. %s · 기록 없음\n' "$n" "$(section_title "$key")"
+      printf '| %s | %d. %s | %s | — |\n' \
+        "$(section_icon "$key")" "$n" "$(section_title "$key")" "$(section_desc "$key")"
     fi
   done
 }
