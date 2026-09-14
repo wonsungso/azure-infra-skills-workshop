@@ -26,10 +26,10 @@ AKS는 만들고 나면 바꾸기 어려운 설정(네트워크 플러그인, CI
 ```bash
 set -a; . ./.env; set +a
 SCOPE="/subscriptions/$SUBSCRIPTION_ID/providers/Microsoft.Compute/locations/$REGION"
-bash scripts/log-evidence.sh "Lab 02 Step 1" "az CLI" -- \
+bash scripts/add-report.sh --run "Lab 02 Step 1 · DSv5 family quota" "az CLI" -- \
   az quota show --resource-name standardDSv5Family --scope "$SCOPE" \
     --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
-bash scripts/log-evidence.sh "Lab 02 Step 1" "az CLI" -- \
+bash scripts/add-report.sh --run "Lab 02 Step 1 · Total Regional vCPU quota" "az CLI" -- \
   az quota show --resource-name cores --scope "$SCOPE" \
     --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
 ```
@@ -103,7 +103,7 @@ azure-enterprise-infra-planner Skill을 사용해 이 교육용 AKS의 least pri
 - [ ] quota를 조회해 region·SKU·node 개수를 결정했다
 - [ ] Day-0 결정을 스스로 설명할 수 있다
 - [ ] 결정한 값을 [`set-env.sh`](../../scripts/set-env.sh)로 `.env`에 반영했다
-- [ ] 세 Step의 결과가 `evidence-log.md`에 남았다
+- [ ] 세 Step의 검토 결과가 `infra-report.md`에 섹션으로 남았다
 - [ ] 아직 아무것도 생성하지 않았다
 
 ## 🚧 문제가 생겼다면

@@ -117,12 +117,12 @@ cat .env
 먼저 **빠른 방법**으로 확인합니다. 단순 조회는 CLI가 몇 초면 끝납니다.
 
 ```bash
-bash scripts/log-evidence.sh "Lab 01 Step 5" "az CLI" -- az account show -o table
+bash scripts/add-report.sh --run "Lab 01 Step 5 · 내 Azure 범위" "az CLI" -- az account show -o table
 ```
 
-결과를 출력하며 동시에 저장소 루트의 `evidence-log.md`에도 기록합니다. 
+결과를 출력하면서 동시에 저장소 루트의 `infra-report.md`에 명령과 출력을 그대로 남깁니다.
 
-앞으로 Skill 프롬프트를 실행하면 **그 결론도 에이전트가 알아서 같은 파일에 남깁니다.** 저장소 루트의 [`AGENTS.md`](../../AGENTS.md)에 그렇게 지시돼 있어서입니다. Lab 08의 인계 문서가 이 기록을 근거로 씁니다.
+앞으로 Skill 프롬프트를 실행하면 **답변의 표와 설명이 그대로 같은 문서에 섹션으로 추가됩니다.** 저장소 루트의 [`AGENTS.md`](../../AGENTS.md)에 그렇게 지시돼 있어서입니다. Lab 08의 인계 문서가 이 보고서를 근거로 씁니다.
 
 그다음 resource group을 봅니다. Lab 05에서 배포와 함께 만들 것이므로 **지금 없어도 정상입니다.**
 
@@ -170,8 +170,8 @@ azure-resource-lookup Skill로 저장소 루트의 .env를 읽어 SUBSCRIPTION_I
 - [ ] `Microsoft.Quota` provider가 `Registered` 상태임을 확인했다
 - [ ] `.env`의 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워진 것을 확인했다
 - [ ] 조회한 subscription이 `.env`와 일치함을 확인했다
-- [ ] `evidence-log.md`에 실행 기록이 남았다
-- [ ] Skill 프롬프트를 실행한 뒤에도 `evidence-log.md`에 줄이 늘어나는지 확인했다
+- [ ] `infra-report.md`가 생성되고 조회 결과가 들어갔다
+- [ ] Skill 프롬프트를 실행한 뒤 그 답변이 보고서에 섹션으로 추가되는지 확인했다
 - [ ] 단순 조회와 판단을 각각 어떤 도구로 하는지 설명할 수 있다
 
 ## 🚧 문제가 생겼다면

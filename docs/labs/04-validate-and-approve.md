@@ -44,7 +44,7 @@ azure-enterprise-infra-planner Skill을 사용해 승인된 계획과 검증 증
 
 - 배포 대상(resource group, region)이 `.env`와 같은가?
 - 예상 비용과 삭제 책임자가 명확한가?
-- 승인자, 승인 시각을 증거 로그에 남겼는가?
+- 승인자, 승인 시각이 `infra-report.md`에 남았는가?
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>

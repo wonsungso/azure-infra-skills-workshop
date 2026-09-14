@@ -104,7 +104,7 @@ Azure 로그인과 Skill 동작 확인은 [Lab 01](docs/labs/01-orientation-and-
 > 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-이 저장소의 .env와 증거 로그를 읽고 현재 완료된 단계를 판별해줘. Azure에서 실제 상태를 조회해 문서와 비교하되 리소스를 변경하지 마. 다음 미완료 단계와 선행 조건만 제시해줘.
+이 저장소의 .env와 infra-report.md를 읽고 현재 완료된 단계를 판별해줘. Azure에서 실제 상태를 조회해 문서와 비교하되 리소스를 변경하지 마. 다음 미완료 단계와 선행 조건만 제시해줘.
 ```
 
 </details>
@@ -121,7 +121,7 @@ Azure 로그인과 Skill 동작 확인은 [Lab 01](docs/labs/01-orientation-and-
 | `azure-resource-visualizer` | 리소스 관계를 다이어그램으로 정리 |
 | MCP 도구 / CLI / `kubectl` | 제안을 실제로 실행 |
 
-Skill은 판단과 절차를, 도구는 실행을 담당합니다. **프롬프트에 Skill 이름을 썼다는 사실만으로는 증거가 되지 않습니다.** 실제 호출과 결과를 [`log-evidence.sh`](scripts/log-evidence.sh)로 남기세요.
+Skill은 판단과 절차를, 도구는 실행을 담당합니다. **프롬프트에 Skill 이름을 썼다는 사실만으로는 증거가 되지 않습니다.** 검토 결과는 [`add-report.sh`](scripts/add-report.sh)가 `infra-report.md`에 문서로 쌓습니다.
 
 ## ⚡ Skill을 쓰면 무엇이 달라지나
 
@@ -146,7 +146,7 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다. **프롬프�
 | `reference/kubernetes/` | 상품 페이지 manifest - **그대로 사용** |
 | `templates/` | [인계 문서 양식](templates/handoff-template.md) - Lab 08에서 채웁니다 |
 | `.devcontainer/` | Codespace 환경 정의 |
-| `scripts/` | `.env` 초기화([`init-workshop`](scripts/init-workshop.sh)), 값 반영([`set-env`](scripts/set-env.sh)), 실행 기록([`log-evidence`](scripts/log-evidence.sh)) |
+| `scripts/` | `.env` 초기화([`init-workshop`](scripts/init-workshop.sh)), 값 반영([`set-env`](scripts/set-env.sh)), 보고서 작성([`add-report`](scripts/add-report.sh)) |
 
 모든 Lab은 같은 순서를 따릅니다. 목표 → 왜 필요한가 → 시작 전에 → Step → 완료 체크리스트 → 문제가 생겼다면 → 다음 Lab.
 

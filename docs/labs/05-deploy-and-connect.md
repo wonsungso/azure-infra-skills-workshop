@@ -58,7 +58,7 @@ azure-resource-lookup Skill을 사용해 저장소 루트의 .env에서 RESOURCE
 ```bash
 set -a; . ./.env; set +a
 az aks get-credentials --resource-group "$RESOURCE_GROUP" --name "$AKS_NAME"
-bash scripts/log-evidence.sh "Lab 05 Step 2" "kubectl" -- kubectl get nodes -L kubernetes.azure.com/mode
+bash scripts/add-report.sh --run "Lab 05 Step 2 · node pool 분리 확인" "kubectl" -- kubectl get nodes -L kubernetes.azure.com/mode
 kubectl create namespace "$NAMESPACE"
 ```
 
@@ -83,7 +83,7 @@ kubectl create namespace "$NAMESPACE"
 - [ ] `NODE_RESOURCE_GROUP`이 `.env`에 반영됨
 - [ ] system/user node pool 분리를 확인
 - [ ] `lab` namespace를 직접 생성
-- [ ] `evidence-log.md`에 실행 기록이 남았다
+- [ ] 배포와 검증 결과가 `infra-report.md`에 남았다
 
 ## 🚧 문제가 생겼다면
 

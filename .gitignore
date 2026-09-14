@@ -26,7 +26,7 @@ secrets.json
 # OS / editor noise
 .DS_Store
 Thumbs.db
-/evidence-log.md
+/infra-report.md
 
 # Codespace 이름 (로컬 전용)
 .cs-name

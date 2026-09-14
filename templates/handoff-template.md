@@ -21,7 +21,7 @@ Deployment, Pod, Service, EndpointSlice, readiness와 내부 DNS 검증 결과�
 
 ## 검증과 문제 해결
 
-증거 로그 링크, 실패 증상, 원인, 복구 조치, 재검증 결과를 기록한다.
+`infra-report.md`의 해당 섹션, 실패 증상, 원인, 복구 조치, 재검증 결과를 기록한다.
 
 ## 미검증 및 정리
 
