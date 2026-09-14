@@ -17,7 +17,7 @@
 
 | 값 | 어디서 새어 나오나 | 대신 쓸 것 |
 | --- | --- | --- |
-| subscription ID, tenant ID, 사용자/객체 ID | `az account show`, `az deployment` 출력 | `[subscription-id]`, `<tenant-id>` |
+| subscription ID, tenant ID, 사용자/객체 ID | `az account show`, `az deployment` 출력 | `<subscription-id>`, `<tenant-id>` |
 | 개인 egress IP | Lab 01의 IP 조회, `authorizedIpRanges` | `<your-ip>/32` |
 | kubeconfig 내용, 클러스터 인증서, 토큰 | `az aks get-credentials`, `kubectl config view` | 절대 붙여넣지 않음 |
 | AKS FQDN, node resource group 실명 | `az aks show` 출력 | `<aks-fqdn>`, `MC_<rg>_<aks>_<region>` |
@@ -30,7 +30,7 @@
 - [인계 문서](templates/handoff-template.md)는 **참가자가 자기 환경에서 로컬로 채우는 양식**입니다. 실제 값을 채운 상태로 커밋하지 마세요.
 - 워크샵 공용 값은 저장소 루트의 `.env`에, Lab 결과는 `infra-report.md`에 들어 있으며 둘 다 `.gitignore` 대상입니다. 이 파일을 커밋하거나 내용을 문서·이슈에 붙여넣지 마세요.
 - 저장소에 커밋되는 것은 **자리 표시자가 들어간 빈 양식**뿐이어야 합니다.
-- 실제 값이 필요한 예시는 `[subscription-id]` 처럼 꺾쇠 자리 표시자를 쓰거나, 형태만 알 수 있게 마스킹합니다(예: `10.245.x.x`).
+- 실제 값이 필요한 예시는 `<subscription-id>` 처럼 꺾쇠 자리 표시자를 쓰거나, 형태만 알 수 있게 마스킹합니다(예: `10.245.x.x`).
 
 ### 스크린샷과 터미널 출력
 
