@@ -122,10 +122,10 @@ build_meta() {
 
 build_summary() {
   cat <<EOF
-| 구성 항목 | 값 | 정해진 곳 |
+| 구성 항목 | 값 | 수행 Lab |
 | --- | --- | --- |
 | VNet | $(code_or_dash VNET_NAME) | Lab 03 |
-| Node resource group | $(code_or_dash NODE_RESOURCE_GROUP) | Lab 05 배포 output |
+| Node resource group | $(code_or_dash NODE_RESOURCE_GROUP) | Lab 05 |
 | System node SKU | $(text_or_dash SYSTEM_VM_SIZE) | Lab 02 |
 | User node SKU | $(text_or_dash USER_VM_SIZE) | Lab 02 |
 | Pod CIDR | $(text_or_dash POD_CIDR) | Lab 02 |
@@ -207,7 +207,7 @@ build_toc() {
   done
 
   printf '**%d / %d 장** 기록됨\n\n' "$done_n" "$total"
-  printf '| | 장 | 내용 | 기록 |\n| :-: | --- | --- | :-: |\n'
+  printf '| | 장 | 내용 |\n| :-: | --- | --- |\n'
   for key in "${SECTION_KEYS[@]}"; do
     n=$((n+1))
     count=$(awk -v k="$key" '
@@ -217,11 +217,11 @@ build_toc() {
       END { print c+0 }
     ' "$REPORT")
     if [ "$count" -gt 0 ]; then
-      printf '| %s | [%d. %s](#%d-%s) | %s | **%d** |\n' \
+      printf '| %s | [%d. %s](#%d-%s) | %s |\n' \
         "$(section_icon "$key")" "$n" "$(section_title "$key")" \
-        "$n" "$(section_title "$key" | tr ' ' '-')" "$(section_desc "$key")" "$count"
+        "$n" "$(section_title "$key" | tr ' ' '-')" "$(section_desc "$key")"
     else
-      printf '| %s | %d. %s | %s | — |\n' \
+      printf '| %s | %d. %s | %s |\n' \
         "$(section_icon "$key")" "$n" "$(section_title "$key")" "$(section_desc "$key")"
     fi
   done
