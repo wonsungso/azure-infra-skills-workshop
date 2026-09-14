@@ -21,7 +21,15 @@
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 승인된 계획을 대상으로 배포 단계를 진행해줘. 배포 진행 상태와 생성된 자원을 기록하고, 실패하면 실제 오류를 분류해줘. 승인 범위를 벗어난 변경은 하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-enterprise-infra-planner Skill을 사용해 승인된 계획을 배포해줘.
+
+[해야 할 일]
+- 배포 진행 상태와 생성된 자원을 기록해줘
+- 실패하면 실제 오류를 분류해줘
+
+[하지 말 것]
+- 승인 범위를 벗어난 변경은 하지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 배포는 여러 분이 걸립니다. 성공 여부는 클러스터가 Ready가 된 뒤에만 판단합니다.
@@ -50,7 +58,20 @@ bash scripts/set-env.sh NODE_RESOURCE_GROUP \
 > 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-resource-lookup Skill을 사용해 저장소 루트의 .env에서 RESOURCE_GROUP과 AKS_NAME을 읽고, 해당 AKS의 실제 상태와 node resource group을 읽기 전용으로 확인해줘. 이후 Entra 기반으로 클러스터에 접속하는 데 필요한 점검 항목을 제시해줘. 역할을 변경하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-resource-lookup Skill을 사용해 AKS의 실제 상태를 확인해줘.
+
+[읽을 값]
+- 저장소 루트 .env의 RESOURCE_GROUP, AKS_NAME
+
+[확인할 것]
+- 해당 AKS의 실제 상태와 node resource group (읽기 전용)
+
+[그다음]
+- Entra 기반으로 클러스터에 접속하는 데 필요한 점검 항목을 제시해줘
+
+[하지 말 것]
+- 역할을 변경하지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 클러스터가 Ready라면 credentials를 가져와 node를 확인하고, 실습용 namespace를 **직접** 만듭니다.

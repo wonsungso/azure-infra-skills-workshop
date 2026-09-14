@@ -26,7 +26,31 @@ cat .env
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해줘. 저장소 루트의 .env에서 RESOURCE_GROUP, AKS_NAME, REGION, EGRESS_IP_CIDR, POD_CIDR, SERVICE_CIDR, DNS_SERVICE_IP, SYSTEM_VM_SIZE, USER_VM_SIZE를 읽어 쓰고, 비어 있는 값이 있으면 추측하지 말고 먼저 알려줘. Lab 02의 Day-0 검토와 least privilege 매트릭스를 반영해줘. public API server의 authorized IP ranges는 EGRESS_IP_CIDR만 사용하고, Entra와 Azure RBAC for Kubernetes를 사용하며 local accounts는 비활성화해줘. system/user node pool 분리, Azure CNI Overlay + Cilium, load balancer egress, 비중첩 CIDR을 포함해줘. 대안, 위험, 비용 요인을 보여주고 계획 승인 전에는 멈춰. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해줘.
+
+[읽을 값]
+- 저장소 루트 .env의 RESOURCE_GROUP, AKS_NAME, REGION, EGRESS_IP_CIDR,
+  POD_CIDR, SERVICE_CIDR, DNS_SERVICE_IP, SYSTEM_VM_SIZE, USER_VM_SIZE
+- 비어 있는 값이 있으면 추측하지 말고 먼저 알려줘
+- Lab 02의 Day-0 검토와 least privilege 매트릭스를 반영해줘
+
+[보안 요구]
+- public API server의 authorized IP ranges는 EGRESS_IP_CIDR만 사용
+- Entra와 Azure RBAC for Kubernetes 사용
+- local accounts는 비활성화
+
+[구성 요구]
+- system/user node pool 분리
+- Azure CNI Overlay + Cilium
+- load balancer egress
+- 서로 겹치지 않는 CIDR
+
+[출력]
+- 대안, 위험, 비용 요인
+
+[하지 말 것]
+- 계획 승인 전에는 멈춰
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 **진행 방식**
@@ -48,7 +72,16 @@ azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해�
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **검토를 마쳤다면 아래 프롬프트를 복사해 실행**
 
 ```text
-이 계획을 승인합니다. azure-enterprise-infra-planner Skill의 Phase 5에 따라 .azure/infrastructure-plan.json의 meta.status를 approved로 바꾸고, 승인자와 승인 시각을 함께 기록해줘. 그다음 어떤 값이 approved로 바뀌었는지 보여줘. 아직 IaC 생성이나 배포로 넘어가지는 마.
+이 계획을 승인합니다.
+
+[해야 할 일]
+- azure-enterprise-infra-planner Skill의 Phase 5에 따라
+  .azure/infrastructure-plan.json의 meta.status를 approved로 바꿔줘
+- 승인자와 승인 시각을 함께 기록해줘
+- 어떤 값이 approved로 바뀌었는지 보여줘
+
+[하지 말 것]
+- 아직 IaC 생성이나 배포로 넘어가지 마
 ```
 
 **확인할 것**
@@ -66,7 +99,21 @@ grep -A3 '"meta"' .azure/infrastructure-plan.json
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 승인된 infrastructure plan과 .env를 읽어 Bicep을 생성해줘. 기존 foundation 자원은 참조하고, 변경 대상과 생성 파일을 설명해줘. 그 Skill이 요구하는 로컬 문법 확인(az bicep build)까지는 해도 되지만, Azure에 자원을 만들거나 바꾸는 명령은 실행하지 마. 보안 검사와 what-if는 Lab 04에서 한다. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
+
+[읽을 값]
+- 승인된 infrastructure plan
+- 저장소 루트의 .env
+
+[해야 할 일]
+- 기존 foundation 자원은 참조만 하고 덮어쓰지 마
+- 변경 대상과 생성 파일을 설명해줘
+- 그 Skill이 요구하는 로컬 문법 확인(az bicep build)까지는 해도 돼
+
+[하지 말 것]
+- Azure에 자원을 만들거나 바꾸는 명령은 실행하지 마
+- 보안 검사와 what-if는 Lab 04에서 하니 여기서는 하지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 이 Skill은 생성한 Bicep의 **문법 확인을 자기 절차의 일부로** 봅니다. 그래서 "검증하지 마"라고 막으면 생성 자체를 거부합니다. 여기서 미루는 것은 **Azure를 건드리는 일**뿐이고, 로컬에서 끝나는 `az bicep build`는 비용도 영향도 없으므로 허용합니다.

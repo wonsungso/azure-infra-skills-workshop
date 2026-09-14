@@ -37,7 +37,26 @@ az quota show --resource-name cores --scope "$SCOPE" \
 > 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-quotas Skill을 사용해 저장소 루트의 .env에서 SUBSCRIPTION_ID와 REGION을 읽고, 해당 region의 Standard DSv5 family vCPU와 Total Regional vCPU의 quota와 현재 사용량을 확인해줘. 장치명은 standardDSv5Family와 cores이고, 값은 properties.limit.value와 properties.usages.value에 있어. AKS node 3대(Standard_D4s_v5 2대 + Standard_D2s_v5 1대 = 10 vCPU)를 만들 수 있는지 판단하고, 부족하면 대안 region도 알려줘. 어느 명령으로 확인했는지 같이 알려줘. Azure 리소스는 만들거나 바꾸지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-quotas Skill을 사용해 AKS node를 만들 quota가 남아 있는지 확인해줘.
+
+[읽을 값]
+- 저장소 루트 .env의 SUBSCRIPTION_ID, REGION
+
+[확인할 것]
+- 해당 region의 Standard DSv5 family vCPU quota와 현재 사용량
+- 해당 region의 Total Regional vCPU quota와 현재 사용량
+- 장치명은 standardDSv5Family와 cores
+- 값은 properties.limit.value와 properties.usages.value에 있음
+
+[판단할 것]
+- node 3대를 만들 수 있는가
+  (Standard_D4s_v5 2대 + Standard_D2s_v5 1대 = 10 vCPU)
+- 부족하면 대안 region도 알려줘
+- 어느 명령으로 확인했는지 같이 알려줘
+
+[하지 말 것]
+- Azure 리소스는 만들거나 바꾸지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 **확인할 것**
@@ -62,7 +81,21 @@ bash scripts/set-env.sh \
 > 🧠 **Skill** `azure-kubernetes` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해줘. Standard 운영 모드, system/user pool 분리, Azure CNI Overlay + Cilium, load balancer egress, public API authorized IP ranges를 기준으로 대안과 위험을 표로 정리해줘. Azure 리소스는 만들거나 바꾸지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해줘.
+
+[검토 기준]
+- Standard 운영 모드
+- system/user pool 분리
+- Azure CNI Overlay + Cilium
+- load balancer egress
+- public API server의 authorized IP ranges
+
+[출력]
+- 기준별 대안과 위험을 표로 정리
+
+[하지 말 것]
+- Azure 리소스는 만들거나 바꾸지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 **사람이 판단할 것**
@@ -89,7 +122,21 @@ bash scripts/set-env.sh \
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 이 교육용 AKS의 least privilege 매트릭스를 작성해줘. Azure 리소스 배포자, 역할 할당자, AKS control-plane managed identity, lab namespace 사용자를 분리하고 scope와 필요한 작업을 표로 보여줘. 계획만 세우고 권한을 변경하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-enterprise-infra-planner Skill을 사용해 이 교육용 AKS의
+least privilege 매트릭스를 작성해줘.
+
+[분리할 주체]
+- Azure 리소스 배포자
+- 역할 할당자
+- AKS control-plane managed identity
+- lab namespace 사용자
+
+[출력]
+- 주체별 scope와 필요한 작업을 표로
+
+[하지 말 것]
+- 계획만 세우고 권한을 변경하지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 "리소스를 배포하는 권한"과 "남에게 역할을 부여하는 권한"은 다릅니다. **Azure 권한과 Kubernetes 내부 권한도 완전히 다른 시스템**입니다. 이 표는 Lab 08 인계 문서에 그대로 들어갑니다.

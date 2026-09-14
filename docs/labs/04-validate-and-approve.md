@@ -25,7 +25,23 @@ ls infra/ && grep -A3 '"meta"' .azure/infrastructure-plan.json
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 승인된 infrastructure plan과 infra/ 아래의 기존 Bicep을 읽어줘. 코드를 다시 생성하지 말고, 그 Skill의 검증 단계를 따라 Bicep build, 보안 검사, ARM validation 또는 what-if를 수행해줘. 실제로 실행한 명령과 그 결과, 실패 항목을 정리해줘. 검증 결과 고쳐야 할 것이 있으면 어디를 왜 고쳐야 하는지 먼저 설명해줘. 배포는 하지 마. 검증되지 않은 결과는 예상으로 표시해줘. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
+
+[읽을 값]
+- 승인된 infrastructure plan
+- infra/ 아래의 기존 Bicep
+
+[해야 할 일]
+- 그 Skill의 검증 단계를 따라 Bicep build, 보안 검사,
+  ARM validation 또는 what-if를 수행해줘
+- 실제로 실행한 명령과 그 결과, 실패 항목을 정리해줘
+- 고쳐야 할 것이 있으면 어디를 왜 고쳐야 하는지 먼저 설명해줘
+- 검증되지 않은 결과는 예상으로 표시해줘
+
+[하지 말 것]
+- 코드를 다시 생성하지 마
+- 배포는 하지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 **확인할 것**
@@ -41,7 +57,23 @@ azure-enterprise-infra-planner Skill을 사용해 승인된 infrastructure plan�
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 승인된 계획과 검증 증거를 읽어줘. 배포 대상, 생성 또는 변경될 자원, 권한 요구, 비용 및 삭제 책임을 요약한 뒤 명시적 배포 승인을 요청해줘. 승인을 받기 전에는 Azure 리소스를 생성하거나 변경하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
+
+[읽을 값]
+- 승인된 계획과 검증 증거
+
+[요약할 것]
+- 배포 대상
+- 생성 또는 변경될 자원
+- 권한 요구
+- 비용과 삭제 책임
+
+[그다음]
+- 명시적 배포 승인을 요청해줘
+
+[하지 말 것]
+- 승인을 받기 전에는 Azure 리소스를 생성하거나 변경하지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 **확인할 것**

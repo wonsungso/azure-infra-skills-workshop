@@ -48,7 +48,19 @@ ls .github/skills
 > 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-quotas, azure-kubernetes, azure-enterprise-infra-planner, azure-resource-lookup, azure-diagnostics, azure-resource-visualizer Skill을 지금 쓸 수 있는지 하나씩 확인해서 표로 알려줘. 없는 것이 있으면 그대로 알려줘. 아무것도 실행하지 마.
+아래 6개 Skill을 지금 쓸 수 있는지 하나씩 확인해서 표로 알려줘.
+
+[확인 대상]
+- azure-quotas
+- azure-kubernetes
+- azure-enterprise-infra-planner
+- azure-resource-lookup
+- azure-diagnostics
+- azure-resource-visualizer
+
+[하지 말 것]
+- 없는 것이 있으면 대체 방법을 찾지 말고 그대로 알려줘
+- 아무것도 실행하지 마
 ```
 
 여섯 개가 모두 있어야 합니다.
@@ -141,7 +153,18 @@ az group show -n "$RESOURCE_GROUP" -o table 2>/dev/null || echo "아직 없음 -
 > 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-resource-lookup Skill로 저장소 루트의 .env를 읽어 SUBSCRIPTION_ID와 RESOURCE_GROUP을 확인하고, 그 resource group의 존재 여부만 확인해줘. 없으면 "없음", 접근이 막혀 있으면 권한 부족으로 구분해서 한 줄로 답해줘. 리소스를 만들거나 바꾸지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-resource-lookup Skill을 사용해 resource group의 존재 여부를 확인해줘.
+
+[읽을 값]
+- 저장소 루트 .env의 SUBSCRIPTION_ID, RESOURCE_GROUP
+
+[답할 것]
+- 존재 여부만 한 줄로
+- 없으면 "없음", 접근이 막혀 있으면 "권한 부족"으로 구분
+
+[하지 말 것]
+- 리소스를 만들거나 바꾸지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 **Skill 응답은 CLI보다 느립니다.** 도구를 여러 번 호출하고 결과를 해석하기 때문입니다. 그만큼 더 복잡한 작업 혹은 질문에 써야 합니다.

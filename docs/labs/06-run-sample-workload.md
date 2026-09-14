@@ -23,7 +23,22 @@
 > 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-reference/kubernetes/lab-web.yaml을 검토해줘. ConfigMap으로 주입되는 index.html, projected volume이 ConfigMap과 Downward API를 합치는 방식, namespace, nodeSelector, non-root 보안 설정, requests/limits, readiness/liveness, ClusterIP Service를 설명하고 적용 대상과 검증 순서를 제시해줘. 적용하지 마.
+reference/kubernetes/lab-web.yaml을 검토해줘.
+
+[설명할 것]
+- ConfigMap으로 주입되는 index.html
+- projected volume이 ConfigMap과 Downward API를 합치는 방식
+- namespace와 nodeSelector
+- non-root 보안 설정
+- requests와 limits
+- readiness와 liveness probe
+- ClusterIP Service
+
+[그다음]
+- 적용 대상과 검증 순서를 제시해줘
+
+[하지 말 것]
+- 적용하지 마
 ```
 
 **이 manifest의 핵심 아이디어** - 화면을 보여주려고 새 컨테이너 이미지를 만들지 않습니다. 대신 세 조각을 조립합니다.
