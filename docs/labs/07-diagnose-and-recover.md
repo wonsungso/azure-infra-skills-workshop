@@ -22,7 +22,8 @@
 존재하지 않는 이미지 태그로 바꿔 Pod가 뜨지 못하게 만듭니다.
 
 ```bash
-kubectl set image deployment/lab-web web=nginxinc/nginx-unprivileged:does-not-exist -n lab
+bash scripts/log-evidence.sh "Lab 07 Step 1" "kubectl" -- \
+  kubectl set image deployment/lab-web web=nginxinc/nginx-unprivileged:does-not-exist -n lab
 ```
 
 > [!NOTE]
@@ -61,7 +62,8 @@ azure-diagnostics를 사용해 lab namespace의 샘플 Deployment가 준비되�
 복구 변경(올바른 이미지로 되돌리기)을 승인한 뒤 적용하고, [Lab 06](06-run-sample-workload.md)의 계층별 확인을 다시 수행합니다.
 
 ```bash
-kubectl rollout undo deployment/lab-web -n lab
+bash scripts/log-evidence.sh "Lab 07 Step 3" "kubectl" -- \
+  kubectl rollout undo deployment/lab-web -n lab
 ```
 
 > [!NOTE]

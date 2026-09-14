@@ -73,6 +73,16 @@ if [ -n "$hits" ]; then printf '%s\n' "$hits"; echo "확인 필요: 커밋하지
 
 ## 📋 저장소 가이드라인
 
+### 커밋 메시지
+
+커밋 메시지는 **영어로** 씀니다. 제목은 명령형 현재시제 한 줄이고, 본문이 필요하면 무엇을 왜 바꿨는지 적습니다. 문서 본문은 한국어를 유지합니다.
+
+```text
+Auto-fill .env and evidence log from the environment
+
+Participants had to type values the tooling already knows.
+```
+
 ### 목적
 
 이 저장소는 **Azure Skills를 사용해 AKS 인프라를 설계·검증·배포·문서화하는 6시간 자기주도형 워크샵**입니다.
@@ -82,6 +92,8 @@ if [ -n "$hits" ]; then printf '%s\n' "$hits"; echo "확인 필요: 커밋하지
 - AKS는 소재일 뿐이고, 핵심은 "계획 승인 → 코드 → 검증 → 배포 승인 → 배포"라는 안전한 절차입니다
 - 실행 환경은 **GitHub Codespaces**가 기본입니다. 도구 설치는 `.devcontainer/`가 담당하므로, Lab 문서에 설치 절차를 다시 쓰지 않습니다
 - 프롬프트와 입력값은 **해당 Lab 본문 안에** 둡니다. 별도의 프롬프트 모음 파일이나 입력표 파일을 다시 만들지 않습니다
+- **기계가 알 수 있는 값은 사람이 타이핑하게 하지 않습니다.** 조회로 얻는 값은 `scripts/init-workshop.sh`가 채우고, 사람이 결정한 값은 `scripts/set-env.sh`로 반영하며, 실행 기록은 `scripts/log-evidence.sh`가 남깁니다. 문서에 "손으로 적으세요"라고 쓰지 않습니다
+- 반대로 **판단이 필요한 값**(region, CIDR, SKU, 승인 여부)은 자동으로 정하지 않습니다. 사람이 결정하고 도구는 기록만 돕습니다
 
 ### 용어 표기
 

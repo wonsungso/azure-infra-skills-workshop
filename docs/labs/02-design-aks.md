@@ -31,7 +31,18 @@ azure-quotas를 사용해 내 subscription에서 [region]의 Standard DSv5 famil
 
 - 기본 구성은 **10 vCPU**가 필요합니다. 여유가 있나요?
 - 부족하면 region을 바꾸거나 node 개수·SKU를 줄입니다.
-- 결정한 region·SKU·node 개수를 `.env`에 기록합니다.
+
+결정했다면 `.env`에 반영합니다. 손으로 편집하지 말고 아래를 씁니다. 없는 항목명을 쓰면 오타로 보고 멈춥니다.
+
+```bash
+bash scripts/set-env.sh \
+  REGION koreacentral \
+  SYSTEM_VM_SIZE Standard_D4s_v5 \
+  USER_VM_SIZE Standard_D2s_v5
+```
+
+> [!WARNING]
+> 위 값은 **예시일 뿐입니다.** 방금 조회한 내 quota 결과에 맞는 값을 넣으세요. region·SKU·node 개수는 기계가 대신 정해줄 수 없는 **사람의 판단**입니다.
 
 > [!TIP]
 > 여기서 얻은 **실제 조회 결과**가 이후 프롬프트의 근거가 됩니다. Skill은 내 subscription의 용량을 추측하지 않습니다.
@@ -83,7 +94,7 @@ azure-rbac을 사용해 이 교육용 AKS의 least privilege 매트릭스를 작
 
 - [ ] quota를 조회해 region·SKU·node 개수를 결정했다
 - [ ] Day-0 결정을 스스로 설명할 수 있다
-- [ ] 결정한 값을 `.env`에 기록했다
+- [ ] 결정한 값을 `scripts/set-env.sh`로 `.env`에 반영했다
 - [ ] least privilege 매트릭스를 증거 로그에 연결했다
 - [ ] 아직 아무것도 생성하지 않았다
 

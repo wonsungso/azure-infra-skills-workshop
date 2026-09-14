@@ -147,7 +147,7 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다. **프롬프�
 | `reference/kubernetes/` | 상품 페이지 manifest - **그대로 사용** |
 | `templates/` | 증거 로그, 인계 문서 양식 |
 | `.devcontainer/` | Codespace 환경 정의 |
-| `scripts/` | 워크샵 공용 값(`.env`) 초기화 |
+| `scripts/` | `.env`·증거 로그 초기화(`init-workshop`), 값 반영(`set-env`), 실행 기록(`log-evidence`) |
 
 모든 Lab은 같은 순서를 따릅니다. 목표 → 왜 필요한가 → 시작 전에 → Step → 완료 체크리스트 → 문제가 생겼다면 → 다음 Lab.
 
@@ -158,3 +158,11 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다. **프롬프�
 - authorized IP ranges에 `0.0.0.0/0`을 넣지 않습니다. 접속이 안 되면 내 egress IP부터 다시 확인합니다.
 - 샘플은 `lab` namespace에서만 실행하고 외부 LoadBalancer나 Ingress를 만들지 않습니다.
 - subscription ID, tenant ID, kubeconfig 내용은 저장소에 기록하지 않습니다([AGENTS.md](AGENTS.md) 참고).
+
+---
+
+## 준비되셨나요?
+
+### ➡️ [Lab 01: 워크샵 시작하기](docs/labs/01-orientation-and-setup.md)
+
+앞 Lab의 결과물이 다음 Lab의 입력입니다. 순서대로 진행하세요.

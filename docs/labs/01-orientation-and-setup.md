@@ -2,7 +2,7 @@
 
 **Lab 1 / 8** · 1부 · 설계와 검증 · ⏱ 30분
 
-🎯 Skill·도구·사람의 역할 구분 / 입력값 확정 / 내 Azure 범위를 읽기 전용으로 확인
+🎯 Skill·도구·사람의 역할 구분 / 자동으로 채워진 입력값 확인 / 내 Azure 범위를 읽기 전용으로 확인
 
 🧠 `azure-resource-lookup`
 
@@ -34,69 +34,89 @@ Skill에게 작업을 요청하면 Skill은 절차와 판단 기준을, MCP 도�
 > [!TIP]
 > 헷갈리면 "지금 이 작업이 Azure를 바꾸나요, 읽기만 하나요?"를 먼저 물어보세요.
 
-## Step 2. 입력값 채우기 (10분)
+## Step 2. 입력값 확인하기 (5분)
 
-이후 모든 프롬프트가 저장소 루트의 `.env`를 공유합니다. 리소스 이름은 미리 채워져 있고, 빈 칸을 Lab을 진행하며 넣습니다.
+이후 모든 프롬프트가 저장소 루트의 `.env`를 공유합니다. **직접 타이핑할 값은 없습니다.** Codespace가 만들어질 때 리소스 이름과 egress IP가 채워졌고, `az login` 후 아래를 한 번 더 실행하면 subscription까지 채워집니다.
 
 ```bash
+bash scripts/init-workshop.sh
 cat .env
 ```
 
-**이번 Lab에서 채울 것**은 두 가지입니다.
-
-| 항목 | 어떻게 |
+| 항목 | 채우는 방식 |
 | --- | --- |
-| `SUBSCRIPTION_ID` | Step 3에서 조회 |
-| `EGRESS_IP_CIDR` | 아래에서 지금 조회 |
+| `WORKSHOP_ID`와 리소스 이름 | Codespace 생성 시 자동 |
+| `EGRESS_IP_CIDR` | 자동 (ipify 조회) |
+| `SUBSCRIPTION_ID` | 자동 (`az login` 후 재실행) |
+| `REGION`, CIDR, VM SKU | **Lab 02에서 내가 결정** |
+| `NODE_RESOURCE_GROUP` | Lab 05 배포 후 output |
 
-`REGION`, CIDR, VM SKU는 Lab 02에서 quota를 확인한 뒤 채우고, `NODE_RESOURCE_GROUP`은 Lab 05 배포 후 output으로 채웁니다.
-
-**egress IP를 지금 조회합니다.** AKS API server에 접근할 수 있는 유일한 주소가 됩니다.
-
-```bash
-curl -s https://api.ipify.org
-```
-
-조회된 값을 `<IP>/32` 형식으로 기록하세요.
+자동으로 알 수 있는 값과 **사람이 결정해야 하는 값**을 구분하세요. 뒤의 네 가지는 quota와 기존 네트워크를 보고 판단해야 해서 자동화할 수 없습니다.
 
 > [!IMPORTANT]
-> Codespace에서 실행하면 내 PC의 IP가 아니라 **Codespace의 egress IP**가 나옵니다. authorized IP ranges에는 이 값을 넣어야 하므로, 반드시 **Codespace 터미널에서** 조회하세요.
+> `EGRESS_IP_CIDR`은 내 PC가 아니라 **Codespace의 egress IP**입니다. AKS API server에 접근할 수 있는 유일한 주소가 되므로 반드시 Codespace 안에서 조회된 값이어야 합니다.
 >
-> Codespace를 중지했다가 다시 시작하면 이 IP가 바뀔 수 있습니다. Lab 05 이후 API server 접속이 갑자기 안 되면 이 값부터 다시 확인합니다.
+> Codespace를 중지했다가 다시 시작하면 이 IP가 바뀔 수 있습니다. Lab 05 이후 접속이 갑자기 안 되면 `bash scripts/init-workshop.sh`를 다시 실행해 갱신하세요.
 
 > [!WARNING]
-> 확실하지 않은 값을 추측해서 채우지 마세요. 이후 모든 프롬프트가 잘못된 전제를 쓰게 됩니다. 비밀번호, token, kubeconfig 내용은 절대 적지 않습니다.
+> 비밀번호, token, kubeconfig 내용은 `.env`에 적지 않습니다. 이 파일은 `.gitignore` 대상이므로 커밋되지 않습니다.
 
-## Step 3. 내 Azure 범위 확인하기 (15분)
+## Step 3. 내 Azure 범위 확인하기 (10분)
 
-> 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+먼저 **빠른 방법**으로 확인합니다. 단순 조회는 CLI가 몇 초면 끝납니다.
 
-```text
-azure-resource-lookup을 사용해 내 subscription과 [resource-group]을 읽기 전용으로 확인해줘. 리소스를 생성·변경·삭제하지 말고, 접근 불가 항목은 권한 부족으로 구분해줘.
+```bash
+bash scripts/log-evidence.sh "Lab 01 Step 3" "az CLI" -- az account show -o table
+```
+
+결과를 보여주면서 동시에 `evidence-log.md`에 한 줄을 기록합니다. 따로 적을 필요가 없습니다.
+
+그다음 resource group을 봅니다. Lab 05에서 배포와 함께 만들 것이므로 **지금 없어도 정상입니다.**
+
+```bash
+set -a; . ./.env; set +a
+az group show -n "$RESOURCE_GROUP" -o table 2>/dev/null || echo "아직 없음 - 정상입니다"
 ```
 
 **확인할 것**
 
-- 조회된 subscription·region이 `.env`와 같은가?
-- resource group이 없다면 **지금 만들지 않고** 이름만 확정합니다. 생성은 Lab 05에서 배포와 함께 합니다.
+- 표시된 subscription이 `.env`의 `SUBSCRIPTION_ID`와 같은가?
 - 그룹에 다른 리소스가 이미 있다면, Lab 08에서 실수로 지우지 않도록 목록을 기록해 둡니다.
+
+### Skill은 언제 쓰나
+
+위 두 명령으로 "무엇이 있는가"는 알 수 있습니다. 하지만 **"접근이 안 되는 게 권한 때문인지, 없어서인지"** 같은 구분은 CLI가 대신해주지 않습니다. 그럴 때 Skill을 씁니다.
+
+> 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+
+```text
+azure-resource-lookup으로 내 subscription에서 [resource-group]의 존재 여부만 확인해줘. 없으면 "없음", 접근이 막혀 있으면 권한 부족으로 구분해서 한 줄로 답해줘. 리소스를 만들거나 바꾸지 마.
+```
+
+> [!NOTE]
+> **Skill 응답은 CLI보다 느립니다.** 도구를 여러 번 호출하고 결과를 해석하기 때문입니다. 그만큼 값어치가 있는 질문에 써야 합니다.
+>
+> **단순 조회는 CLI, 판단·절차·위험 검토는 Skill.** 이 구분이 이번 Lab의 진짜 교훈입니다. Lab 02부터는 quota 판정과 Day-0 설계 검토처럼 CLI 한 줄로 대체할 수 없는 작업이 이어집니다.
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>
 
 | 방식 | 이 단계에서 벌어지는 일 |
 | --- | --- |
-| 🖐 수동 | `az account show`, `az group show`를 직접 조합한다. **무엇을 확인해야 하는지** 스스로 알아야 한다. |
+| 🖐 수동 | `az account show`, `az group show`를 직접 조합한다. **가장 빠르지만** 무엇을 확인해야 하는지 스스로 알아야 한다. |
 | 💬 일반 프롬프트 | 실제 조회 없이 그럴듯한 결과를 지어낼 수 있다. 읽기 전용이라는 보장도 없다. |
-| ⚡ Skill | 조회 도구를 실제로 호출하고, 접근 불가 항목을 **권한 부족으로 구분**해 알려준다. |
+| ⚡ Skill | 조회 도구를 실제로 호출하고, 접근 불가 항목을 **권한 부족으로 구분**해 알려준다. 대신 느리다. |
+
+이번 Lab처럼 **답이 분명한 조회**는 수동이 유리합니다. Skill의 값어치는 Lab 02 이후처럼 **판단과 절차가 필요할 때** 드러납니다.
 
 </details>
 
 ## ✅ 완료 체크리스트
 
-- [ ] Codespace 터미널에서 egress IP를 조회해 `.env`에 기록했다
-- [ ] 조회 결과가 `.env`와 일치함을 확인했다
-- [ ] [증거 로그](../../templates/evidence-log.md)에 기록했다
+- [ ] `.env`의 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워진 것을 확인했다
+- [ ] 조회한 subscription이 `.env`와 일치함을 확인했다
+- [ ] `evidence-log.md`에 실행 기록이 남았다
+- [ ] 단순 조회와 판단을 각각 어떤 도구로 하는지 설명할 수 있다
 
 ## 🚧 문제가 생겼다면
 

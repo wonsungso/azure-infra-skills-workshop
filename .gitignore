@@ -26,3 +26,4 @@ secrets.json
 # OS / editor noise
 .DS_Store
 Thumbs.db
+/evidence-log.md

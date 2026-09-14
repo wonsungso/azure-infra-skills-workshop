@@ -27,7 +27,13 @@
 배포는 여러 분이 걸립니다. 기다리는 동안 [Lab 06](06-run-sample-workload.md)의 manifest를 미리 읽어도 좋습니다. 다만 성공 여부는 클러스터가 Ready가 된 뒤에만 판단합니다.
 
 > [!TIP]
-> 배포가 끝나면 출력값 `aksResourceName`, `vnetName`, `nodeResourceGroup`을 확인해 증거 로그에 기록하세요. 다음 Step에서 접속할 때 그대로 씁니다.
+> 배포가 끝나면 node resource group을 `.env`에 반영합니다. Azure가 만들어 준 이름이라 직접 보고 적을 필요가 없습니다.
+>
+> ```bash
+> set -a; . ./.env; set +a
+> bash scripts/set-env.sh NODE_RESOURCE_GROUP \
+>   "$(az aks show -g "$RESOURCE_GROUP" -n "$AKS_NAME" --query nodeResourceGroup -o tsv)"
+> ```
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>
@@ -48,12 +54,13 @@
 azure-resource-lookup을 사용해 [aks-name]의 실제 상태와 node resource group을 읽기 전용으로 확인해줘. 이후 Entra 기반으로 클러스터에 접속하는 데 필요한 점검 항목을 제시해줘. 역할을 변경하지 마.
 ```
 
-클러스터가 Ready라면 credentials를 가져와 node를 확인하고, 실습용 namespace를 **직접** 만듭니다.
+클러스터가 Ready라면 credentials를 가져와 node를 확인하고, 실습용 namespace를 **직접** 만듭니다. 리소스 이름은 `.env`에 이미 있으므로 그대로 씁니다.
 
 ```bash
-az aks get-credentials --resource-group <resource-group> --name <aksResourceName>
-kubectl get nodes
-kubectl create namespace lab
+set -a; . ./.env; set +a
+az aks get-credentials --resource-group "$RESOURCE_GROUP" --name "$AKS_NAME"
+bash scripts/log-evidence.sh "Lab 05 Step 2" "kubectl" -- kubectl get nodes -L kubernetes.azure.com/mode
+kubectl create namespace "$NAMESPACE"
 ```
 
 **확인할 것**
@@ -75,10 +82,10 @@ kubectl create namespace lab
 ## ✅ 완료 체크리스트
 
 - [ ] 클러스터가 실제로 Ready 상태임을 확인
-- [ ] 실제 배포된 클러스터 이름(`aksResourceName`)을 기록
+- [ ] `NODE_RESOURCE_GROUP`이 `.env`에 반영됨
 - [ ] system/user node pool 분리를 확인
 - [ ] `lab` namespace를 직접 생성
-- [ ] 위 결과를 증거 로그에 기록
+- [ ] `evidence-log.md`에 실행 기록이 남았다
 
 ## 🚧 문제가 생겼다면
 
@@ -87,7 +94,7 @@ kubectl create namespace lab
 | 배포가 quota 오류로 실패 | vCPU 한도 초과 또는 region 용량 부족 | [Lab 02](02-design-aks.md) Step 1로 돌아가 node 개수·SKU를 줄이거나 region 변경 |
 | 배포가 정책 오류로 실패 | Azure Policy 제약 | 위반한 정책 이름을 확인하고 해당 설정만 조정 |
 | API server 접속 불가 | authorized IP ranges 미반영, 전파 지연, 또는 내 IP 변경 | 내 egress IP를 다시 조회해 비교, 몇 분 대기 후 재시도 |
-| 어제까지 되던 접속이 갑자기 안 됨 | Codespace를 재시작해 egress IP가 바뀌었을 수 있음 | `curl -s https://api.ipify.org`로 다시 조회해 `.env`와 비교하고, 다르면 authorized IP ranges를 갱신 |
+| 어제까지 되던 접속이 갑자기 안 됨 | Codespace를 재시작해 egress IP가 바뀌었을 수 있음 | `bash scripts/init-workshop.sh`로 `.env`를 갱신하고, 바뀌었다면 authorized IP ranges를 다시 적용 |
 | `kubectl`에서 권한 거부 | 클러스터에 대한 Kubernetes RBAC 역할 미부여 | `azure-rbac`으로 내 계정에 필요한 AKS RBAC 역할을 확인하고 부여 |
 | 역할 할당 자체가 실패 | subscription에서 `Microsoft.Authorization` 작업이 제한됨 | [설계 결정](../design-decisions.md)의 "제한된 subscription에서의 테스트" 항목 참고 |
 
