@@ -58,9 +58,10 @@ ls .github/skills
 - azure-diagnostics
 - azure-resource-visualizer
 
-[하지 말 것]
+[제약]
+- 확인만 하고 각 Skill의 실제 작업까지 진행하지 마
 - 없는 것이 있으면 대체 방법을 찾지 말고 그대로 알려줘
-- 아무것도 실행하지 마
+- Azure 리소스를 만들거나 바꾸지 마
 ```
 
 여섯 개가 모두 있어야 합니다.
@@ -162,8 +163,8 @@ azure-resource-lookup Skill을 사용해 resource group의 존재 여부를 확�
 - 존재 여부만 한 줄로
 - 없으면 "없음", 접근이 막혀 있으면 "권한 부족"으로 구분
 
-[하지 말 것]
-- 리소스를 만들거나 바꾸지 마
+[제약]
+- Azure 리소스를 만들거나 바꾸지 마
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 

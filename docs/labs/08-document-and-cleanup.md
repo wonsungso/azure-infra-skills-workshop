@@ -38,8 +38,8 @@ azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
 - 관측 사실 / 설계값 / 추정 / 미검증
 - 보고서에 근거가 없는 항목은 미검증으로 표시해줘
 
-[하지 말 것]
-- 리소스를 변경하지 마
+[제약]
+- Azure 리소스를 만들거나 바꾸지 마
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
@@ -68,7 +68,7 @@ Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 �
 - 아래를 실행해줘
   bash scripts/build-architecture-svg.sh <만든 스펙>.json img/my-architecture.svg
 
-[하지 말 것]
+[제약]
 - 추측한 값은 넣지 말고 조회로 확인한 것만 써줘
 ```
 
@@ -105,7 +105,7 @@ azure-resource-lookup Skill을 사용해 삭제 대상을 확인해줘.
 - 두 그룹의 현재 리소스 (읽기 전용)
 - 삭제 대상과 그에 의존하는 자원을 표로
 
-[하지 말 것]
+[제약]
 - 실제 삭제 작업은 명시적 승인 전에는 수행하지 마
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```

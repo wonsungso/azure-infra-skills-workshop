@@ -48,7 +48,7 @@ azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해�
 [출력]
 - 대안, 위험, 비용 요인
 
-[하지 말 것]
+[제약]
 - 계획 승인 전에는 멈춰
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
@@ -80,7 +80,7 @@ azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해�
 - 승인자와 승인 시각을 함께 기록해줘
 - 어떤 값이 approved로 바뀌었는지 보여줘
 
-[하지 말 것]
+[제약]
 - 아직 IaC 생성이나 배포로 넘어가지 마
 ```
 
@@ -110,7 +110,7 @@ azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
 - 변경 대상과 생성 파일을 설명해줘
 - 그 Skill이 요구하는 로컬 문법 확인(az bicep build)까지는 해도 돼
 
-[하지 말 것]
+[제약]
 - Azure에 자원을 만들거나 바꾸는 명령은 실행하지 마
 - 보안 검사와 what-if는 Lab 04에서 하니 여기서는 하지 마
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
