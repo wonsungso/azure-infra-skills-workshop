@@ -46,11 +46,13 @@ fi
 redact() {
   awk '
     function scrub_ip(s,   out, ip) {
+      # 1.0.0.0 같은 버전 문자열이 IPv4와 구별되지 않으므로 같은 줄의 맥락으로 가린다
+      if (s ~ /[Vv]ersion|templateHash/) return s
       out = ""
       while (match(s, /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/)) {
         ip = substr(s, RSTART, RLENGTH)
         out = out substr(s, 1, RSTART - 1)
-        if (ip ~ /^10\./ || ip ~ /^192\.168\./ || ip ~ /^172\.(1[6-9]|2[0-9]|3[01])\./)
+        if (ip ~ /^(0|10)\./ || ip ~ /^192\.168\./ || ip ~ /^172\.(1[6-9]|2[0-9]|3[01])\./)
           out = out ip
         else
           out = out "<ip>"
@@ -62,6 +64,8 @@ redact() {
       gsub(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/, "<id>")
       gsub(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+/, "<user>")
       gsub(/[A-Za-z0-9-]+\.onmicrosoft\.com/, "<tenant>")
+      gsub(/[A-Za-z]:\\Users\\[^\\]+/, "<home>")
+      gsub(/\/(home|Users)\/[^\/ ]+/, "<home>")
       print scrub_ip($0)
     }
   '
@@ -77,6 +81,11 @@ quote_args() {
     esac
   done
   printf '%s' "${out% }"
+}
+
+# az CLI가 매번 뿜는 확장·대체 경고는 보고서에서 잡음이다
+drop_noise() {
+  grep -vE 'pkg_resources|UserWarning|^[[:space:]]*__import__|^WARNING: The behavior of this command has been altered|^WARNING: A new Bicep release is available|^WARNING: Merged' || true
 }
 
 env_value() { grep -E "^$1=" .env 2>/dev/null | head -1 | cut -d= -f2- ; }
@@ -140,7 +149,7 @@ if [ "$RUN_MODE" -eq 1 ]; then
   [ $# -gt 0 ] || { echo "실행할 명령이 없습니다" >&2; exit 2; }
   OUT=$("$@" 2>&1); CODE=$?
   [ "$CODE" -eq 0 ] && STATUS=관측 || STATUS="실패(exit $CODE)"
-  CLEAN_OUT=$(printf '%s' "$OUT" | redact)
+  CLEAN_OUT=$(printf '%s' "$OUT" | drop_noise | redact)
   CLEAN_CMD=$(quote_args "$@" | redact)
   LINES=$(printf '%s\n' "$CLEAN_OUT" | wc -l)
 
