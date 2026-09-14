@@ -18,7 +18,7 @@
 
 - [Lab 05](05-deploy-and-connect.md)에서 `lab` namespace 접근을 확인했나요?
 
-## Step 1. manifest 검토하기 (10분)
+## Step 1. manifest 검토하기
 
 > 📋 **아래 프롬프트를 복사해 실행**
 
@@ -38,7 +38,7 @@ reference/kubernetes/lab-web.yaml을 검토해줘. ConfigMap으로 주입되는 
 
 **확인할 것:** 외부에 노출하는 LoadBalancer나 Ingress가 없는지, 그리고 `lab` 이외의 namespace를 건드리지 않는지.
 
-## Step 2. 적용하고 계층별로 검증하기 (20분)
+## Step 2. 적용하고 계층별로 검증하기
 
 승인 후 `lab` namespace에만 manifest를 적용합니다. 아래 항목을 하나씩, 개별적으로 확인하세요.
 
@@ -68,7 +68,7 @@ reference/kubernetes/lab-web.yaml을 검토해줘. ConfigMap으로 주입되는 
 
 </details>
 
-## Step 3. 상품 페이지 열어보기 (10분)
+## Step 3. 상품 페이지 열어보기
 
 port-forward를 연 상태에서 브라우저로 `http://127.0.0.1:8080` 에 접속해 **Contoso Shop** 화면을 확인하세요.
 

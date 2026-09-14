@@ -27,8 +27,10 @@ IMAGE_TAG=nginxinc/nginx-unprivileged:1.27-alpine
 SUBSCRIPTION_ID=
 EGRESS_IP_CIDR=
 
+# 기본값 — Lab 02에서 quota를 보고 확인하거나 바꿈
+REGION=koreacentral
+
 # Lab 02에서 내가 결정
-REGION=
 POD_CIDR=
 SERVICE_CIDR=
 DNS_SERVICE_IP=

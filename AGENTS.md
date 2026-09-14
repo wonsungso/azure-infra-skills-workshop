@@ -95,7 +95,9 @@ Participants had to type values the tooling already knows.
 - 실행 환경은 **GitHub Codespaces**가 기본입니다. 도구 설치는 `.devcontainer/`가 담당하므로, Lab 문서에 설치 절차를 다시 쓰지 않습니다
 - 프롬프트와 입력값은 **해당 Lab 본문 안에** 둡니다. 별도의 프롬프트 모음 파일이나 입력표 파일을 다시 만들지 않습니다
 - **기계가 알 수 있는 값은 사람이 타이핑하게 하지 않습니다.** 조회로 얻는 값은 [`scripts/init-workshop.sh`](scripts/init-workshop.sh)가 채우고, 사람이 결정한 값은 [`scripts/set-env.sh`](scripts/set-env.sh)로 반영하며, 실행 기록은 [`scripts/log-evidence.sh`](scripts/log-evidence.sh)가 남깁니다. 문서에 "손으로 적으세요"라고 쓰지 않습니다
-- 반대로 **판단이 필요한 값**(region, CIDR, SKU, 승인 여부)은 자동으로 정하지 않습니다. 사람이 결정하고 도구는 기록만 돕습니다
+- **프롬프트에 값을 직접 적지 않습니다.** `[resource-group]` 같은 자리 표시자를 두고 사람이 치환하게 하는 대신, "저장소 루트의 .env에서 RESOURCE_GROUP을 읽어"처럼 **Skill이 직접 읽도록** 씁니다. 비어 있는 값은 추측하지 말고 멈추라고 붙입니다
+- 반대로 **판단이 필요한 값**(CIDR, SKU, node 개수, 승인 여부)은 자동으로 정하지 않습니다. 사람이 결정하고 도구는 기록만 돕습니다. `REGION`만은 바로 시작할 수 있도록 `koreacentral` 기본값을 두되, Lab 02에서 quota를 보고 확인하게 합니다
+- Step 제목에 **소요시간을 적지 않습니다.** 진도가 사람마다 달라 지키기 어렵고, 뒤처진다는 느낌만 줍니다. 전체 분량은 Lab 머리말의 ⏱ 표기로만 안내합니다
 
 ### 용어 표기
 

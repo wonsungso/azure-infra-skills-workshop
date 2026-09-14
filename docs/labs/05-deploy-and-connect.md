@@ -16,7 +16,7 @@
 
 - [Lab 04](04-validate-and-approve.md)의 배포 승인이 있나요?
 
-## Step 1. 클러스터 배포 관찰하기 (25분)
+## Step 1. 클러스터 배포 관찰하기
 
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
@@ -45,12 +45,12 @@ bash scripts/set-env.sh NODE_RESOURCE_GROUP \
 
 </details>
 
-## Step 2. 접속하고 `lab` namespace 만들기 (20분)
+## Step 2. 접속하고 `lab` namespace 만들기
 
 > 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-resource-lookup을 사용해 [aks-name]의 실제 상태와 node resource group을 읽기 전용으로 확인해줘. 이후 Entra 기반으로 클러스터에 접속하는 데 필요한 점검 항목을 제시해줘. 역할을 변경하지 마.
+azure-resource-lookup을 사용해 저장소 루트의 .env에서 RESOURCE_GROUP과 AKS_NAME을 읽고, 해당 AKS의 실제 상태와 node resource group을 읽기 전용으로 확인해줘. 이후 Entra 기반으로 클러스터에 접속하는 데 필요한 점검 항목을 제시해줘. 역할을 변경하지 마.
 ```
 
 클러스터가 Ready라면 credentials를 가져와 node를 확인하고, 실습용 namespace를 **직접** 만듭니다. 리소스 이름은 `.env`에 이미 있으므로 그대로 씁니다.

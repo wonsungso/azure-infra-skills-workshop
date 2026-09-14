@@ -16,14 +16,14 @@
 
 - [Lab 02](02-design-aks.md)의 Day-0 결정표와 권한 매트릭스가 있나요?
 
-## Step 1. 인프라 계획 만들고 승인하기 (35분)
+## Step 1. 인프라 계획 만들고 승인하기
 
-`.env`의 값으로 대괄호를 바꿔 실행합니다.
+프롬프트에 값을 직접 적지 않습니다. Skill이 `.env`를 읽어 쓰고, 비어 있는 값이 있으면 추측하지 않고 멈춥니다.
 
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-enterprise-infra-planner를 사용해 [resource-group]에 [aks-name] AKS를 위한 인프라 계획을 작성해줘. azure-kubernetes의 Day-0 검토와 azure-rbac의 least privilege 검토를 반영해줘. public API server의 authorized IP ranges는 [egress-ip-cidr]만 사용하고, Entra와 Azure RBAC for Kubernetes를 사용하며 local accounts는 비활성화해줘. system/user node pool 분리, Azure CNI Overlay + Cilium, load balancer egress, 비중첩 CIDR을 포함해줘. 대안, 위험, 비용 요인을 보여주고 계획 승인 전에는 멈춰.
+azure-enterprise-infra-planner를 사용해 인프라 계획을 작성해줘. 저장소 루트의 .env에서 RESOURCE_GROUP, AKS_NAME, REGION, EGRESS_IP_CIDR, POD_CIDR, SERVICE_CIDR, DNS_SERVICE_IP, SYSTEM_VM_SIZE, USER_VM_SIZE를 읽어 쓰고, 비어 있는 값이 있으면 추측하지 말고 먼저 알려줘. azure-kubernetes의 Day-0 검토와 azure-rbac의 least privilege 검토를 반영해줘. public API server의 authorized IP ranges는 EGRESS_IP_CIDR만 사용하고, Entra와 Azure RBAC for Kubernetes를 사용하며 local accounts는 비활성화해줘. system/user node pool 분리, Azure CNI Overlay + Cilium, load balancer egress, 비중첩 CIDR을 포함해줘. 대안, 위험, 비용 요인을 보여주고 계획 승인 전에는 멈춰.
 ```
 
 **진행 방식**
@@ -39,7 +39,7 @@ azure-enterprise-infra-planner를 사용해 [resource-group]에 [aks-name] AKS�
 
 **완료 기준:** `.azure/infrastructure-plan.json`(또는 동등한 계획 산출물)이 생성되고, 승인 여부와 승인 시각이 기록됩니다.
 
-## Step 2. 승인된 계획으로 Bicep 생성하기 (20분)
+## Step 2. 승인된 계획으로 Bicep 생성하기
 
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 

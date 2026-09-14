@@ -16,7 +16,7 @@
 
 - [Lab 03](03-plan-and-bicep.md)에서 생성한 Bicep 파일이 있나요?
 
-## Step 1. IaC를 실제로 검증하기 (25분)
+## Step 1. IaC를 실제로 검증하기
 
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
@@ -32,7 +32,7 @@
 > [!WARNING]
 > 검증 실패를 "일단 무시하고 배포"하지 않습니다. 원인을 고치고 같은 검사를 다시 통과시키세요.
 
-## Step 2. 배포 전에 영향 다시 확인하고 승인받기 (20분)
+## Step 2. 배포 전에 영향 다시 확인하고 승인받기
 
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 

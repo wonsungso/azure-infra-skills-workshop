@@ -17,14 +17,14 @@ AKS는 만들고 나면 바꾸기 어려운 설정(네트워크 플러그인, CI
 - [Lab 01](01-orientation-and-setup.md)에서 scope 확인을 마쳤나요?
 - `.env`에 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워져 있나요?
 
-## Step 1. quota와 용량 확인하기 (10분)
+## Step 1. quota와 용량 확인하기
 
 배포 실패의 가장 흔한 원인이 quota 부족입니다. **배포 직전이 아니라 지금** 확인하면 30분을 아낍니다.
 
 > 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-quotas를 사용해 내 subscription에서 [region]의 Standard DSv5 family vCPU quota와 현재 사용량을 확인해줘. AKS node 3대(Standard_D4s_v5 2대 + Standard_D2s_v5 1대)를 만들 수 있는지 판단해줘. 변경은 하지 마.
+azure-quotas를 사용해 저장소 루트의 .env에서 SUBSCRIPTION_ID와 REGION을 읽고, 해당 region의 Standard DSv5 family vCPU quota와 현재 사용량을 확인해줘. AKS node 3대(Standard_D4s_v5 2대 + Standard_D2s_v5 1대)를 만들 수 있는지 판단해줘. 부족하면 대안 region도 같이 알려줘. 변경은 하지 마.
 ```
 
 **확인할 것**
@@ -32,7 +32,7 @@ azure-quotas를 사용해 내 subscription에서 [region]의 Standard DSv5 famil
 - 기본 구성은 **10 vCPU**가 필요합니다. 여유가 있나요?
 - 부족하면 region을 바꾸거나 node 개수·SKU를 줄입니다.
 
-결정했다면 `.env`에 반영합니다. 손으로 편집하지 말고 아래를 씁니다. 없는 항목명을 쓰면 오타로 보고 멈춥니다.
+`REGION`은 `koreacentral`로 이미 채워져 있습니다. **방금 본 quota 결과로 이 값이 맞는지 확인하세요.** 바꿔야 한다면, 그리고 SKU를 정했다면 아래로 `.env`에 반영합니다. 손으로 편집하지 말고 이 스크립트를 쓰세요. 없는 항목명을 쓰면 오타로 보고 멈춥니다.
 
 ```bash
 bash scripts/set-env.sh \
@@ -43,7 +43,7 @@ bash scripts/set-env.sh \
 
 위 값은 **예시일 뿐입니다.** 방금 조회한 내 quota 결과에 맞는 값을 넣으세요. region·SKU·node 개수는 기계가 대신 정해줄 수 없는 **사람의 판단**입니다. 여기서 얻은 실제 조회 결과가 이후 프롬프트의 근거가 됩니다.
 
-## Step 2. Day-0 결정 검토하기 (20분)
+## Step 2. Day-0 결정 검토하기
 
 > 🧠 **Skill** `azure-kubernetes` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
@@ -59,7 +59,7 @@ azure-kubernetes를 사용해 교육용 AKS의 Day-0 선택을 검토해줘. Sta
 
 "authorized IP ranges를 넓히면 쉽지 않을까?"라는 제안은 승인하지 않습니다. 공개 API + authorized IP ranges 제한이 이 워크샵의 기본 보안 경계입니다.
 
-## Step 3. least privilege 매트릭스 만들기 (15분)
+## Step 3. least privilege 매트릭스 만들기
 
 > 🧠 **Skill** `azure-rbac` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 

@@ -17,7 +17,7 @@ Skill에게 작업을 요청하면 Skill은 절차와 판단 기준을, MCP 도�
 - [README](../../README.md)의 시작하기를 읽고 Codespace를 열었나요?
 - 터미널에서 `az version`이 동작하나요?
 
-## Step 1. 역할 이해하기 (5분)
+## Step 1. 역할 이해하기
 
 | 역할 | 하는 일 |
 | --- | --- |
@@ -33,7 +33,7 @@ Skill에게 작업을 요청하면 Skill은 절차와 판단 기준을, MCP 도�
 
 헷갈리면 "지금 이 작업이 Azure를 바꾸나요, 읽기만 하나요?"를 먼저 물어보세요.
 
-## Step 2. Azure에 로그인하기 (5분)
+## Step 2. Azure에 로그인하기
 
 **이 단계는 사람이 직접 해야 합니다.** 로그인은 본인 계정의 credentials를 다루는 일이라 Skill이나 스크립트에 맡기지 않습니다.
 
@@ -52,7 +52,7 @@ az account list --query "[].{name:name, id:id, default:isDefault}" -o table
 az account set --subscription "<사용할 subscription 이름 또는 id>"
 ```
 
-## Step 3. 입력값 확인하기 (5분)
+## Step 3. 입력값 확인하기
 
 이후 모든 프롬프트가 저장소 루트의 `.env`를 공유합니다. **직접 타이핑할 값은 없습니다.** Codespace가 만들어질 때 리소스 이름과 egress IP가 채워졌고, 로그인을 마친 지금 아래를 한 번 더 실행하면 subscription까지 채워집니다.
 
@@ -66,16 +66,19 @@ cat .env
 | `WORKSHOP_ID`와 리소스 이름 | Codespace 생성 시 자동 |
 | `EGRESS_IP_CIDR` | 자동 (ipify 조회) |
 | `SUBSCRIPTION_ID` | 자동 (Step 2 로그인 후 재실행) |
-| `REGION`, CIDR, VM SKU | **Lab 02에서 내가 결정** |
+| `REGION` | 기본값 `koreacentral` — **Lab 02에서 quota를 보고 확인** |
+| CIDR, VM SKU | **Lab 02에서 내가 결정** |
 | `NODE_RESOURCE_GROUP` | Lab 05 배포 후 output |
 
-자동으로 알 수 있는 값과 **사람이 결정해야 하는 값**을 구분하세요. 뒤의 네 가지는 quota와 기존 네트워크를 보고 판단해야 해서 자동화할 수 없습니다.
+자동으로 알 수 있는 값과 **사람이 결정해야 하는 값**을 구분하세요. CIDR과 SKU는 quota와 기존 네트워크를 보고 판단해야 해서 자동화할 수 없습니다. `REGION`은 바로 진행할 수 있도록 기본값을 놓았을 뿐이니, Lab 02에서 quota를 확인한 뒤 그대로 둘지 바꿀지 직접 정하세요.
+
+이후 Lab의 프롬프트는 이 값들을 **Skill이 `.env`에서 직접 읽어 씁니다.** 프롬프트에 resource group 이름이나 region을 손으로 바꿔 넣을 필요가 없습니다.
 
 `EGRESS_IP_CIDR`은 내 PC가 아니라 **Codespace의 egress IP**입니다. AKS API server에 접근할 수 있는 유일한 주소가 되므로 반드시 Codespace 안에서 조회된 값이어야 합니다. Codespace를 중지했다가 다시 시작하면 이 IP가 바날 수 있으므로, Lab 05 이후 접속이 갑자기 안 되면 [`init-workshop.sh`](../../scripts/init-workshop.sh)를 다시 실행해 갱신하세요.
 
 비밀번호, token, kubeconfig 내용은 `.env`에 적지 않습니다. 이 파일은 `.gitignore` 대상이므로 커밋되지 않습니다.
 
-## Step 4. 내 Azure 범위 확인하기 (10분)
+## Step 4. 내 Azure 범위 확인하기
 
 먼저 **빠른 방법**으로 확인합니다. 단순 조회는 CLI가 몇 초면 끝납니다.
 
@@ -104,7 +107,7 @@ az group show -n "$RESOURCE_GROUP" -o table 2>/dev/null || echo "아직 없음 -
 > 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-resource-lookup으로 내 subscription에서 [resource-group]의 존재 여부만 확인해줘. 없으면 "없음", 접근이 막혀 있으면 권한 부족으로 구분해서 한 줄로 답해줘. 리소스를 만들거나 바꾸지 마.
+azure-resource-lookup으로 저장소 루트의 .env를 읽어 SUBSCRIPTION_ID와 RESOURCE_GROUP을 확인하고, 그 resource group의 존재 여부만 확인해줘. 없으면 "없음", 접근이 막혀 있으면 권한 부족으로 구분해서 한 줄로 답해줘. 리소스를 만들거나 바꾸지 마.
 ```
 
 **Skill 응답은 CLI보다 느립니다.** 도구를 여러 번 호출하고 결과를 해석하기 때문입니다. 그만큼 값어치가 있는 질문에 써야 합니다.

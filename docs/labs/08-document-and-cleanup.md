@@ -16,12 +16,12 @@ Azure Resource Manager 그림만으로는 Kubernetes 내부의 Pod/Service 관�
 
 - [Lab 06](06-run-sample-workload.md)의 결과가 있나요? ([Lab 07](07-diagnose-and-recover.md)은 선택)
 
-## Step 1. 실제 상태 문서화하기 (25분)
+## Step 1. 실제 상태 문서화하기
 
 > 🧠 **Skill** `azure-resource-lookup`, `azure-resource-visualizer` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-resource-lookup과 azure-resource-visualizer를 사용해 [resource-group]과 [node-resource-group]의 실제 Azure 리소스와 관계를 조사하고 Mermaid 문서를 작성해줘. Kubernetes Deployment, Pod, Service 관계는 kubectl 증거를 별도 섹션으로 작성해줘. 관측 사실, 설계값, 추정, 미검증 항목을 구분해줘. 리소스를 변경하지 마.
+azure-resource-lookup과 azure-resource-visualizer를 사용해 저장소 루트의 .env에서 RESOURCE_GROUP과 NODE_RESOURCE_GROUP을 읽고, 그 두 그룹의 실제 Azure 리소스와 관계를 조사해 Mermaid 문서를 작성해줘. Kubernetes Deployment, Pod, Service 관계는 kubectl 증거를 별도 섹션으로 작성해줘. 관측 사실, 설계값, 추정, 미검증 항목을 구분해줘. 리소스를 변경하지 마.
 ```
 
 **확인할 것:** cluster resource group과 node resource group을 모두 조사했는지, Kubernetes 증거(Pod/Service/EndpointSlice)를 Azure ARM 그림과 별도 섹션으로 나눴는지.
@@ -59,12 +59,12 @@ bash scripts/build-architecture-svg.sh <만든 스펙>.json img/my-architecture.
 
 </details>
 
-## Step 2. 제출하고 정리하기 (25분)
+## Step 2. 제출하고 정리하기
 
 > 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-resource-lookup을 사용해 [resource-group]과 [node-resource-group]의 현재 리소스를 읽기 전용으로 확인해줘. 삭제 전에 대상과 의존 자원을 표로 보여주고, 실제 삭제 작업은 명시적 승인 전에는 수행하지 마.
+azure-resource-lookup을 사용해 저장소 루트의 .env에서 RESOURCE_GROUP과 NODE_RESOURCE_GROUP을 읽고, 그 두 그룹의 현재 리소스를 읽기 전용으로 확인해줘. 삭제 전에 대상과 의존 자원을 표로 보여주고, 실제 삭제 작업은 명시적 승인 전에는 수행하지 마.
 ```
 
 삭제를 승인한 뒤 실제로 삭제하고, 다시 조회해서 잔여 자원이 없는지(또는 남은 것이 무엇인지) 확인합니다.
