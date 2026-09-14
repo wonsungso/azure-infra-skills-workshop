@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-# .env와 evidence-log.md를 만들고, 자동으로 알 수 있는 값을 채운다.
+# .env와 자동으로 알 수 있는 값을 채운다.
 # 여러 번 실행해도 안전하다. 사람이 정한 값은 덮어쓰지 않는다.
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 ENV_FILE=.env
-LOG_FILE=evidence-log.md
 
 if [ ! -f "$ENV_FILE" ]; then
   # 3바이트를 16진수로 = 소문자·숫자 6글자. xxd와 달리 od는 어디서나 있다.
@@ -84,9 +83,4 @@ if command -v az >/dev/null 2>&1; then
   fi
 else
   echo "  az CLI 없음 - SUBSCRIPTION_ID는 나중에 채워집니다"
-fi
-
-if [ ! -f "$LOG_FILE" ]; then
-  cp templates/evidence-log.md "$LOG_FILE"
-  echo "$LOG_FILE 생성 (templates/evidence-log.md 복사)"
 fi

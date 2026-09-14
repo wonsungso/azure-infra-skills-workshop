@@ -16,7 +16,20 @@ fi
 shift 3
 [ $# -gt 0 ] || { echo "실행할 명령이 없습니다" >&2; exit 2; }
 
-[ -f "$LOG_FILE" ] || cp templates/evidence-log.md "$LOG_FILE"
+if [ ! -f "$LOG_FILE" ]; then
+  cat > "$LOG_FILE" <<'EOF'
+# 검증 증거 로그
+
+이 파일은 `scripts/log-evidence.sh`가 자동으로 채웁니다. 커밋되지 않습니다(.gitignore).
+`대상`과 `승인/담당자`는 판단이 필요하므로 직접 채우세요.
+
+실제 출력에 token이나 kubeconfig 내용을 넣지 않습니다. subscription·tenant ID와 IP는 자동으로 가려집니다.
+오류는 요약만 남기고 원본 로그 위치를 연결하세요.
+
+| 시각 | 단계 | Skill 또는 도구 | 대상 | 수행 작업 | 실제 결과 | 상태 | 승인/담당자 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+EOF
+fi
 
 OUT=$("$@" 2>&1); CODE=$?
 

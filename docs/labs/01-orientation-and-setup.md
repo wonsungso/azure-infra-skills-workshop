@@ -112,7 +112,7 @@ cat .env
 bash scripts/log-evidence.sh "Lab 01 Step 5" "az CLI" -- az account show -o table
 ```
 
-결과를 보여주면서 동시에 저장소 루트의 `evidence-log.md`에 한 줄을 기록합니다. 따로 적을 필요가 없습니다. 어떤 칸을 사람이 채워야 하는지는 [증거 로그 양식](../../templates/evidence-log.md)에 설명되어 있습니다.
+결과를 보여주면서 동시에 저장소 루트의 `evidence-log.md`에 한 줄을 기록합니다. 따로 적을 필요가 없습니다. 파일이 없으면 머리말과 표를 포함해 새로 만들어집니다.
 
 그다음 resource group을 봅니다. Lab 05에서 배포와 함께 만들 것이므로 **지금 없어도 정상입니다.**
 
@@ -159,7 +159,7 @@ azure-resource-lookup Skill로 저장소 루트의 .env를 읽어 SUBSCRIPTION_I
 - [ ] `az login --use-device-code`로 로그인하고 쓸 subscription을 선택했다
 - [ ] `.env`의 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워진 것을 확인했다
 - [ ] 조회한 subscription이 `.env`와 일치함을 확인했다
-- [ ] [증거 로그](../../templates/evidence-log.md) 형식의 `evidence-log.md`에 실행 기록이 남았다
+- [ ] `evidence-log.md`에 실행 기록이 남았다
 - [ ] 단순 조회와 판단을 각각 어떤 도구로 하는지 설명할 수 있다
 
 ## 🚧 문제가 생겼다면

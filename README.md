@@ -93,7 +93,7 @@ Azure 로그인과 Azure Skills 설치는 [Lab 01](docs/labs/01-orientation-and-
 
 ### 3. Lab 01부터 순서대로 진행합니다
 
-[Lab 01: 워크샵 시작하기](docs/labs/01-orientation-and-setup.md)로 이동하세요. 배경이 궁금하면 [설계 결정](docs/design-decisions.md)을 참고할 수 있지만, 읽지 않아도 진행에는 지장이 없습니다.
+[Lab 01: 워크샵 시작하기](docs/labs/01-orientation-and-setup.md) 로 이동하세요.
 
 <details>
 <summary>진행이 중간에 끊겼다면</summary>
@@ -121,7 +121,7 @@ Azure 로그인과 Azure Skills 설치는 [Lab 01](docs/labs/01-orientation-and-
 | `azure-resource-visualizer` | 리소스 관계를 다이어그램으로 정리 |
 | MCP 도구 / CLI / `kubectl` | 제안을 실제로 실행 |
 
-Skill은 판단과 절차를, 도구는 실행을 담당합니다. **프롬프트에 Skill 이름을 썼다는 사실만으로는 증거가 되지 않습니다.** 실제 호출과 결과를 [증거 로그](templates/evidence-log.md)에 남기세요.
+Skill은 판단과 절차를, 도구는 실행을 담당합니다. **프롬프트에 Skill 이름을 썼다는 사실만으로는 증거가 되지 않습니다.** 실제 호출과 결과를 [`log-evidence.sh`](scripts/log-evidence.sh)로 남기세요.
 
 ## ⚡ Skill을 쓰면 무엇이 달라지나
 
@@ -144,9 +144,9 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다. **프롬프�
 | `docs/labs/` | Lab 01~08 가이드. 프롬프트와 입력값이 모두 이 안에 있습니다 |
 | `reference/infra/` | Bicep 기준본 - **정답지가 아니라 비교용** |
 | `reference/kubernetes/` | 상품 페이지 manifest - **그대로 사용** |
-| `templates/` | 증거 로그, 인계 문서 양식 |
+| `templates/` | [인계 문서 양식](templates/handoff-template.md) - Lab 08에서 채웁니다 |
 | `.devcontainer/` | Codespace 환경 정의 |
-| `scripts/` | `.env`·증거 로그 초기화(`init-workshop`), 값 반영(`set-env`), 실행 기록(`log-evidence`) |
+| `scripts/` | `.env` 초기화([`init-workshop`](scripts/init-workshop.sh)), 값 반영([`set-env`](scripts/set-env.sh)), 실행 기록([`log-evidence`](scripts/log-evidence.sh)) |
 
 모든 Lab은 같은 순서를 따릅니다. 목표 → 왜 필요한가 → 시작 전에 → Step → 완료 체크리스트 → 문제가 생겼다면 → 다음 Lab.
 
