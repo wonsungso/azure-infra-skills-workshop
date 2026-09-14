@@ -73,7 +73,7 @@ redact() {
       while (match(s, /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/)) {
         ip = substr(s, RSTART, RLENGTH)
         out = out substr(s, 1, RSTART - 1)
-        if (ip ~ /^(0|10)\./ || ip ~ /^192\.168\./ || ip ~ /^172\.(1[6-9]|2[0-9]|3[01])\./)
+        if (ip ~ /^(0|10|127)\./ || ip ~ /^192\.168\./ || ip ~ /^172\.(1[6-9]|2[0-9]|3[01])\./)
           out = out ip
         else
           out = out "[ip]"
