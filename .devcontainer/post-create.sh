@@ -23,6 +23,12 @@ $SUDO az aks install-cli \
   --install-location "$BIN_DIR/kubectl" \
   --kubelogin-install-location "$BIN_DIR/kubelogin"
 
+# azure-quotas는 quota, 나머지 조회 Skill은 resource-graph extension을 요구한다
+for ext in quota resource-graph; do
+  az extension add --name "$ext" --upgrade --yes --only-show-errors 2>/dev/null \
+    || echo "az extension '$ext' 설치 실패 - Lab 02 전에 직접 설치하세요"
+done
+
 bash "$REPO_ROOT/scripts/init-workshop.sh"
 
 # VS Code는 작업 영역의 .github/skills 에서도 Skill을 읽는다. 저장소에는 커밋하지 않는다.
@@ -50,6 +56,8 @@ kubectl version --client --output=yaml 2>/dev/null | head -3 || true
 kubelogin --version 2>/dev/null | head -1 || true
 # Azure MCP server가 npm 패키지라 Skill 사용에 필요하다
 node --version 2>/dev/null || true
+az extension list --query "[].name" -o tsv 2>/dev/null | tr '\n' ' ' || true
+echo ""
 
 echo ""
 echo "다음 단계: docs/labs/01-orientation-and-setup.md 를 열어 Azure 로그인부터 진행하세요."

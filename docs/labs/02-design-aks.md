@@ -24,13 +24,14 @@ AKS는 만들고 나면 바꾸기 어려운 설정(네트워크 플러그인, CI
 > 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-quotas Skill을 사용해 저장소 루트의 .env에서 SUBSCRIPTION_ID와 REGION을 읽고, 해당 region의 Standard DSv5 family vCPU quota와 현재 사용량을 확인해줘. AKS node 3대(Standard_D4s_v5 2대 + Standard_D2s_v5 1대)를 만들 수 있는지 판단해줘. 부족하면 대안 region도 같이 알려줘. 변경은 하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-quotas Skill을 사용해 저장소 루트의 .env에서 SUBSCRIPTION_ID와 REGION을 읽고, 해당 region의 Standard DSv5 family vCPU quota와 현재 사용량을 확인해줘. az quota가 MissingSubscription 등으로 실패하면 az vm list-usage로 대체하고, 어느 명령으로 확인했는지 알려줘. AKS node 3대(Standard_D4s_v5 2대 + Standard_D2s_v5 1대)를 만들 수 있는지 판단해줘. 부족하면 대안 region도 같이 알려줘. Azure 리소스는 만들거나 바꾸지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
 **확인할 것**
 
 - 기본 구성은 **10 vCPU**가 필요합니다. 여유가 있나요?
 - 부족하면 region을 바꾸거나 node 개수·SKU를 줄입니다.
+- **어떤 명령으로 확인했다고 하나요?** 조회 없이 일반론으로 답했다면 근거가 아닙니다.
 
 `REGION`은 `koreacentral`로 이미 채워져 있습니다. **방금 본 quota 결과로 이 값이 맞는지 확인하세요.** 결정한 값은 손으로 편집하지 말고 아래로 반영합니다.
 
@@ -48,7 +49,7 @@ bash scripts/set-env.sh \
 > 🧠 **Skill** `azure-kubernetes` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해줘. Standard 운영 모드, system/user pool 분리, Azure CNI Overlay + Cilium, load balancer egress, public API authorized IP ranges를 기준으로 대안과 위험을 표로 정리해줘. 리소스 변경은 하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해줘. Standard 운영 모드, system/user pool 분리, Azure CNI Overlay + Cilium, load balancer egress, public API authorized IP ranges를 기준으로 대안과 위험을 표로 정리해줘. Azure 리소스는 만들거나 바꾸지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
 **사람이 판단할 것**
@@ -95,6 +96,8 @@ azure-enterprise-infra-planner Skill을 사용해 이 교육용 AKS의 least pri
 | 증상 | 해야 할 일 |
 | --- | --- |
 | vCPU quota 부족 | node 개수·SKU를 줄이거나 다른 region 선택 (증설은 승인에 시간이 걸림) |
+| Skill이 `quota` extension이 없다고 함 | `az extension add --name quota --upgrade --yes` 후 다시 실행 |
+| `az quota`가 `MissingSubscription`으로 실패 | 이 subscription에 `Microsoft.Quota` provider가 등록되지 않은 것입니다. `az vm list-usage --location "$REGION"`으로 확인하세요 |
 | CIDR 겹침 경고 | 겹치지 않는 대역으로 변경 (예: `10.244.0.0/16` → `10.245.0.0/16`) |
 | Skill이 SKU를 추측함 | Step 1의 quota 결과를 붙여넣고 재요청 |
 | 매트릭스에 Owner/cluster-admin 등장 | least privilege 원칙을 다시 언급하며 재요청 |
