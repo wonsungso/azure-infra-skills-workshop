@@ -55,7 +55,7 @@ flowchart LR
 | Lab | 주 Skill | 다음 Lab에 넘길 것 |
 | --- | --- | --- |
 | [01. 워크샵 시작하기](docs/labs/01-orientation-and-setup.md) | `azure-resource-lookup` | `.env`, 확인된 scope |
-| [02. AKS 설계 결정하기](docs/labs/02-design-aks.md) | `azure-quotas`, `azure-kubernetes`, `azure-rbac` | quota 확인 결과, Day-0 결정표 |
+| [02. AKS 설계 결정하기](docs/labs/02-design-aks.md) | `azure-quotas`, `azure-kubernetes`, `azure-enterprise-infra-planner` | quota 확인 결과, Day-0 결정표 |
 | [03. 계획 승인 + Bicep 생성](docs/labs/03-plan-and-bicep.md) | `azure-enterprise-infra-planner` | 승인된 계획, Bicep |
 | [04. IaC 검증 + 배포 승인](docs/labs/04-validate-and-approve.md) | `azure-enterprise-infra-planner` | 검증 증거, 배포 승인 |
 | [05. AKS 배포 + 접속 확인](docs/labs/05-deploy-and-connect.md) | `azure-resource-lookup` | Ready 클러스터, `lab` namespace |
@@ -81,13 +81,14 @@ flowchart LR
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/wonsungso/azure-infra-skills-workshop)
 
-Azure CLI, Bicep, `kubectl`, `kubelogin`이 설치된 상태로 열립니다. 로컬에 아무것도 깔지 않아도 됩니다. 컨테이너 준비가 끝나면 터미널에서 도구만 확인합니다.
+Azure CLI, Bicep, `kubectl`, `kubelogin`이 설치되고 **이 워크샵이 쓰는 Azure Skill 6개가 받아진 상태**로 열립니다. 로컬에 아무것도 깔지 않아도 됩니다. 컨테이너 준비가 끝나면 터미널에서 확인합니다.
 
 ```bash
 az version && az bicep version && kubectl version --client && kubelogin --version
+ls .github/skills
 ```
 
-Azure 로그인과 Azure Skills 설치는 [Lab 01](docs/labs/01-orientation-and-setup.md)에서 함께 진행합니다. **Skill은 Copilot 플러그인이라 이 저장소에 들어 있지 않습니다.**
+Azure 로그인과 Skill 동작 확인은 [Lab 01](docs/labs/01-orientation-and-setup.md)에서 합니다.
 
 로컬 VS Code로 진행해도 됩니다. 그때는 위 도구를 직접 설치하고 [`init-workshop.sh`](scripts/init-workshop.sh)를 한 번 실행하세요. 이후 Lab은 두 경우 모두 동일합니다.
 
@@ -115,8 +116,7 @@ Azure 로그인과 Azure Skills 설치는 [Lab 01](docs/labs/01-orientation-and-
 | `azure-resource-lookup` | 실제 자원을 읽기 전용으로 조회 |
 | `azure-quotas` | vCPU quota와 region 용량 확인 |
 | `azure-kubernetes` | AKS Day-0 설계 검토 |
-| `azure-rbac` | least privilege 매트릭스 설계 |
-| `azure-enterprise-infra-planner` | 계획 승인, Bicep 생성·검증·배포 |
+| `azure-enterprise-infra-planner` | least privilege 매트릭스 설계, 계획 승인, Bicep 생성·검증·배포 |
 | `azure-diagnostics` | 증거 기반 오류 진단 |
 | `azure-resource-visualizer` | 리소스 관계를 다이어그램으로 정리 |
 | MCP 도구 / CLI / `kubectl` | 제안을 실제로 실행 |

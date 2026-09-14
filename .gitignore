@@ -30,3 +30,6 @@ Thumbs.db
 
 # Codespace 이름 (로컬 전용)
 .cs-name
+
+# Codespace가 내려받는 Azure Skills (커밋하지 않음)
+/.github/skills/

@@ -23,7 +23,7 @@
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해줘. 저장소 루트의 .env에서 RESOURCE_GROUP, AKS_NAME, REGION, EGRESS_IP_CIDR, POD_CIDR, SERVICE_CIDR, DNS_SERVICE_IP, SYSTEM_VM_SIZE, USER_VM_SIZE를 읽어 쓰고, 비어 있는 값이 있으면 추측하지 말고 먼저 알려줘. azure-kubernetes의 Day-0 검토와 azure-rbac의 least privilege 검토를 반영해줘. public API server의 authorized IP ranges는 EGRESS_IP_CIDR만 사용하고, Entra와 Azure RBAC for Kubernetes를 사용하며 local accounts는 비활성화해줘. system/user node pool 분리, Azure CNI Overlay + Cilium, load balancer egress, 비중첩 CIDR을 포함해줘. 대안, 위험, 비용 요인을 보여주고 계획 승인 전에는 멈춰. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해줘. 저장소 루트의 .env에서 RESOURCE_GROUP, AKS_NAME, REGION, EGRESS_IP_CIDR, POD_CIDR, SERVICE_CIDR, DNS_SERVICE_IP, SYSTEM_VM_SIZE, USER_VM_SIZE를 읽어 쓰고, 비어 있는 값이 있으면 추측하지 말고 먼저 알려줘. Lab 02의 Day-0 검토와 least privilege 매트릭스를 반영해줘. public API server의 authorized IP ranges는 EGRESS_IP_CIDR만 사용하고, Entra와 Azure RBAC for Kubernetes를 사용하며 local accounts는 비활성화해줘. system/user node pool 분리, Azure CNI Overlay + Cilium, load balancer egress, 비중첩 CIDR을 포함해줘. 대안, 위험, 비용 요인을 보여주고 계획 승인 전에는 멈춰. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
 **진행 방식**

@@ -33,11 +33,45 @@ Skill에게 작업을 요청하면 Skill은 절차와 판단 기준을, MCP 도�
 
 헷갈리면 "지금 이 작업이 Azure를 바꾸나요, 읽기만 하나요?"를 먼저 물어보세요.
 
-## Step 2. Azure Skills 설치하기
+## Step 2. Azure Skills 확인하기
 
-**Skill은 이 저장소에 들어 있지 않습니다.** Copilot 플러그인이라 Codespace를 열었다고 자동으로 생기지 않습니다. 이 워크샵의 모든 Lab이 Skill을 쓰므로 지금 설치합니다.
+Codespace가 만들어질 때 이 워크샵이 쓰는 Skill 6개를 `.github/skills/`에 내려받았습니다. 저장소에는 커밋되지 않고, 내 Codespace 안에만 있습니다.
 
-Copilot Chat 입력창에 아래 두 줄을 차례로 실행합니다. 터미널이 아니라 **채팅창**입니다.
+먼저 파일이 있는지 봅니다.
+
+```bash
+ls .github/skills
+```
+
+그다음 Copilot이 실제로 인식하는지 확인합니다. 파일이 있어도 로드되지 않으면 소용이 없습니다.
+
+> 📋 **아래 프롬프트를 복사해 실행**
+
+```text
+azure-quotas, azure-kubernetes, azure-enterprise-infra-planner, azure-resource-lookup, azure-diagnostics, azure-resource-visualizer Skill을 지금 쓸 수 있는지 하나씩 확인해서 표로 알려줘. 없는 것이 있으면 그대로 알려줘. 아무것도 실행하지 마.
+```
+
+여섯 개가 모두 있어야 합니다.
+
+**Skill이 없는 채로 진행하면 안 됩니다.** 요청을 받은 에이전트는 Skill이 없어도 "대신 다른 방법으로 해봤다"며 그럴듯한 답을 내놓을 수 있습니다. 그 답에는 이 워크샵이 가르치려는 절차와 위험 판단이 빠져 있습니다.
+
+<details>
+<summary>🖐 <b>비어 있거나 로컬 VS Code로 진행한다면</b></summary>
+
+자동 설치는 Codespace를 만들 때만 실행됩니다. 직접 내려받으려면 저장소 루트에서 아래를 실행하세요.
+
+```bash
+tmp=$(mktemp -d)
+git clone -q --depth 1 https://github.com/microsoft/azure-skills.git "$tmp"
+mkdir -p .github/skills
+for s in azure-quotas azure-kubernetes azure-enterprise-infra-planner \
+         azure-resource-lookup azure-diagnostics azure-resource-visualizer; do
+  cp -r "$tmp/skills/$s" .github/skills/
+done
+rm -rf "$tmp"
+```
+
+Copilot Chat에서 플러그인으로 설치해도 됩니다. 이 경우 Skill이 워크샵 밖에서도 쓸 수 있게 됩니다.
 
 ```text
 /plugin marketplace add microsoft/azure-skills
@@ -47,17 +81,7 @@ Copilot Chat 입력창에 아래 두 줄을 차례로 실행합니다. 터미널
 /plugin install azure@azure-skills
 ```
 
-설치됐는지 확인합니다.
-
-> 📋 **아래 프롬프트를 복사해 실행**
-
-```text
-azure-quotas, azure-kubernetes, azure-rbac, azure-enterprise-infra-planner, azure-resource-lookup, azure-diagnostics, azure-resource-visualizer Skill을 지금 쓸 수 있는지 하나씩 확인해서 표로 알려줘. 없는 것이 있으면 그대로 알려줘. 아무것도 실행하지 마.
-```
-
-일곱 개가 모두 있어야 합니다. 하나라도 없으면 위 설치 명령을 다시 실행하고, 그래도 안 되면 [문제가 생겼다면](#-문제가-생겼다면)을 보세요.
-
-**Skill이 없는 채로 진행하면 안 됩니다.** 요청을 받은 에이전트는 Skill이 없어도 "대신 다른 방법으로 해봤다"며 그럴듯한 답을 내놓을 수 있습니다. 그 답에는 이 워크샵이 가르치려는 절차와 위험 판단이 빠져 있습니다.
+</details>
 
 ## Step 3. Azure에 로그인하기
 
@@ -155,7 +179,7 @@ azure-resource-lookup Skill로 저장소 루트의 .env를 읽어 SUBSCRIPTION_I
 
 ## ✅ 완료 체크리스트
 
-- [ ] Azure Skills 플러그인을 설치하고 7개 Skill이 모두 있음을 확인했다
+- [ ] `.github/skills/`에 Skill 6개가 있고 Copilot이 인식함을 확인했다
 - [ ] `az login --use-device-code`로 로그인하고 쓸 subscription을 선택했다
 - [ ] `.env`의 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워진 것을 확인했다
 - [ ] 조회한 subscription이 `.env`와 일치함을 확인했다
@@ -166,9 +190,9 @@ azure-resource-lookup Skill로 저장소 루트의 .env를 읽어 SUBSCRIPTION_I
 
 | 증상 | 해야 할 일 |
 | --- | --- |
-| "~ 도구가 제공되지 않아" 라며 다른 방법으로 답함 | Skill이 설치되지 않은 것입니다. Step 2를 다시 수행하고, 그 답변은 증거로 쓰지 마세요 |
-| `/plugin` 명령이 듣지 않음 | 터미널이 아니라 **Copilot Chat 입력창**에 입력했는지 확인 |
-| 플러그인 설치는 됐는데 Skill이 안 잡힘 | Azure MCP server가 npm 패키지입니다. `node --version`으로 Node.js를 확인하세요 |
+| "~ 도구가 제공되지 않아" 라며 다른 방법으로 답함 | Skill이 로드되지 않은 것입니다. Step 2를 다시 확인하고, 그 답변은 증거로 쓰지 마세요 |
+| `.github/skills`가 비어 있거나 없음 | Step 2의 "비어 있거나 로컬 VS Code로 진행한다면"을 펼서 수동으로 내려받으세요 |
+| 파일은 있는데 Copilot이 못 찾음 | Azure MCP server가 npm 패키지입니다. `node --version`으로 Node.js를 확인하세요 |
 | `az login`이 브라우저를 못 열고 멈춤 | `--use-device-code`를 붙였는지 확인 |
 | 로그인은 됐는데 subscription이 안 보임 | 게스트 계정일 수 있음. `az login --use-device-code --tenant <tenant-id>` |
 | `SUBSCRIPTION_ID`가 비어 있음 | 로그인 후 [`init-workshop.sh`](../../scripts/init-workshop.sh)를 다시 실행 |

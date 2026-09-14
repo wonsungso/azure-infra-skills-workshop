@@ -99,7 +99,8 @@ Participants had to type values the tooling already knows.
 - **프롬프트에 값을 직접 적지 않습니다.** `[resource-group]` 같은 자리 표시자를 두고 사람이 치환하게 하는 대신, "저장소 루트의 .env에서 RESOURCE_GROUP을 읽어"처럼 **Skill이 직접 읽도록** 씁니다. 비어 있는 값은 추측하지 말고 멈추라고 붙입니다
 - 반대로 **판단이 필요한 값**(CIDR, SKU, node 개수, 승인 여부)은 자동으로 정하지 않습니다. 사람이 결정하고 도구는 기록만 돕습니다. `REGION`만은 바로 시작할 수 있도록 `koreacentral` 기본값을 두되, Lab 02에서 quota를 보고 확인하게 합니다
 - **프롬프트에는 Skill 이름 뒤에 `Skill`을 붙입니다.** `azure-kubernetes를 사용해`라고만 쓰면 에이전트가 같은 이름의 **도구**를 찾다 실패하고 다른 방법으로 조용히 대체합니다. 모든 Skill 프롬프트는 "이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘."로 끝납니다
-- **Skill은 이 저장소에 없습니다.** Copilot 플러그인(`microsoft/azure-skills`)이므로 Codespace가 자동으로 설치하지 않습니다. Lab 01에서 설치하고 확인합니다
+- **Skill은 이 저장소에 커밋하지 않습니다.** Codespace가 만들어질 때 [`post-create.sh`](.devcontainer/post-create.sh)가 `microsoft/azure-skills`에서 필요한 것만 `.github/skills/`로 복사하며, 이 경로는 `.gitignore` 대상입니다. 워크샵이 쓰는 Skill을 바꿀 때는 `WORKSHOP_SKILLS` 목록과 Lab 01 Step 2의 확인 프롬프트를 함께 고칩니다
+- 참조하려는 Skill이 `microsoft/azure-skills`의 `skills/`에 **실제로 있는지 확인하고 씁니다.** 그 목록은 바뀝니다(예: `azure-rbac`은 2026-07에 제거됨)
 - Step 제목에 **소요시간을 적지 않습니다.** 진도가 사람마다 달라 지키기 어렵고, 뒤처진다는 느낌만 줍니다. 전체 분량은 Lab 머리말의 ⏱ 표기로만 안내합니다
 
 ### 용어 표기

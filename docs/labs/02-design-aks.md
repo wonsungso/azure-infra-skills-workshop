@@ -4,7 +4,7 @@
 
 🎯 quota 확인 / Day-0 결정(네트워크·node pool·접근) / least privilege 매트릭스
 
-🧠 `azure-quotas` · `azure-kubernetes` · `azure-rbac`
+🧠 `azure-quotas` · `azure-kubernetes` · `azure-enterprise-infra-planner`
 
 > 🎬 권한과 범위는 확인했습니다. 이제 **무엇을 만들 것인가**를 정합니다. 여기서 잘못 정하면 클러스터를 처음부터 다시 만들어야 합니다.
 
@@ -61,10 +61,10 @@ azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해�
 
 ## Step 3. least privilege 매트릭스 만들기
 
-> 🧠 **Skill** `azure-rbac` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-rbac Skill을 사용해 이 교육용 AKS의 least privilege 매트릭스를 작성해줘. Azure 리소스 배포자, 역할 할당자, AKS control-plane managed identity, lab namespace 사용자를 분리하고 scope와 필요한 작업을 표로 보여줘. 권한을 변경하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
+azure-enterprise-infra-planner Skill을 사용해 이 교육용 AKS의 least privilege 매트릭스를 작성해줘. Azure 리소스 배포자, 역할 할당자, AKS control-plane managed identity, lab namespace 사용자를 분리하고 scope와 필요한 작업을 표로 보여줘. 계획만 세우고 권한을 변경하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
 "리소스를 배포하는 권한"과 "남에게 역할을 부여하는 권한"은 다릅니다. **Azure 권한과 Kubernetes 내부 권한도 완전히 다른 시스템**입니다. 이 표가 있으면 나중에 "왜 안 되지?"에 바로 답할 수 있습니다.
