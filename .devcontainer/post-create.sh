@@ -33,4 +33,4 @@ kubectl version --client --output=yaml 2>/dev/null | head -3 || true
 kubelogin --version 2>/dev/null | head -1 || true
 
 echo ""
-echo "다음 단계: az login 으로 로그인한 뒤 docs/labs/01-orientation-and-setup.md 를 여세요."
+echo "다음 단계: docs/labs/01-orientation-and-setup.md 를 열어 Azure 로그인부터 진행하세요."

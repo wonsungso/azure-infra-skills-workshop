@@ -82,12 +82,13 @@ flowchart LR
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/wonsungso/azure-infra-skills-workshop)
 
-Azure CLI, Bicep, `kubectl`, `kubelogin`이 설치된 상태로 열립니다. 로컬에 아무것도 깔지 않아도 됩니다. 컨테이너 준비가 끝나면 터미널에서 로그인합니다.
+Azure CLI, Bicep, `kubectl`, `kubelogin`이 설치된 상태로 열립니다. 로컬에 아무것도 깔지 않아도 됩니다. 컨테이너 준비가 끝나면 터미널에서 도구만 확인합니다.
 
 ```bash
-az login
 az version && az bicep version && kubectl version --client && kubelogin --version
 ```
+
+Azure 로그인은 [Lab 01](docs/labs/01-orientation-and-setup.md)에서 함께 진행합니다.
 
 > [!NOTE]
 > 로컬 VS Code로 진행해도 됩니다. 그때는 위 도구를 직접 설치하고 `bash scripts/init-workshop.sh`를 한 번 실행하세요. 이후 Lab은 두 경우 모두 동일합니다.

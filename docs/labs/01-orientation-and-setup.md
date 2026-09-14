@@ -2,7 +2,7 @@
 
 **Lab 1 / 8** · 1부 · 설계와 검증 · ⏱ 30분
 
-🎯 Skill·도구·사람의 역할 구분 / 자동으로 채워진 입력값 확인 / 내 Azure 범위를 읽기 전용으로 확인
+🎯 Skill·도구·사람의 역할 구분 / Azure 로그인과 입력값 확인 / 내 범위를 읽기 전용으로 확인
 
 🧠 `azure-resource-lookup`
 
@@ -14,8 +14,8 @@ Skill에게 작업을 요청하면 Skill은 절차와 판단 기준을, MCP 도�
 
 ## 시작 전에
 
-- [README](../../README.md)의 시작하기를 마쳤나요?
-- Codespace 터미널에서 `az login`으로 로그인했나요?
+- [README](../../README.md)의 시작하기를 읽고 Codespace를 열었나요?
+- 터미널에서 `az version`이 동작하나요?
 
 ## Step 1. 역할 이해하기 (5분)
 
@@ -34,9 +34,34 @@ Skill에게 작업을 요청하면 Skill은 절차와 판단 기준을, MCP 도�
 > [!TIP]
 > 헷갈리면 "지금 이 작업이 Azure를 바꾸나요, 읽기만 하나요?"를 먼저 물어보세요.
 
-## Step 2. 입력값 확인하기 (5분)
+## Step 2. Azure에 로그인하기 (5분)
 
-이후 모든 프롬프트가 저장소 루트의 `.env`를 공유합니다. **직접 타이핑할 값은 없습니다.** Codespace가 만들어질 때 리소스 이름과 egress IP가 채워졌고, `az login` 후 아래를 한 번 더 실행하면 subscription까지 채워집니다.
+**이 단계는 사람이 직접 해야 합니다.** 로그인은 본인 계정의 credentials를 다루는 일이라 Skill이나 스크립트에 맡기지 않습니다.
+
+Codespace는 원격 컨테이너라 브라우저가 자동으로 열리지 않습니다. **device code 방식**을 씁니다.
+
+```bash
+az login --use-device-code
+```
+
+터미널에 나온 코드를 복사해, 함께 표시된 주소를 브라우저에서 열고 붙여넣습니다. 브라우저에서 인증이 끝나면 터미널이 알아서 다음으로 넘어갑니다.
+
+subscription이 여러 개라면 이 워크샵에서 쓸 것을 직접 고릅니다.
+
+```bash
+az account list --query "[].{name:name, id:id, default:isDefault}" -o table
+az account set --subscription "<사용할 subscription 이름 또는 id>"
+```
+
+> [!IMPORTANT]
+> 터미널에 표시된 device code와 로그인 결과에는 **계정 이메일과 subscription ID**가 그대로 나옵니다. 이 화면을 캡처해 공유하지 마세요.
+
+> [!WARNING]
+> 비밀번호나 인증 코드를 채팅 창에 붙여넣지 마세요. 로그인은 터미널과 브라우저에서만 진행합니다.
+
+## Step 3. 입력값 확인하기 (5분)
+
+이후 모든 프롬프트가 저장소 루트의 `.env`를 공유합니다. **직접 타이핑할 값은 없습니다.** Codespace가 만들어질 때 리소스 이름과 egress IP가 채워졌고, 로그인을 마친 지금 아래를 한 번 더 실행하면 subscription까지 채워집니다.
 
 ```bash
 bash scripts/init-workshop.sh
@@ -47,7 +72,7 @@ cat .env
 | --- | --- |
 | `WORKSHOP_ID`와 리소스 이름 | Codespace 생성 시 자동 |
 | `EGRESS_IP_CIDR` | 자동 (ipify 조회) |
-| `SUBSCRIPTION_ID` | 자동 (`az login` 후 재실행) |
+| `SUBSCRIPTION_ID` | 자동 (Step 2 로그인 후 재실행) |
 | `REGION`, CIDR, VM SKU | **Lab 02에서 내가 결정** |
 | `NODE_RESOURCE_GROUP` | Lab 05 배포 후 output |
 
@@ -61,12 +86,12 @@ cat .env
 > [!WARNING]
 > 비밀번호, token, kubeconfig 내용은 `.env`에 적지 않습니다. 이 파일은 `.gitignore` 대상이므로 커밋되지 않습니다.
 
-## Step 3. 내 Azure 범위 확인하기 (10분)
+## Step 4. 내 Azure 범위 확인하기 (10분)
 
 먼저 **빠른 방법**으로 확인합니다. 단순 조회는 CLI가 몇 초면 끝납니다.
 
 ```bash
-bash scripts/log-evidence.sh "Lab 01 Step 3" "az CLI" -- az account show -o table
+bash scripts/log-evidence.sh "Lab 01 Step 4" "az CLI" -- az account show -o table
 ```
 
 결과를 보여주면서 동시에 `evidence-log.md`에 한 줄을 기록합니다. 따로 적을 필요가 없습니다.
@@ -113,6 +138,7 @@ azure-resource-lookup으로 내 subscription에서 [resource-group]의 존재 �
 
 ## ✅ 완료 체크리스트
 
+- [ ] `az login --use-device-code`로 로그인하고 쓸 subscription을 선택했다
 - [ ] `.env`의 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워진 것을 확인했다
 - [ ] 조회한 subscription이 `.env`와 일치함을 확인했다
 - [ ] `evidence-log.md`에 실행 기록이 남았다
@@ -122,8 +148,10 @@ azure-resource-lookup으로 내 subscription에서 [resource-group]의 존재 �
 
 | 증상 | 해야 할 일 |
 | --- | --- |
-| 조회 결과가 `.env`와 다름 | `az account show`로 현재 subscription 확인 후 정정 |
-| subscription이 여러 개라 헷갈림 | `az account list -o table` → `az account set --subscription <id>` |
+| `az login`이 브라우저를 못 열고 멈춤 | `--use-device-code`를 붙였는지 확인 |
+| 로그인은 됐는데 subscription이 안 보임 | 게스트 계정일 수 있음. `az login --use-device-code --tenant <tenant-id>` |
+| `SUBSCRIPTION_ID`가 비어 있음 | 로그인 후 `bash scripts/init-workshop.sh`를 다시 실행 |
+| 조회 결과가 `.env`와 다름 | `az account set --subscription <id>` 후 `init-workshop.sh` 재실행 |
 | "권한이 없습니다" | 권한을 스스로 올리지 말고, 권한이 있는 다른 subscription·그룹으로 진행 |
 | Skill이 리소스를 만들려 함 | "읽기 전용"을 다시 강조해 재요청 |
 

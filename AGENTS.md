@@ -58,6 +58,12 @@ if [ -n "$hits" ]; then printf '%s\n' "$hits"; echo "확인 필요: 커밋하지
 > [!NOTE]
 > 종료 코드로 판정하지 마세요. `xargs`는 `grep`이 "일치 없음(1)"을 반환해도 `123`을 돌려주기 때문에, 종료 코드만 보면 잘못 판단합니다. **출력이 비어 있는지**로 판정해야 합니다.
 
+`assets/azure-icons/*.svg`와 `img/*.svg`는 `linearGradient id`가 GUID 형식이라 위 패턴에 걸립니다. 이것만으로 유출이라고 단정하지 말고, 실제 값과 대조해 확인하세요.
+
+```bash
+grep -rqF "$(az account show --query id -o tsv)" . && echo "실제 유출" || echo "오탐"
+```
+
 무언가 걸리면 **커밋하지 말고 사용자에게 먼저 알립니다.** 이미 커밋된 뒤라면 파일 수정만으로는 히스토리에서 지워지지 않으므로, 해당 credentials를 **폐기(rotate)** 하는 것이 우선입니다.
 
 > [!WARNING]

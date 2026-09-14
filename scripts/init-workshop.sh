@@ -23,7 +23,7 @@ AKS_NAME=aks-lab-$ID
 NAMESPACE=lab
 IMAGE_TAG=nginxinc/nginx-unprivileged:1.27-alpine
 
-# 자동으로 채워짐 (az login 후 재실행하면 갱신)
+# 자동으로 채워짐 (로그인 후 재실행하면 갱신)
 SUBSCRIPTION_ID=
 EGRESS_IP_CIDR=
 
@@ -78,7 +78,7 @@ if command -v az >/dev/null 2>&1; then
   if [ -n "$SUB" ]; then
     set_env SUBSCRIPTION_ID "$SUB"
   else
-    echo "  SUBSCRIPTION_ID 비어 있음 - az login 후 이 스크립트를 다시 실행하세요"
+    echo "  SUBSCRIPTION_ID 비어 있음 - az login --use-device-code 후 이 스크립트를 다시 실행하세요"
   fi
 else
   echo "  az CLI 없음 - SUBSCRIPTION_ID는 나중에 채워집니다"

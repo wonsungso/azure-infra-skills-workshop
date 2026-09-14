@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 명령을 실행하고 그 결과를 evidence-log.md 표에 한 줄로 덧붙인다.
 # 사용법: bash scripts/log-evidence.sh "<단계>" "<Skill 또는 도구>" -- <명령...>
-#   예:  bash scripts/log-evidence.sh "Lab 01 Step 3" "az CLI" -- az account show -o table
+#   예:  bash scripts/log-evidence.sh "Lab 01 Step 4" "az CLI" -- az account show -o table
 set -uo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
@@ -28,6 +28,7 @@ DIGEST=$(printf '%s' "$OUT" \
       -e 's/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/<id>/g' \
       -e 's/[0-9]{1,3}(\.[0-9]{1,3}){3}/<ip>/g' \
       -e 's/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+/<user>/g' \
+      -e 's/[A-Za-z0-9-]+\.onmicrosoft\.com/<tenant>/g' \
       -e 's/\|//g' \
   | cut -c1-120)
 
