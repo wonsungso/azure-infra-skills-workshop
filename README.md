@@ -89,7 +89,7 @@ az version && az bicep version && kubectl version --client && kubelogin --versio
 
 Azure 로그인은 [Lab 01](docs/labs/01-orientation-and-setup.md)에서 함께 진행합니다.
 
-로컬 VS Code로 진행해도 됩니다. 그때는 위 도구를 직접 설치하고 `bash scripts/init-workshop.sh`를 한 번 실행하세요. 이후 Lab은 두 경우 모두 동일합니다.
+로컬 VS Code로 진행해도 됩니다. 그때는 위 도구를 직접 설치하고 [`init-workshop.sh`](scripts/init-workshop.sh)를 한 번 실행하세요. 이후 Lab은 두 경우 모두 동일합니다.
 
 ### 3. Lab 01부터 순서대로 진행합니다
 

@@ -43,7 +43,7 @@ Azure Resource Manager의 실제 자원 관계와 Kubernetes API의 Deployment, 
 
 ## 이름 충돌 방지
 
-모든 리소스 이름에 6글자 `workshopId`를 공통으로 넣는다. `reference/infra/main.bicep`은 이 값 하나로 VNet과 AKS 이름, DNS 접두사를 모두 생성한다.
+모든 리소스 이름에 6글자 `workshopId`를 공통으로 넣는다. [`main.bicep`](../reference/infra/main.bicep)은 이 값 하나로 VNet과 AKS 이름, DNS 접두사를 모두 생성한다.
 
 | 리소스 | 이름 규칙 |
 | --- | --- |

@@ -52,8 +52,6 @@ az account list --query "[].{name:name, id:id, default:isDefault}" -o table
 az account set --subscription "<사용할 subscription 이름 또는 id>"
 ```
 
-로그인 화면에는 **계정 이메일과 subscription ID**가 그대로 나오므로 캐처해 공유하지 마세요. 비밀번호나 인증 코드도 채팅 창에 붙여넣지 않습니다. 로그인은 터미널과 브라우저에서만 진행합니다.
-
 ## Step 3. 입력값 확인하기 (5분)
 
 이후 모든 프롬프트가 저장소 루트의 `.env`를 공유합니다. **직접 타이핑할 값은 없습니다.** Codespace가 만들어질 때 리소스 이름과 egress IP가 채워졌고, 로그인을 마친 지금 아래를 한 번 더 실행하면 subscription까지 채워집니다.
@@ -73,7 +71,7 @@ cat .env
 
 자동으로 알 수 있는 값과 **사람이 결정해야 하는 값**을 구분하세요. 뒤의 네 가지는 quota와 기존 네트워크를 보고 판단해야 해서 자동화할 수 없습니다.
 
-`EGRESS_IP_CIDR`은 내 PC가 아니라 **Codespace의 egress IP**입니다. AKS API server에 접근할 수 있는 유일한 주소가 되므로 반드시 Codespace 안에서 조회된 값이어야 합니다. Codespace를 중지했다가 다시 시작하면 이 IP가 바날 수 있으므로, Lab 05 이후 접속이 갑자기 안 되면 `bash scripts/init-workshop.sh`를 다시 실행해 갱신하세요.
+`EGRESS_IP_CIDR`은 내 PC가 아니라 **Codespace의 egress IP**입니다. AKS API server에 접근할 수 있는 유일한 주소가 되므로 반드시 Codespace 안에서 조회된 값이어야 합니다. Codespace를 중지했다가 다시 시작하면 이 IP가 바날 수 있으므로, Lab 05 이후 접속이 갑자기 안 되면 [`init-workshop.sh`](../../scripts/init-workshop.sh)를 다시 실행해 갱신하세요.
 
 비밀번호, token, kubeconfig 내용은 `.env`에 적지 않습니다. 이 파일은 `.gitignore` 대상이므로 커밋되지 않습니다.
 
@@ -85,7 +83,7 @@ cat .env
 bash scripts/log-evidence.sh "Lab 01 Step 4" "az CLI" -- az account show -o table
 ```
 
-결과를 보여주면서 동시에 `evidence-log.md`에 한 줄을 기록합니다. 따로 적을 필요가 없습니다.
+결과를 보여주면서 동시에 저장소 루트의 `evidence-log.md`에 한 줄을 기록합니다. 따로 적을 필요가 없습니다. 어떤 칸을 사람이 채워야 하는지는 [증거 로그 양식](../../templates/evidence-log.md)에 설명되어 있습니다.
 
 그다음 resource group을 봅니다. Lab 05에서 배포와 함께 만들 것이므로 **지금 없어도 정상입니다.**
 
@@ -131,7 +129,7 @@ azure-resource-lookup으로 내 subscription에서 [resource-group]의 존재 �
 - [ ] `az login --use-device-code`로 로그인하고 쓸 subscription을 선택했다
 - [ ] `.env`의 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워진 것을 확인했다
 - [ ] 조회한 subscription이 `.env`와 일치함을 확인했다
-- [ ] `evidence-log.md`에 실행 기록이 남았다
+- [ ] [증거 로그](../../templates/evidence-log.md) 형식의 `evidence-log.md`에 실행 기록이 남았다
 - [ ] 단순 조회와 판단을 각각 어떤 도구로 하는지 설명할 수 있다
 
 ## 🚧 문제가 생겼다면
@@ -140,8 +138,8 @@ azure-resource-lookup으로 내 subscription에서 [resource-group]의 존재 �
 | --- | --- |
 | `az login`이 브라우저를 못 열고 멈춤 | `--use-device-code`를 붙였는지 확인 |
 | 로그인은 됐는데 subscription이 안 보임 | 게스트 계정일 수 있음. `az login --use-device-code --tenant <tenant-id>` |
-| `SUBSCRIPTION_ID`가 비어 있음 | 로그인 후 `bash scripts/init-workshop.sh`를 다시 실행 |
-| 조회 결과가 `.env`와 다름 | `az account set --subscription <id>` 후 `init-workshop.sh` 재실행 |
+| `SUBSCRIPTION_ID`가 비어 있음 | 로그인 후 [`init-workshop.sh`](../../scripts/init-workshop.sh)를 다시 실행 |
+| 조회 결과가 `.env`와 다름 | `az account set --subscription <id>` 후 [`init-workshop.sh`](../../scripts/init-workshop.sh) 재실행 |
 | "권한이 없습니다" | 권한을 스스로 올리지 말고, 권한이 있는 다른 subscription·그룹으로 진행 |
 | Skill이 리소스를 만들려 함 | "읽기 전용"을 다시 강조해 재요청 |
 

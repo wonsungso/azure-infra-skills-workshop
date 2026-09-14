@@ -27,8 +27,7 @@
 
 ### 문서와 템플릿에 값을 기록할 때
 
-- [증거 로그](templates/evidence-log.md)와 [인계 문서](templates/handoff-template.md)는 **참가자가 자기 환경에서 로컬로 채우는 양식**입니다. 실제 값을 채운 상태로 커밋하지 마세요.
-- 워크샵 공용 값은 저장소 루트의 `.env`에 들어 있으며 `.gitignore` 대상입니다. 이 파일을 커밋하거나 내용을 문서·이슈에 붙여넣지 마세요.
+- [증거 로그](templates/evidence-log.md)와 [인계 문서](templates/handoff-template.md)는 **참가자가 자기 환경에서 로컬로 채우는 양식**입니다. 실제 값을 채운 상태로 커밋하지 마세요.- 워크샵 공용 값은 저장소 루트의 `.env`에 들어 있으며 `.gitignore` 대상입니다. 이 파일을 커밋하거나 내용을 문서·이슈에 붙여넣지 마세요.
 - 저장소에 커밋되는 것은 **자리 표시자가 들어간 빈 양식**뿐이어야 합니다.
 - 실제 값이 필요한 예시는 `<subscription-id>` 처럼 꺾쇠 자리 표시자를 쓰거나, 형태만 알 수 있게 마스킹합니다(예: `10.245.x.x`).
 
@@ -72,7 +71,7 @@ grep -rqF "$(az account show --query id -o tsv)" . && echo "실제 유출" || ec
 - **비용이 발생하는 리소스**(AKS node 등)를 만들었다면 반드시 사용자에게 알리고, 정리 방법을 함께 안내합니다.
 - 접속 오류를 해결하려고 `authorizedIpRanges`에 `0.0.0.0/0`을 넣거나 허용 목록을 비우지 않습니다.
 - 권한 문제를 우회하려고 사용자에게 Owner나 cluster-admin을 부여하도록 제안하지 않습니다.
-- `reference/infra/main.bicep`의 `testingMode`는 기본값 `false`를 유지합니다. 역할 할당이 차단된 제한 subscription에서 테스트할 때만 예외적으로 사용합니다.
+- [`reference/infra/main.bicep`](reference/infra/main.bicep)의 `testingMode`는 기본값 `false`를 유지합니다. 역할 할당이 차단된 제한 subscription에서 테스트할 때만 예외적으로 사용합니다.
 
 ## 📋 저장소 가이드라인
 
@@ -95,7 +94,7 @@ Participants had to type values the tooling already knows.
 - AKS는 소재일 뿐이고, 핵심은 "계획 승인 → 코드 → 검증 → 배포 승인 → 배포"라는 안전한 절차입니다
 - 실행 환경은 **GitHub Codespaces**가 기본입니다. 도구 설치는 `.devcontainer/`가 담당하므로, Lab 문서에 설치 절차를 다시 쓰지 않습니다
 - 프롬프트와 입력값은 **해당 Lab 본문 안에** 둡니다. 별도의 프롬프트 모음 파일이나 입력표 파일을 다시 만들지 않습니다
-- **기계가 알 수 있는 값은 사람이 타이핑하게 하지 않습니다.** 조회로 얻는 값은 `scripts/init-workshop.sh`가 채우고, 사람이 결정한 값은 `scripts/set-env.sh`로 반영하며, 실행 기록은 `scripts/log-evidence.sh`가 남깁니다. 문서에 "손으로 적으세요"라고 쓰지 않습니다
+- **기계가 알 수 있는 값은 사람이 타이핑하게 하지 않습니다.** 조회로 얻는 값은 [`scripts/init-workshop.sh`](scripts/init-workshop.sh)가 채우고, 사람이 결정한 값은 [`scripts/set-env.sh`](scripts/set-env.sh)로 반영하며, 실행 기록은 [`scripts/log-evidence.sh`](scripts/log-evidence.sh)가 남깁니다. 문서에 "손으로 적으세요"라고 쓰지 않습니다
 - 반대로 **판단이 필요한 값**(region, CIDR, SKU, 승인 여부)은 자동으로 정하지 않습니다. 사람이 결정하고 도구는 기록만 돕습니다
 
 ### 용어 표기
@@ -116,6 +115,7 @@ Azure·Kubernetes 기술 용어는 **영어를 그대로** 씁니다. 번역하�
 - 앱 소스 코드와 Dockerfile을 추가하지 않음. 이 워크샵은 **앱 코딩과 컨테이너 이미지 빌드를 범위에서 제외**함
 - 샘플 워크로드는 `lab` namespace의 ClusterIP만 사용하고 외부 LoadBalancer나 Ingress를 만들지 않음
 - 모든 README와 Lab 문서의 상대 링크는 항상 유효해야 함
+- **저장소에 있는 파일을 본문에서 언급할 때는 링크를 겁니다.** 파일명은 백틱으로 감싸고, 링크 대상은 그 문서 위치 기준 상대 경로로 씁니다. 예를 들어 [`set-env.sh`](scripts/set-env.sh)를 Lab 문서에서 가리키려면 경로가 `../../scripts/set-env.sh`가 됩니다. 단, `.env`나 `evidence-log.md`처럼 **실행 중에 생성되는 파일**은 저장소에 없으므로 링크하지 않습니다. 연결할 양식이나 생성 스크립트가 있다면 그쪽을 링크합니다
 - 강사 전용 자료를 다시 만들지 않음. 모든 작업은 참가자가 직접 수행하는 형태로 서술함
 
 ### 검증되지 않은 것을 검증된 것처럼 쓰지 않기

@@ -23,20 +23,22 @@
 
 | 파일 | Azure 리소스 |
 | --- | --- |
-| `resource-group.svg` | Resource Groups |
-| `vnet.svg` | Virtual Networks |
-| `subnet.svg` | Subnet |
-| `nsg.svg` | Network Security Groups |
-| `public-ip.svg` | Public IP Addresses |
-| `load-balancer.svg` | Load Balancers |
-| `aks.svg` | Kubernetes Services |
-| `managed-identity.svg` | Managed Identities |
+| [`resource-group.svg`](resource-group.svg) | Resource Groups |
+| [`vnet.svg`](vnet.svg) | Virtual Networks |
+| [`subnet.svg`](subnet.svg) | Subnet |
+| [`nsg.svg`](nsg.svg) | Network Security Groups |
+| [`public-ip.svg`](public-ip.svg) | Public IP Addresses |
+| [`load-balancer.svg`](load-balancer.svg) | Load Balancers |
+| [`aks.svg`](aks.svg) | Kubernetes Services |
+| [`managed-identity.svg`](managed-identity.svg) | Managed Identities |
 
 ## 그림 만들기
 
 ```bash
 bash scripts/build-architecture-svg.sh <스펙.json> <출력.svg>
 ```
+
+스펙 형식은 [`example-architecture.json`](example-architecture.json), 생성기는 [`build-architecture-svg.sh`](../../scripts/build-architecture-svg.sh)를 보세요.
 
 스펙은 레이어 단위로 적습니다. 좌표를 직접 계산할 필요가 없고, 스크립트가 배치와 화살표를 처리합니다.
 [example-architecture.json](example-architecture.json)이 실제 예시입니다.

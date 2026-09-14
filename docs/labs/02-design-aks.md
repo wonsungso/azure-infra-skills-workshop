@@ -88,7 +88,7 @@ azure-rbac을 사용해 이 교육용 AKS의 least privilege 매트릭스를 작
 
 - [ ] quota를 조회해 region·SKU·node 개수를 결정했다
 - [ ] Day-0 결정을 스스로 설명할 수 있다
-- [ ] 결정한 값을 `scripts/set-env.sh`로 `.env`에 반영했다
+- [ ] 결정한 값을 [`set-env.sh`](../../scripts/set-env.sh)로 `.env`에 반영했다
 - [ ] least privilege 매트릭스를 증거 로그에 연결했다
 - [ ] 아직 아무것도 생성하지 않았다
 
