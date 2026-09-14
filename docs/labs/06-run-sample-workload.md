@@ -72,21 +72,19 @@ reference/kubernetes/lab-web.yaml을 검토해줘. ConfigMap으로 주입되는 
 
 port-forward를 연 상태에서 브라우저로 `http://127.0.0.1:8080` 에 접속해 **Contoso Shop** 화면을 확인하세요.
 
-> [!TIP]
-> Codespace에서는 port-forward를 시작하면 VS Code가 8080 포트를 자동으로 감지합니다. 하단 **포트(Ports) 패널**에서 지구본 아이콘을 누르면 브라우저로 열립니다. 이때 주소는 `127.0.0.1`이 아니라 `...app.github.dev` 형태입니다. 이것은 Codespace 내부로의 터널일 뿐이므로, 클러스터를 외부에 공개한 것이 아닙니다.
+Codespace에서는 port-forward를 시작하면 VS Code가 8080 포트를 자동으로 감지합니다. 하단 **포트(Ports) 패널**에서 지구본 아이콘을 누르면 브라우저로 열립니다. 이때 주소는 `127.0.0.1`이 아니라 `...app.github.dev` 형태입니다. 이것은 Codespace 내부로의 터널일 뿐이므로, 클러스터를 외부에 공개한 것이 아닙니다.
 
 <img src="../../img/shop.png" alt="Contoso Shop 상품 페이지 - 상품 카드 4개와 하단에 실제 Pod 이름이 표시된 화면" width="760">
 
 화면 아래의 Pod 이름과 터미널에서 조회한 이름이 **같은지** 비교해 보세요. 같다면 화면이 정말로 내 클러스터에서 오고 있다는 증거입니다. `-o wide`로 조회한 node가 **user pool**인지도 확인하세요. Lab 02 설계 결정이 실제로 지켜졌다는 증거입니다.
 
-> [!TIP]
-> Pod를 지우고 재생성된 뒤 페이지를 새로고침해 보세요. **하단의 Pod 이름이 바뀝니다.** 재생성이 눈으로 보이는 순간입니다.
->
-> ```bash
-> kubectl delete pod -n lab -l app=lab-web
-> ```
->
-> port-forward는 Pod가 바뀌면 끊어지므로 다시 실행해야 합니다.
+Pod를 지우고 재생성된 뒤 페이지를 새로고침해 보세요. **하단의 Pod 이름이 바뀝니다.** 재생성이 눈으로 보이는 순간입니다.
+
+```bash
+kubectl delete pod -n lab -l app=lab-web
+```
+
+port-forward는 Pod가 바뀌면 끊어지므로 다시 실행해야 합니다.
 
 <img src="../../img/shop-after-restart.png" alt="Pod 재생성 후 같은 상품 페이지 - 하단의 Pod 이름만 다른 값으로 바뀐 화면" width="760">
 

@@ -18,8 +18,7 @@
 
 커머스팀이 출시할 **Contoso Shop**입니다. 화면 아래 **응답을 처리한 Pod 이름**은 고정 텍스트가 아니라 지금 트래픽을 받고 있는 실제 Pod입니다. Pod를 다시 만들면 이름이 바뀝니다.
 
-> [!NOTE]
-> 컨테이너 이미지를 빌드하지 않습니다. 공개 nginx 이미지에 **ConfigMap**으로 화면을 주입하고 **Downward API**로 Pod 정보를 전달합니다. 앱 코딩 없이 manifest만으로 만듭니다.
+컨테이너 이미지를 빌드하지 않습니다. 공개 nginx 이미지에 **ConfigMap**으로 화면을 주입하고 **Downward API**로 Pod 정보를 전달합니다. 앱 코딩 없이 manifest만으로 만듭니다.
 
 ## 🗺️ 오늘의 여정
 
@@ -75,7 +74,7 @@ flowchart LR
 - resource group을 만들고 그 안에 AKS를 배포할 권한 (예: 해당 scope의 `Contributor`)
 - 실습이 끝난 뒤 리소스를 **삭제**할 권한
 
-> [!IMPORTANT]
+> [!WARNING]
 > **실제 비용이 발생하는 리소스**를 만듭니다. AKS node는 실행되는 동안 계속 과금되므로, 중간에 그만두더라도 [Lab 08](docs/labs/08-document-and-cleanup.md)의 정리 단계는 반드시 수행하세요. 회사 공용 subscription이라면 **전용 resource group**을 새로 만들어 진행하세요.
 
 ### 2. Codespace를 엽니다
@@ -90,8 +89,7 @@ az version && az bicep version && kubectl version --client && kubelogin --versio
 
 Azure 로그인은 [Lab 01](docs/labs/01-orientation-and-setup.md)에서 함께 진행합니다.
 
-> [!NOTE]
-> 로컬 VS Code로 진행해도 됩니다. 그때는 위 도구를 직접 설치하고 `bash scripts/init-workshop.sh`를 한 번 실행하세요. 이후 Lab은 두 경우 모두 동일합니다.
+로컬 VS Code로 진행해도 됩니다. 그때는 위 도구를 직접 설치하고 `bash scripts/init-workshop.sh`를 한 번 실행하세요. 이후 Lab은 두 경우 모두 동일합니다.
 
 ### 3. Lab 01부터 순서대로 진행합니다
 

@@ -23,8 +23,7 @@
 | AKS FQDN, node resource group 실명 | `az aks show` 출력 | `<aks-fqdn>`, `MC_<rg>_<aks>_<region>` |
 | 로그인 계정 이메일(UPN) | `az account show`, 오류 메시지 | `<user>@<tenant>` |
 
-> [!IMPORTANT]
-> `kubectl config view`는 기본적으로 credentials를 출력합니다. 문서나 이슈에 붙여넣어야 한다면 반드시 `kubectl config view --raw=false --minify` 수준으로 줄이고, 그래도 남는 인증 필드는 직접 지우세요. 더 안전한 방법은 붙여넣지 않는 것입니다.
+`kubectl config view`는 기본적으로 credentials를 출력합니다. 문서나 이슈에 붙여넣어야 한다면 반드시 `kubectl config view --raw=false --minify` 수준으로 줄이고, 그래도 남는 인증 필드는 직접 지우세요. 더 안전한 방법은 붙여넣지 않는 것입니다.
 
 ### 문서와 템플릿에 값을 기록할 때
 
@@ -55,8 +54,7 @@ hits=$(git ls-files -z -- . ':!AGENTS.md' | xargs -0 grep -nEI \
 if [ -n "$hits" ]; then printf '%s\n' "$hits"; echo "확인 필요: 커밋하지 마세요"; else echo "클린: 민감정보 없음"; fi
 ```
 
-> [!NOTE]
-> 종료 코드로 판정하지 마세요. `xargs`는 `grep`이 "일치 없음(1)"을 반환해도 `123`을 돌려주기 때문에, 종료 코드만 보면 잘못 판단합니다. **출력이 비어 있는지**로 판정해야 합니다.
+종료 코드로 판정하지 마세요. `xargs`는 `grep`이 "일치 없음(1)"을 반환해도 `123`을 돌려주기 때문에, 종료 코드만 보면 잘못 판단합니다. **출력이 비어 있는지**로 판정해야 합니다.
 
 `assets/azure-icons/*.svg`와 `img/*.svg`는 `linearGradient id`가 GUID 형식이라 위 패턴에 걸립니다. 이것만으로 유출이라고 단정하지 말고, 실제 값과 대조해 확인하세요.
 
@@ -66,8 +64,7 @@ grep -rqF "$(az account show --query id -o tsv)" . && echo "실제 유출" || ec
 
 무언가 걸리면 **커밋하지 말고 사용자에게 먼저 알립니다.** 이미 커밋된 뒤라면 파일 수정만으로는 히스토리에서 지워지지 않으므로, 해당 credentials를 **폐기(rotate)** 하는 것이 우선입니다.
 
-> [!WARNING]
-> 에이전트는 사용자의 비밀값을 대화로 요청하지 않습니다. 비밀번호, 토큰, 연결 문자열이 필요하면 사용자가 터미널이나 환경 변수에 직접 입력하도록 안내하고, 그 값을 다시 출력하거나 파일에 쓰지 않습니다.
+에이전트는 사용자의 비밀값을 대화로 요청하지 않습니다. 비밀번호, 토큰, 연결 문자열이 필요하면 사용자가 터미널이나 환경 변수에 직접 입력하도록 안내하고, 그 값을 다시 출력하거나 파일에 쓰지 않습니다.
 
 ## ☁️ Azure 작업 규칙
 
@@ -140,4 +137,4 @@ Azure·Kubernetes 기술 용어는 **영어를 그대로** 씁니다. 번역하�
   ```
 
   Skill을 쓰지 않는 프롬프트는 `> 📋 **아래 프롬프트를 복사해 실행**`만 붙입니다.
-- 강조는 GitHub Alert(`> [!NOTE]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!WARNING]`)를 사용합니다
+- 강조는 기본적으로 **본문 문장과 굵게**로 합니다. GitHub Alert(`> [!WARNING]`)는 Codespace 내부 에디터에서 깨져 보이고 많아지면 오히려 안 읽힐니다. **문서 하나에 최대 1개**만 쓰고, 무시했을 때 돈이 나가거나 되돌릴 수 없는 일에만 한정합니다

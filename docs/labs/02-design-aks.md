@@ -41,11 +41,7 @@ bash scripts/set-env.sh \
   USER_VM_SIZE Standard_D2s_v5
 ```
 
-> [!WARNING]
-> 위 값은 **예시일 뿐입니다.** 방금 조회한 내 quota 결과에 맞는 값을 넣으세요. region·SKU·node 개수는 기계가 대신 정해줄 수 없는 **사람의 판단**입니다.
-
-> [!TIP]
-> 여기서 얻은 **실제 조회 결과**가 이후 프롬프트의 근거가 됩니다. Skill은 내 subscription의 용량을 추측하지 않습니다.
+위 값은 **예시일 뿐입니다.** 방금 조회한 내 quota 결과에 맞는 값을 넣으세요. region·SKU·node 개수는 기계가 대신 정해줄 수 없는 **사람의 판단**입니다. 여기서 얻은 실제 조회 결과가 이후 프롬프트의 근거가 됩니다.
 
 ## Step 2. Day-0 결정 검토하기 (20분)
 
@@ -61,8 +57,7 @@ azure-kubernetes를 사용해 교육용 AKS의 Day-0 선택을 검토해줘. Sta
 - Pod CIDR / Service CIDR / DNS IP가 서로, 그리고 기존 네트워크와 겹치지 않는가
 - API server를 공개하되 authorized IP ranges로만 제한한다는 의미
 
-> [!WARNING]
-> "authorized IP ranges를 넓히면 쉽지 않을까?"라는 제안은 승인하지 않습니다. 공개 API + authorized IP ranges 제한이 이 워크샵의 기본 보안 경계입니다.
+"authorized IP ranges를 넓히면 쉽지 않을까?"라는 제안은 승인하지 않습니다. 공개 API + authorized IP ranges 제한이 이 워크샵의 기본 보안 경계입니다.
 
 ## Step 3. least privilege 매트릭스 만들기 (15분)
 
@@ -74,8 +69,7 @@ azure-rbac을 사용해 이 교육용 AKS의 least privilege 매트릭스를 작
 
 "리소스를 배포하는 권한"과 "남에게 역할을 부여하는 권한"은 다릅니다. **Azure 권한과 Kubernetes 내부 권한도 완전히 다른 시스템**입니다. 이 표가 있으면 나중에 "왜 안 되지?"에 바로 답할 수 있습니다.
 
-> [!NOTE]
-> 이 실습에서는 여러분이 만드는 사람이자 쓰는 사람입니다. 그래도 역할을 나눠 설계하는 이유는 실제 팀에서는 둘이 다른 사람이기 때문입니다. 이 표는 Lab 08 인계 문서에 그대로 들어갑니다.
+이 실습에서는 여러분이 만드는 사람이자 쓰는 사람입니다. 그래도 역할을 나누어 설계하는 이유는 실제 팀에서는 둘이 다른 사람이기 때문입니다. 이 표는 Lab 08 인계 문서에 그대로 들어갑니다.
 
 **확인할 것** - 나에게 subscription Owner나 cluster-admin을 주는 제안이 없는지. 이 랩에서는 권한을 실제로 바꾸지 않습니다.
 

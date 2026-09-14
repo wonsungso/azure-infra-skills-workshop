@@ -33,12 +33,9 @@ Contoso Shop 상품 페이지는 공개 `nginx-unprivileged` 이미지에 Config
 | Pod/Service CIDR, DNS IP | Lab 02 | 기존 네트워크와 겹치지 않게 결정 |
 | 샘플 이미지 태그 | Lab 06 | 제공된 manifest 값을 그대로 사용 |
 
-> [!TIP]
-> 값이 확실하지 않을 때 **추측해서 채우지 마세요.** Skill에게 "이 값을 어떻게 확인하는지" 먼저 물어보고, 조회 결과로 채우는 것이 이 워크샵이 가르치려는 습관입니다.
+값이 확실하지 않을 때 **추측해서 채우지 마세요.** Skill에게 "이 값을 어떻게 확인하는지" 먼저 물어보고, 조회 결과로 채우는 것이 이 워크샵이 가르치려는 습관입니다.
 
-> [!IMPORTANT]
-> Codespace에서 조회한 egress IP는 내 PC가 아니라 **Codespace의 주소**이다. 그리고 Codespace를 재시작하면 바뀔 수 있다. 따라서 authorized IP ranges는 워크샵 도중에 한 번 갱신해야 할 수 있는 값으로 다룬다.
-
+Codespace에서 조회한 egress IP는 내 PC가 아니라 **Codespace의 주소**이다. 그리고 Codespace를 재시작하면 바뀔 수 있다. 따라서 authorized IP ranges는 워크샵 도중에 한 번 갱신해야 할 수 있는 값으로 다룬다.
 
 ## 경계
 

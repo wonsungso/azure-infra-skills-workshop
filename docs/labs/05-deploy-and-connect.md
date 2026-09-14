@@ -26,14 +26,13 @@
 
 배포는 여러 분이 걸립니다. 기다리는 동안 [Lab 06](06-run-sample-workload.md)의 manifest를 미리 읽어도 좋습니다. 다만 성공 여부는 클러스터가 Ready가 된 뒤에만 판단합니다.
 
-> [!TIP]
-> 배포가 끝나면 node resource group을 `.env`에 반영합니다. Azure가 만들어 준 이름이라 직접 보고 적을 필요가 없습니다.
->
-> ```bash
-> set -a; . ./.env; set +a
-> bash scripts/set-env.sh NODE_RESOURCE_GROUP \
->   "$(az aks show -g "$RESOURCE_GROUP" -n "$AKS_NAME" --query nodeResourceGroup -o tsv)"
-> ```
+배포가 끝나면 node resource group을 `.env`에 반영합니다. Azure가 만들어 준 이름이라 직접 보고 적을 필요가 없습니다.
+
+```bash
+set -a; . ./.env; set +a
+bash scripts/set-env.sh NODE_RESOURCE_GROUP \
+  "$(az aks show -g "$RESOURCE_GROUP" -n "$AKS_NAME" --query nodeResourceGroup -o tsv)"
+```
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>
@@ -73,8 +72,7 @@ kubectl create namespace "$NAMESPACE"
 
 <img src="../../img/lab05-nodes.png" alt="kubectl get nodes 결과 - system 2대와 user 1대가 모두 Ready 상태이고 lab namespace가 생성된 터미널 출력" width="760">
 
-> [!NOTE]
-> 지금 여러분은 클러스터를 만든 사람이라 **모든 namespace에 쓸 수 있습니다.** 그래서 "다른 namespace 쓰기 거부"는 지금 검증할 수 없습니다. 대신 Lab 02의 least privilege 매트릭스를 다시 보고, **팀원에게 `lab`만 허용하려면 어떤 역할을 어느 scope에 줘야 하는지**를 인계 문서에 적어두세요. 실제 팀에서는 이것이 다음 사람의 첫 질문입니다.
+지금 여러분은 클러스터를 만든 사람이라 **모든 namespace에 쓸 수 있습니다.** 그래서 "다른 namespace 쓰기 거부"는 지금 검증할 수 없습니다. 대신 Lab 02의 least privilege 매트릭스를 다시 보고, **팀원에게 `lab`만 허용하려면 어떤 역할을 어느 scope에 줘야 하는지**를 인계 문서에 적어두세요. 실제 팀에서는 이것이 다음 사람의 첫 질문입니다.
 
 > [!WARNING]
 > 접속이 안 될 때 authorized IP ranges에 `0.0.0.0/0`을 넣지 않습니다. 먼저 내 egress IP가 바뀌지 않았는지 `curl -s https://api.ipify.org`로 다시 확인하세요.

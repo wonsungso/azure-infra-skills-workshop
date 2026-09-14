@@ -31,8 +31,7 @@ Skill에게 작업을 요청하면 Skill은 절차와 판단 기준을, MCP 도�
 - 만들거나 바꾸거나 지우기 전에 항상 사람이 승인합니다.
 - `예상`과 `관측`을 구분해서 기록합니다.
 
-> [!TIP]
-> 헷갈리면 "지금 이 작업이 Azure를 바꾸나요, 읽기만 하나요?"를 먼저 물어보세요.
+헷갈리면 "지금 이 작업이 Azure를 바꾸나요, 읽기만 하나요?"를 먼저 물어보세요.
 
 ## Step 2. Azure에 로그인하기 (5분)
 
@@ -53,11 +52,7 @@ az account list --query "[].{name:name, id:id, default:isDefault}" -o table
 az account set --subscription "<사용할 subscription 이름 또는 id>"
 ```
 
-> [!IMPORTANT]
-> 터미널에 표시된 device code와 로그인 결과에는 **계정 이메일과 subscription ID**가 그대로 나옵니다. 이 화면을 캡처해 공유하지 마세요.
-
-> [!WARNING]
-> 비밀번호나 인증 코드를 채팅 창에 붙여넣지 마세요. 로그인은 터미널과 브라우저에서만 진행합니다.
+로그인 화면에는 **계정 이메일과 subscription ID**가 그대로 나오므로 캐처해 공유하지 마세요. 비밀번호나 인증 코드도 채팅 창에 붙여넣지 않습니다. 로그인은 터미널과 브라우저에서만 진행합니다.
 
 ## Step 3. 입력값 확인하기 (5분)
 
@@ -78,13 +73,9 @@ cat .env
 
 자동으로 알 수 있는 값과 **사람이 결정해야 하는 값**을 구분하세요. 뒤의 네 가지는 quota와 기존 네트워크를 보고 판단해야 해서 자동화할 수 없습니다.
 
-> [!IMPORTANT]
-> `EGRESS_IP_CIDR`은 내 PC가 아니라 **Codespace의 egress IP**입니다. AKS API server에 접근할 수 있는 유일한 주소가 되므로 반드시 Codespace 안에서 조회된 값이어야 합니다.
->
-> Codespace를 중지했다가 다시 시작하면 이 IP가 바뀔 수 있습니다. Lab 05 이후 접속이 갑자기 안 되면 `bash scripts/init-workshop.sh`를 다시 실행해 갱신하세요.
+`EGRESS_IP_CIDR`은 내 PC가 아니라 **Codespace의 egress IP**입니다. AKS API server에 접근할 수 있는 유일한 주소가 되므로 반드시 Codespace 안에서 조회된 값이어야 합니다. Codespace를 중지했다가 다시 시작하면 이 IP가 바날 수 있으므로, Lab 05 이후 접속이 갑자기 안 되면 `bash scripts/init-workshop.sh`를 다시 실행해 갱신하세요.
 
-> [!WARNING]
-> 비밀번호, token, kubeconfig 내용은 `.env`에 적지 않습니다. 이 파일은 `.gitignore` 대상이므로 커밋되지 않습니다.
+비밀번호, token, kubeconfig 내용은 `.env`에 적지 않습니다. 이 파일은 `.gitignore` 대상이므로 커밋되지 않습니다.
 
 ## Step 4. 내 Azure 범위 확인하기 (10분)
 
@@ -118,10 +109,9 @@ az group show -n "$RESOURCE_GROUP" -o table 2>/dev/null || echo "아직 없음 -
 azure-resource-lookup으로 내 subscription에서 [resource-group]의 존재 여부만 확인해줘. 없으면 "없음", 접근이 막혀 있으면 권한 부족으로 구분해서 한 줄로 답해줘. 리소스를 만들거나 바꾸지 마.
 ```
 
-> [!NOTE]
-> **Skill 응답은 CLI보다 느립니다.** 도구를 여러 번 호출하고 결과를 해석하기 때문입니다. 그만큼 값어치가 있는 질문에 써야 합니다.
->
-> **단순 조회는 CLI, 판단·절차·위험 검토는 Skill.** 이 구분이 이번 Lab의 진짜 교훈입니다. Lab 02부터는 quota 판정과 Day-0 설계 검토처럼 CLI 한 줄로 대체할 수 없는 작업이 이어집니다.
+**Skill 응답은 CLI보다 느립니다.** 도구를 여러 번 호출하고 결과를 해석하기 때문입니다. 그만큼 값어치가 있는 질문에 써야 합니다.
+
+**단순 조회는 CLI, 판단·절차·위험 검토는 Skill.** 이 구분이 이번 Lab의 진짜 교훈입니다. Lab 02부터는 quota 판정과 Day-0 설계 검토처럼 CLI 한 줄로 대체할 수 없는 작업이 이어집니다.
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>

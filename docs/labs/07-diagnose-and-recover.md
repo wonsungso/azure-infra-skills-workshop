@@ -26,8 +26,7 @@ bash scripts/log-evidence.sh "Lab 07 Step 1" "kubectl" -- \
   kubectl set image deployment/lab-web web=nginxinc/nginx-unprivileged:does-not-exist -n lab
 ```
 
-> [!NOTE]
-> 지금 원인을 알고 있더라도, **다음 Step에서는 모르는 척하고 증거만으로 결론을 내리세요.** 아는 답을 확인하는 게 아니라, 증거를 읽는 순서를 연습하는 것이 목적입니다.
+지금 원인을 알고 있더라도, **다음 Step에서는 모르는 척하고 증거만으로 결론을 내리세요.** 아는 답을 확인하는 게 아니라, 증거를 읽는 순서를 연습하는 것이 목적입니다.
 
 ## Step 2. 증거로 원인 분석하기
 
@@ -66,11 +65,9 @@ bash scripts/log-evidence.sh "Lab 07 Step 3" "kubectl" -- \
   kubectl rollout undo deployment/lab-web -n lab
 ```
 
-> [!NOTE]
-> `rollout undo`로 복구하면 **페이지의 Pod 이름은 바뀌지 않습니다.** 기존 Pod가 한 번도 죽지 않았기 때문입니다. 이름이 그대로인 것이 오히려 "무중단으로 막았다"는 증거입니다. 이름이 바뀌는 것을 보고 싶다면 [Lab 06](06-run-sample-workload.md)의 Pod 삭제 실험을 따로 해보세요.
+`rollout undo`로 복구하면 **페이지의 Pod 이름은 바뀜지 않습니다.** 기존 Pod가 한 번도 죽지 않았기 때문입니다. 이름이 그대로인 것이 오히려 "무중단으로 막았다"는 증거입니다. 이름이 바뀜는 것을 보고 싶다면 [Lab 06](06-run-sample-workload.md)의 Pod 삭제 실험을 따로 해보세요.
 
-> [!WARNING]
-> 권한 확대, IP 제한 완화, namespace 삭제는 복구 수단이 아닙니다.
+권한 확대, IP 제한 완화, namespace 삭제는 복구 수단이 아닙니다.
 
 ## ✅ 완료 체크리스트
 
