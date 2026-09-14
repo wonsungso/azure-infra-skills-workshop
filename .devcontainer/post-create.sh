@@ -31,6 +31,14 @@ az version --output tsv --query '"azure-cli"' 2>/dev/null || true
 az bicep version 2>/dev/null || true
 kubectl version --client --output=yaml 2>/dev/null | head -3 || true
 kubelogin --version 2>/dev/null | head -1 || true
+# Azure MCP server가 npm 패키지라 Skill 사용에 필요하다
+node --version 2>/dev/null || true
+
+echo ""
+echo "Azure Skills는 Copilot 플러그인이라 컨테이너에 포함되지 않습니다."
+echo "Copilot Chat에서 두 줄을 실행해 설치하세요:"
+echo "  /plugin marketplace add microsoft/azure-skills"
+echo "  /plugin install azure@azure-skills"
 
 echo ""
 echo "다음 단계: docs/labs/01-orientation-and-setup.md 를 열어 Azure 로그인부터 진행하세요."

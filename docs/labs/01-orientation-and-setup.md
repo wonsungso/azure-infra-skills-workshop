@@ -33,7 +33,33 @@ Skill에게 작업을 요청하면 Skill은 절차와 판단 기준을, MCP 도�
 
 헷갈리면 "지금 이 작업이 Azure를 바꾸나요, 읽기만 하나요?"를 먼저 물어보세요.
 
-## Step 2. Azure에 로그인하기
+## Step 2. Azure Skills 설치하기
+
+**Skill은 이 저장소에 들어 있지 않습니다.** Copilot 플러그인이라 Codespace를 열었다고 자동으로 생기지 않습니다. 이 워크샵의 모든 Lab이 Skill을 쓰므로 지금 설치합니다.
+
+Copilot Chat 입력창에 아래 두 줄을 차례로 실행합니다. 터미널이 아니라 **채팅창**입니다.
+
+```text
+/plugin marketplace add microsoft/azure-skills
+```
+
+```text
+/plugin install azure@azure-skills
+```
+
+설치됐는지 확인합니다.
+
+> 📋 **아래 프롬프트를 복사해 실행**
+
+```text
+azure-quotas, azure-kubernetes, azure-rbac, azure-enterprise-infra-planner, azure-resource-lookup, azure-diagnostics, azure-resource-visualizer Skill을 지금 쓸 수 있는지 하나씩 확인해서 표로 알려줘. 없는 것이 있으면 그대로 알려줘. 아무것도 실행하지 마.
+```
+
+일곱 개가 모두 있어야 합니다. 하나라도 없으면 위 설치 명령을 다시 실행하고, 그래도 안 되면 [문제가 생겼다면](#-문제가-생겼다면)을 보세요.
+
+**Skill이 없는 채로 진행하면 안 됩니다.** 요청을 받은 에이전트는 Skill이 없어도 "대신 다른 방법으로 해봤다"며 그럴듯한 답을 내놓을 수 있습니다. 그 답에는 이 워크샵이 가르치려는 절차와 위험 판단이 빠져 있습니다.
+
+## Step 3. Azure에 로그인하기
 
 **이 단계는 사람이 직접 해야 합니다.** 로그인은 본인 계정의 credentials를 다루는 일이라 Skill이나 스크립트에 맡기지 않습니다.
 
@@ -52,7 +78,7 @@ az account list --query "[].{name:name, id:id, default:isDefault}" -o table
 az account set --subscription "<사용할 subscription 이름 또는 id>"
 ```
 
-## Step 3. 입력값 확인하기
+## Step 4. 입력값 확인하기
 
 이후 모든 프롬프트가 저장소 루트의 `.env`를 공유합니다. **직접 타이핑할 값은 없습니다.** Codespace가 만들어질 때 리소스 이름과 egress IP가 채워졌고, 로그인을 마친 지금 아래를 한 번 더 실행하면 subscription까지 채워집니다.
 
@@ -65,7 +91,7 @@ cat .env
 | --- | --- |
 | `WORKSHOP_ID`와 리소스 이름 | Codespace 생성 시 자동 |
 | `EGRESS_IP_CIDR` | 자동 (ipify 조회) |
-| `SUBSCRIPTION_ID` | 자동 (Step 2 로그인 후 재실행) |
+| `SUBSCRIPTION_ID` | 자동 (Step 3 로그인 후 재실행) |
 | `REGION` | 기본값 `koreacentral` — **Lab 02에서 quota를 보고 확인** |
 | CIDR, VM SKU | **Lab 02에서 내가 결정** |
 | `NODE_RESOURCE_GROUP` | Lab 05 배포 후 output |
@@ -78,12 +104,12 @@ cat .env
 
 비밀번호, token, kubeconfig 내용은 `.env`에 적지 않습니다. 이 파일은 `.gitignore` 대상이므로 커밋되지 않습니다.
 
-## Step 4. 내 Azure 범위 확인하기
+## Step 5. 내 Azure 범위 확인하기
 
 먼저 **빠른 방법**으로 확인합니다. 단순 조회는 CLI가 몇 초면 끝납니다.
 
 ```bash
-bash scripts/log-evidence.sh "Lab 01 Step 4" "az CLI" -- az account show -o table
+bash scripts/log-evidence.sh "Lab 01 Step 5" "az CLI" -- az account show -o table
 ```
 
 결과를 보여주면서 동시에 저장소 루트의 `evidence-log.md`에 한 줄을 기록합니다. 따로 적을 필요가 없습니다. 어떤 칸을 사람이 채워야 하는지는 [증거 로그 양식](../../templates/evidence-log.md)에 설명되어 있습니다.
@@ -107,7 +133,7 @@ az group show -n "$RESOURCE_GROUP" -o table 2>/dev/null || echo "아직 없음 -
 > 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-resource-lookup으로 저장소 루트의 .env를 읽어 SUBSCRIPTION_ID와 RESOURCE_GROUP을 확인하고, 그 resource group의 존재 여부만 확인해줘. 없으면 "없음", 접근이 막혀 있으면 권한 부족으로 구분해서 한 줄로 답해줘. 리소스를 만들거나 바꾸지 마.
+azure-resource-lookup Skill로 저장소 루트의 .env를 읽어 SUBSCRIPTION_ID와 RESOURCE_GROUP을 확인하고, 그 resource group의 존재 여부만 확인해줘. 없으면 "없음", 접근이 막혀 있으면 권한 부족으로 구분해서 한 줄로 답해줘. 리소스를 만들거나 바꾸지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
 **Skill 응답은 CLI보다 느립니다.** 도구를 여러 번 호출하고 결과를 해석하기 때문입니다. 그만큼 값어치가 있는 질문에 써야 합니다.
@@ -129,6 +155,7 @@ azure-resource-lookup으로 저장소 루트의 .env를 읽어 SUBSCRIPTION_ID�
 
 ## ✅ 완료 체크리스트
 
+- [ ] Azure Skills 플러그인을 설치하고 7개 Skill이 모두 있음을 확인했다
 - [ ] `az login --use-device-code`로 로그인하고 쓸 subscription을 선택했다
 - [ ] `.env`의 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워진 것을 확인했다
 - [ ] 조회한 subscription이 `.env`와 일치함을 확인했다
@@ -139,6 +166,9 @@ azure-resource-lookup으로 저장소 루트의 .env를 읽어 SUBSCRIPTION_ID�
 
 | 증상 | 해야 할 일 |
 | --- | --- |
+| "~ 도구가 제공되지 않아" 라며 다른 방법으로 답함 | Skill이 설치되지 않은 것입니다. Step 2를 다시 수행하고, 그 답변은 증거로 쓰지 마세요 |
+| `/plugin` 명령이 듣지 않음 | 터미널이 아니라 **Copilot Chat 입력창**에 입력했는지 확인 |
+| 플러그인 설치는 됐는데 Skill이 안 잡힘 | Azure MCP server가 npm 패키지입니다. `node --version`으로 Node.js를 확인하세요 |
 | `az login`이 브라우저를 못 열고 멈춤 | `--use-device-code`를 붙였는지 확인 |
 | 로그인은 됐는데 subscription이 안 보임 | 게스트 계정일 수 있음. `az login --use-device-code --tenant <tenant-id>` |
 | `SUBSCRIPTION_ID`가 비어 있음 | 로그인 후 [`init-workshop.sh`](../../scripts/init-workshop.sh)를 다시 실행 |

@@ -24,7 +24,7 @@ AKS는 만들고 나면 바꾸기 어려운 설정(네트워크 플러그인, CI
 > 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-quotas를 사용해 저장소 루트의 .env에서 SUBSCRIPTION_ID와 REGION을 읽고, 해당 region의 Standard DSv5 family vCPU quota와 현재 사용량을 확인해줘. AKS node 3대(Standard_D4s_v5 2대 + Standard_D2s_v5 1대)를 만들 수 있는지 판단해줘. 부족하면 대안 region도 같이 알려줘. 변경은 하지 마.
+azure-quotas Skill을 사용해 저장소 루트의 .env에서 SUBSCRIPTION_ID와 REGION을 읽고, 해당 region의 Standard DSv5 family vCPU quota와 현재 사용량을 확인해줘. AKS node 3대(Standard_D4s_v5 2대 + Standard_D2s_v5 1대)를 만들 수 있는지 판단해줘. 부족하면 대안 region도 같이 알려줘. 변경은 하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
 **확인할 것**
@@ -48,7 +48,7 @@ bash scripts/set-env.sh \
 > 🧠 **Skill** `azure-kubernetes` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-kubernetes를 사용해 교육용 AKS의 Day-0 선택을 검토해줘. Standard 운영 모드, system/user pool 분리, Azure CNI Overlay + Cilium, load balancer egress, public API authorized IP ranges를 기준으로 대안과 위험을 표로 정리해줘. 리소스 변경은 하지 마.
+azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해줘. Standard 운영 모드, system/user pool 분리, Azure CNI Overlay + Cilium, load balancer egress, public API authorized IP ranges를 기준으로 대안과 위험을 표로 정리해줘. 리소스 변경은 하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
 **사람이 판단할 것**
@@ -64,7 +64,7 @@ azure-kubernetes를 사용해 교육용 AKS의 Day-0 선택을 검토해줘. Sta
 > 🧠 **Skill** `azure-rbac` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-azure-rbac을 사용해 이 교육용 AKS의 least privilege 매트릭스를 작성해줘. Azure 리소스 배포자, 역할 할당자, AKS control-plane managed identity, lab namespace 사용자를 분리하고 scope와 필요한 작업을 표로 보여줘. 권한을 변경하지 마.
+azure-rbac Skill을 사용해 이 교육용 AKS의 least privilege 매트릭스를 작성해줘. Azure 리소스 배포자, 역할 할당자, AKS control-plane managed identity, lab namespace 사용자를 분리하고 scope와 필요한 작업을 표로 보여줘. 권한을 변경하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
 "리소스를 배포하는 권한"과 "남에게 역할을 부여하는 권한"은 다릅니다. **Azure 권한과 Kubernetes 내부 권한도 완전히 다른 시스템**입니다. 이 표가 있으면 나중에 "왜 안 되지?"에 바로 답할 수 있습니다.

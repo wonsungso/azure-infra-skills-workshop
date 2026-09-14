@@ -87,7 +87,7 @@ Azure CLI, Bicep, `kubectl`, `kubelogin`이 설치된 상태로 열립니다. �
 az version && az bicep version && kubectl version --client && kubelogin --version
 ```
 
-Azure 로그인은 [Lab 01](docs/labs/01-orientation-and-setup.md)에서 함께 진행합니다.
+Azure 로그인과 Azure Skills 설치는 [Lab 01](docs/labs/01-orientation-and-setup.md)에서 함께 진행합니다. **Skill은 Copilot 플러그인이라 이 저장소에 들어 있지 않습니다.**
 
 로컬 VS Code로 진행해도 됩니다. 그때는 위 도구를 직접 설치하고 [`init-workshop.sh`](scripts/init-workshop.sh)를 한 번 실행하세요. 이후 Lab은 두 경우 모두 동일합니다.
 

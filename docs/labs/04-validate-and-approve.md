@@ -21,7 +21,7 @@
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-승인된 infrastructure plan과 .env를 읽어 Bicep을 생성 또는 갱신해줘. azure-enterprise-infra-planner의 검증 단계를 따라 Bicep build, 보안 검사, ARM validation 또는 what-if를 수행하고 실제 명령 결과와 실패 항목을 정리해줘. 배포는 하지 마. 검증되지 않은 결과는 예상으로 표시해줘.
+azure-enterprise-infra-planner Skill을 사용해 승인된 infrastructure plan과 .env를 읽어 Bicep을 생성 또는 갱신해줘. 그 Skill의 검증 단계를 따라 Bicep build, 보안 검사, ARM validation 또는 what-if를 수행하고 실제 명령 결과와 실패 항목을 정리해줘. 배포는 하지 마. 검증되지 않은 결과는 예상으로 표시해줘. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
 **확인할 것**
@@ -37,7 +37,7 @@
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
 
 ```text
-승인된 계획과 검증 증거를 읽어줘. 배포 대상, 생성 또는 변경될 자원, 권한 요구, 비용 및 삭제 책임을 요약한 뒤 명시적 배포 승인을 요청해줘. 승인을 받기 전에는 Azure 리소스를 생성하거나 변경하지 마.
+azure-enterprise-infra-planner Skill을 사용해 승인된 계획과 검증 증거를 읽어줘. 배포 대상, 생성 또는 변경될 자원, 권한 요구, 비용 및 삭제 책임을 요약한 뒤 명시적 배포 승인을 요청해줘. 승인을 받기 전에는 Azure 리소스를 생성하거나 변경하지 마. 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘.
 ```
 
 **확인할 것**
