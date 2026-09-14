@@ -15,6 +15,11 @@
 ## 시작 전에
 
 - [Lab 02](02-design-aks.md)의 Day-0 결정표와 권한 매트릭스가 있나요?
+- `.env`에 `POD_CIDR`, `SERVICE_CIDR`, `DNS_SERVICE_IP`까지 채워져 있나요? 비어 있으면 아래 프롬프트가 멈춥니다.
+
+```bash
+cat .env
+```
 
 ## Step 1. 인프라 계획 만들고 승인하기
 
@@ -73,6 +78,7 @@ azure-enterprise-infra-planner Skill을 사용해 승인된 infrastructure plan�
 
 | 증상 | 원인일 가능성 | 해야 할 일 |
 | --- | --- | --- |
+| "값이 비어 있어 멈췄다"고 답함 | Lab 02의 `set-env.sh` 반영을 건너뜀 | `cat .env`로 빈 항목을 찾아 [Lab 02](02-design-aks.md)에서 반영 후 재실행 |
 | 계획에 없던 자원이 생성 목록에 있다 | 기존 자원 참조가 누락됨 | "기존 자원은 참조만" 문구를 강조해 재요청 |
 | 매개변수가 계획과 다르다 | `.env` 값이 최신이 아님 | `.env`를 갱신하고 재생성 요청 |
 | 승인자가 불명확하다 | 팀 역할 미정 | Lab 01의 역할 정리로 돌아가기 |

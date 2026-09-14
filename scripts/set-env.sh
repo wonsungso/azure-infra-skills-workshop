@@ -28,6 +28,10 @@ while [ $# -gt 0 ]; do
   }
 
   cur=$(grep -E "^${key}=" "$ENV_FILE" | head -1 | cut -d= -f2- || true)
-  sed -i "s|^${key}=.*|${key}=${val}|" "$ENV_FILE"
-  echo "  $key: ${cur:-(비어 있음)} -> $val"
+  if [ "$cur" = "$val" ]; then
+    echo "  $key: $val (그대로)"
+  else
+    sed -i "s|^${key}=.*|${key}=${val}|" "$ENV_FILE"
+    echo "  $key: ${cur:-(비어 있음)} -> $val"
+  fi
 done

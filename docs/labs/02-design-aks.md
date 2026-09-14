@@ -73,6 +73,17 @@ azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해�
 
 "authorized IP ranges를 넓히면 쉽지 않을까?"라는 제안은 승인하지 않습니다. 공개 API + authorized IP ranges 제한이 이 워크샵의 기본 보안 경계입니다.
 
+정한 CIDR을 `.env`에 반영합니다. **Lab 03이 이 값을 읽어 쓰므로, 비어 있으면 계획 생성이 멈춥니다.**
+
+```bash
+bash scripts/set-env.sh \
+  POD_CIDR 10.245.0.0/16 \
+  SERVICE_CIDR 10.1.48.0/20 \
+  DNS_SERVICE_IP 10.1.48.10
+```
+
+위 값도 **예시입니다.** VNet은 `10.60.0.0/16`을 쓰므로 Pod·Service 대역이 그것과, 그리고 서로 겹치지 않아야 합니다. `DNS_SERVICE_IP`는 반드시 `SERVICE_CIDR` **안에** 있어야 합니다.
+
 ## Step 3. least privilege 매트릭스 만들기
 
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
@@ -100,7 +111,7 @@ azure-enterprise-infra-planner Skill을 사용해 이 교육용 AKS의 least pri
 
 - [ ] quota를 조회해 region·SKU·node 개수를 결정했다
 - [ ] Day-0 결정을 스스로 설명할 수 있다
-- [ ] 결정한 값을 [`set-env.sh`](../../scripts/set-env.sh)로 `.env`에 반영했다
+- [ ] `cat .env`로 **REGION, SYSTEM_VM_SIZE, USER_VM_SIZE, POD_CIDR, SERVICE_CIDR, DNS_SERVICE_IP가 모두 채워졌는지** 확인했다
 - [ ] 세 Step의 검토 결과가 `infra-report.md`에 섹션으로 남았다
 - [ ] 아직 아무것도 생성하지 않았다
 
