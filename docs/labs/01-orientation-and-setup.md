@@ -79,6 +79,17 @@ rm -rf "$tmp"
 az login --use-device-code
 ```
 
+마지막으로 quota 조회 API를 쓰려면 `Microsoft.Quota` provider가 subscription에 등록돼 있어야 합니다. Lab 02가 이걸 씁니다.
+
+```bash
+az provider register --namespace Microsoft.Quota --wait
+az provider show --namespace Microsoft.Quota --query registrationState -o tsv
+```
+
+`Registered`가 나와야 합니다. 이미 등록돼 있으면 그대로 끝나므로 여러 번 실행해도 안전합니다.
+
+**이것이 이 워크샵의 첫 번째 쓰기 작업입니다.** provider 등록은 비용이 없고 리소스를 만들지 않으며, 해당 API를 쓸 수 있게 만들 뿐입니다. 그래도 subscription 설정을 바꾸는 일이니, 공용 subscription이라면 먼저 확인하세요.
+
 ## Step 4. 입력값 확인하기
 
 이후 모든 프롬프트가 저장소 루트의 `.env`를 공유합니다. **직접 타이핑할 값은 없습니다.** Codespace가 만들어질 때 리소스 이름과 egress IP가 채워졌고, 로그인을 마친 지금 아래를 한 번 더 실행하면 subscription까지 채워집니다.
@@ -154,6 +165,7 @@ azure-resource-lookup Skill로 저장소 루트의 .env를 읽어 SUBSCRIPTION_I
 
 - [ ] `.github/skills/`에 Skill 6개가 있고 Copilot이 인식함을 확인했다
 - [ ] `az login --use-device-code`로 로그인하고 쓸 subscription을 선택했다
+- [ ] `Microsoft.Quota` provider가 `Registered` 상태임을 확인했다
 - [ ] `.env`의 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워진 것을 확인했다
 - [ ] 조회한 subscription이 `.env`와 일치함을 확인했다
 - [ ] `evidence-log.md`에 실행 기록이 남았다
