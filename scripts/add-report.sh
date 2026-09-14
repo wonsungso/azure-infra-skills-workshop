@@ -94,11 +94,14 @@ redact() {
 
 # 보고서의 명령을 그대로 복사해 쓸 수 있도록 공백·특수문자 인자는 감싼다
 quote_args() {
-  local a out=""
+  local a esc out=""
   for a in "$@"; do
     case $a in
-      *[!A-Za-z0-9_./:=-]*) out="$out\"$a\" " ;;
-      *)                    out="$out$a " ;;
+      *[!A-Za-z0-9_./:=-]*)
+        esc=${a//\\/\\\\}      # 백슬래시를 먼저 escape해야 뒤의 따옴표 처리가 깨지지 않는다
+        esc=${esc//\"/\\\"}
+        out="$out\"$esc\" " ;;
+      *) out="$out$a " ;;
     esac
   done
   printf '%s' "${out% }"
@@ -106,7 +109,7 @@ quote_args() {
 
 # az CLI가 매번 뿜는 확장·대체 경고는 보고서에서 잡음이다
 drop_noise() {
-  grep -vE 'pkg_resources|UserWarning|^[[:space:]]*__import__|^WARNING: The behavior of this command has been altered|^WARNING: A new Bicep release is available|^WARNING: Merged' || true
+  grep -avE 'pkg_resources|UserWarning|^[[:space:]]*__import__|^WARNING: The behavior of this command has been altered|^WARNING: A new Bicep release is available|^WARNING: Merged' || true
 }
 
 env_value() { grep -E "^$1=" .env 2>/dev/null | head -1 | cut -d= -f2- ; }
@@ -165,6 +168,14 @@ if [ "$RUN_MODE" -eq 1 ]; then
   [ $# -gt 0 ] || { echo "실행할 명령이 없습니다" >&2; exit 2; }
   OUT=$("$@" 2>&1); CODE=$?
   if [ "$CODE" -eq 0 ]; then STATUS='🟢 관측'; else STATUS="🔴 실패 (exit $CODE)"; fi
+
+  # Windows의 az는 콘솔 코드페이지로 출력해 비ASCII 투영 이름이 깨진다. 깨진 채로 묻지 않는다.
+  if ! printf '%s' "$OUT" | iconv -f UTF-8 -t UTF-8 >/dev/null 2>&1; then
+    STATUS="🟡 인코딩 깨짐"
+    OUT="$OUT
+
+[기록 도구] 이 출력은 UTF-8이 아닙니다. --query 투영 이름을 ASCII로 바꿔 다시 실행하세요."
+  fi
   CLEAN_OUT=$(printf '%s' "$OUT" | drop_noise | redact)
   CLEAN_CMD=$(quote_args "$@" | redact)
   LINES=$(printf '%s\n' "$CLEAN_OUT" | wc -l)
