@@ -1,6 +1,6 @@
 # Lab 02: AKS 설계 결정하기
 
-**Lab 2 / 8** · 1부 · 설계와 검증 · ⏱ 45분
+**Lab 2 / 8** · 1부 · 설계와 검증
 
 🎯 quota 확인 / Day-0 결정(네트워크·node pool·접근) / least privilege 매트릭스
 

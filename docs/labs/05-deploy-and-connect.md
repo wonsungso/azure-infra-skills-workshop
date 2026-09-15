@@ -1,6 +1,6 @@
 # Lab 05: AKS 배포 + 접속 확인
 
-**Lab 5 / 8** · 2부 · 실행과 마무리 · ⏱ 45분
+**Lab 5 / 8** · 2부 · 실행과 마무리
 
 🎯 배포 실행 후 확인할 것 / Entra 인증 접속과 least privilege 검증
 
@@ -115,7 +115,7 @@ kubelogin convert-kubeconfig -l azurecli
 - `-l azurecli`는 이미 `az login`으로 받아둔 토큰을 그대로 씁니다
 - 따라서 추가 로그인이 없습니다
 
-이제 node를 확인하고 실습용 namespace를 **직접** 만듭니다.
+이제 node를 확인하고 실습용 namespace를 만듭니다. Copilot에게 namespace 생성을 요청할 수도 있습니다. 이 Lab에서는 인증과 권한 상태를 직접 확인하기 위해 터미널 명령을 사용합니다.
 
 > 💻 **터미널에서 실행**
 
