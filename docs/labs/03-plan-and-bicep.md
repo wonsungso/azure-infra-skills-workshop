@@ -160,7 +160,7 @@ Step 1에서 버튼을 눌렀더라도 한 번 더 확인합니다.
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **검토를 마쳤다면 Copilot 채팅에 붙여넣기**
 
 ```text
-이 계획을 승인합니다.
+이 계획을 승인해.
 
 [해야 할 일]
 - azure-enterprise-infra-planner Skill의 Phase 5에 따라
