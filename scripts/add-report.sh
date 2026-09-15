@@ -113,8 +113,8 @@ drop_noise() {
 }
 
 env_value() { grep -E "^$1=" .env 2>/dev/null | head -1 | cut -d= -f2- ; }
-code_or_dash() { local v; v=$(env_value "$1"); [ -n "$v" ] && printf '`%s`' "$v" || printf '—'; }
-text_or_dash() { local v; v=$(env_value "$1"); [ -n "$v" ] && printf '%s' "$v" || printf '—'; }
+code_or_dash() { local v; v=$(env_value "$1"); [ -n "$v" ] && printf '`%s`' "$v" || printf '-'; }
+text_or_dash() { local v; v=$(env_value "$1"); [ -n "$v" ] && printf '%s' "$v" || printf '-'; }
 
 build_meta() {
   local rg aks region

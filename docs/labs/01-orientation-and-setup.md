@@ -155,7 +155,7 @@ cat .env
 | `WORKSHOP_ID`와 리소스 이름 | Codespace 생성 시 자동 |
 | `EGRESS_IP_CIDR` | 자동 (ipify 조회) |
 | `SUBSCRIPTION_ID` | 자동 (Step 3 로그인 후 재실행) |
-| `REGION` | 기본값 `koreacentral` — **Lab 02에서 quota를 보고 확인** |
+| `REGION` | 기본값 `koreacentral` - **Lab 02에서 quota를 보고 확인** |
 | CIDR, VM SKU | **Lab 02에서 내가 결정** |
 | `NODE_RESOURCE_GROUP` | Lab 05 배포 후 output |
 

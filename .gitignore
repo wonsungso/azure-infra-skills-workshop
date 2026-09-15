@@ -11,7 +11,7 @@ kubeconfig
 .azure/
 *.azcli
 
-# Secrets and locally filled parameter files — never commit
+# Secrets and locally filled parameter files - never commit
 .env
 .env.*
 *.secret
