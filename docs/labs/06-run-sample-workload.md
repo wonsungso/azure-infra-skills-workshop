@@ -27,7 +27,7 @@
 > 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-reference/kubernetes/lab-web.yaml을 검토해줘.
+reference/kubernetes/lab-web.yaml을 검토해주세요.
 
 [설명할 것]
 - ConfigMap으로 주입되는 index.html
@@ -39,10 +39,10 @@ reference/kubernetes/lab-web.yaml을 검토해줘.
 - ClusterIP Service
 
 [그다음]
-- 적용 대상과 검증 순서를 제시해줘
+- 적용 대상과 검증 순서를 제시해주세요
 
 [제약]
-- 검토만 하고 클러스터에 적용하지 마
+- 검토만 하고 클러스터에 적용하지 마세요
 ```
 
 **이 manifest의 핵심 아이디어** - 화면을 보여주려고 새 컨테이너 이미지를 만들지 않습니다. 대신 세 조각을 조립합니다.

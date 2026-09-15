@@ -30,13 +30,13 @@ cat .env
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해줘.
+azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해주세요.
 
 [읽을 값]
 - 저장소 루트 .env의 RESOURCE_GROUP, AKS_NAME, REGION, EGRESS_IP_CIDR,
   POD_CIDR, SERVICE_CIDR, DNS_SERVICE_IP, SYSTEM_VM_SIZE, USER_VM_SIZE
-- 비어 있는 값이 있으면 추측하지 말고 먼저 알려줘
-- Lab 02의 Day-0 검토와 least privilege 매트릭스를 반영해줘
+- 비어 있는 값이 있으면 추측하지 말고 먼저 알려주세요
+- Lab 02의 Day-0 검토와 least privilege 매트릭스를 반영해주세요
 
 [보안 요구]
 - public API server의 authorized IP ranges는 EGRESS_IP_CIDR만 사용
@@ -53,8 +53,8 @@ azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해�
 - 대안, 위험, 비용 요인
 
 [제약]
-- 계획 승인 전에는 멈춰
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
+- 계획 승인 전에는 멈춰 주세요
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
 ```
 
 **진행 방식**
@@ -65,7 +65,11 @@ azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해�
 - 파일을 수십 개 읽는 것이 정상입니다
 - 빠른 답을 원했다면 그건 일반 프롬프트지 이 Skill을 쓰는 이유가 아닙니다
 
-중간에 **두 번 멈춰 승인을 요청**합니다. 먼저 만들 자원 목록을, 그다음 완성된 계획을 확인합니다. 멈췄다고 실패한 게 아니라 설계된 동작입니다.
+중간에 **두 번 멈춰 승인**을 요청합니다.
+
+- 먼저 만들 자원 목록을 확인합니다
+- 다음으로 완성된 계획을 확인합니다
+- 이때 멈추는 것은 정상 동작입니다
 
 1. 프롬프트를 실행하면 대안·위험·예상 비용 요인이 정리되어 나옵니다.
 2. 다음 세 가지를 직접 검토합니다.
@@ -84,14 +88,14 @@ Skill이 멈추는 자리에서 채팅에 **승인 / 거절** 버튼이 나타�
 - 여기서 승인해도 리소스는 생성되지 않습니다
 
 - **내용을 읽은 뒤 이상이 없으면 승인**을 선택합니다.
-- 다르거나 빠진 게 있으면 **거절**하고, 무엇이 왜 잘못됐는지 말로 알려주면 Skill이 고쳐서 다시 제시합니다.
-- 버튼이 안 보이면 채팅에 그냥 "승인합니다"라고 써도 같습니다.
+- 다르거나 빠진 게 있으면 **거절**을 선택하고, 이유를 알려주면 Skill이 고쳐서 다시 제시합니다.
+- 버튼이 보이지 않으면 채팅에 "승인합니다"라고 입력해도 같습니다.
 
 **버튼을 눌렀다고 끝이 아닙니다.** 그건 대화의 흐름일 뿐이고, 계획 파일에 `approved`로 남았는지는 별개입니다. Step 3에서 그것을 확인합니다.
 
 ## Step 2. 값을 하나 바꿔 계획이 따라오는지 보기
 
-계획이 **정말 `.env`를 읽고 만들어진 것인지**, 아니면 그럴듯하게 쓰인 글인지 확인할 방법이 있습니다. 값을 하나 바꿔보는 것입니다.
+계획이 `.env`를 실제로 읽고 만들어졌는지 확인해 봅니다. 값 하나를 바꾼 뒤, 계획이 따라 바뀌는지 봅니다.
 
 user node pool의 크기를 한 단계 올려봅니다. 실제로 배포하려는 게 아니라, **바꾸면 무엇이 따라 움직이는지** 보려는 것입니다.
 
@@ -104,7 +108,7 @@ bash scripts/set-env.sh USER_VM_SIZE Standard_D4s_v5
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-방금 .env의 USER_VM_SIZE를 바꿨어. azure-enterprise-infra-planner Skill로 계획을 갱신해줘.
+방금 .env의 USER_VM_SIZE를 바꿨습니다. azure-enterprise-infra-planner Skill로 계획을 갱신해주세요.
 
 [보여줄 것]
 - 계획에서 바뀐 항목과 바뀌기 전후 값
@@ -112,9 +116,9 @@ bash scripts/set-env.sh USER_VM_SIZE Standard_D4s_v5
 - 비용 요인이 어떻게 달라지는지
 
 [제약]
-- 내가 바꾼 값 때문에 달라지는 것만 바꿔. 나머지는 그대로 둬
-- Azure 리소스를 만들거나 바꾸지 마
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
+- 내가 바꾼 값 때문에 달라지는 것만 바꿔 주세요. 나머지는 그대로 두세요
+- Azure 리소스를 만들거나 바꾸지 마세요
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
 ```
 
 **확인할 것**
@@ -140,15 +144,15 @@ bash scripts/set-env.sh USER_VM_SIZE Standard_D2s_v5
 > 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-USER_VM_SIZE를 Standard_D2s_v5로 되돌렸어. 계획도 원래대로 되돌리고,
-지금 계획이 Lab 02에서 결정한 값과 다시 일치하는지 확인해줘.
+USER_VM_SIZE를 Standard_D2s_v5로 되돌렸습니다. 계획도 원래대로 되돌리고,
+지금 계획이 Lab 02에서 결정한 값과 다시 일치하는지 확인해주세요.
 ```
 
 **완료 기준:** 계획의 user node SKU가 `Standard_D2s_v5`로 돌아왔고, vCPU 합계가 다시 10입니다.
 
 ## Step 3. 계획을 승인하고 파일에 남기기
 
-Step 1에서 버튼을 눌렀더라도 한 번 더 확인해야 합니다.
+Step 1에서 버튼을 눌렀더라도 한 번 더 확인합니다.
 
 - 계획 파일의 `meta.status`가 `draft`로 남아 있으면 **다음 프롬프트에서 Skill이 다시 읽고 멈춥니다**
 - 승인은 대화가 아니라 **파일에 기록**되어야 합니다
@@ -160,12 +164,12 @@ Step 1에서 버튼을 눌렀더라도 한 번 더 확인해야 합니다.
 
 [해야 할 일]
 - azure-enterprise-infra-planner Skill의 Phase 5에 따라
-  .azure/infrastructure-plan.json의 meta.status를 approved로 바꿔줘
-- 승인자와 승인 시각을 함께 기록해줘
-- 어떤 값이 approved로 바뀌었는지 보여줘
+  .azure/infrastructure-plan.json의 meta.status를 approved로 바꿔주세요
+- 승인자와 승인 시각을 함께 기록해주세요
+- 어떤 값이 approved로 바뀌었는지 보여주세요
 
 [제약]
-- 아직 IaC 생성이나 배포로 넘어가지 마
+- 아직 IaC 생성이나 배포로 넘어가지 마세요
 ```
 
 **확인할 것**
@@ -185,21 +189,21 @@ grep -A3 '"meta"' .azure/infrastructure-plan.json
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
+azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해주세요.
 
 [읽을 값]
 - 승인된 infrastructure plan
 - 저장소 루트의 .env
 
 [해야 할 일]
-- 기존 foundation 자원은 참조만 하고 덮어쓰지 마
-- 변경 대상과 생성 파일을 설명해줘
-- 그 Skill이 요구하는 로컬 문법 확인(az bicep build)까지는 해도 돼
+- 기존 foundation 자원은 참조만 하고 덮어쓰지 마세요
+- 변경 대상과 생성 파일을 설명해주세요
+- 그 Skill이 요구하는 로컬 문법 확인(az bicep build)까지는 진행해 주세요
 
 [제약]
-- Azure에 자원을 만들거나 바꾸는 명령은 실행하지 마
-- 보안 검사와 what-if는 Lab 04에서 하니 여기서는 하지 마
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
+- Azure에 자원을 만들거나 바꾸는 명령은 실행하지 마세요
+- 보안 검사와 what-if는 Lab 04에서 하니 여기서는 하지 마세요
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
 ```
 
 이 Skill은 생성한 Bicep의 **문법 확인을 자기 절차의 일부로** 봅니다.
@@ -213,7 +217,10 @@ azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
 - 생성된 파일 목록과 위치(`infra/main.bicep`, `infra/modules/*.bicep`)
 - 매개변수(authorized IP ranges, CIDR, SKU 등)가 계획과 정확히 일치하는지
 
-[Bicep 기준본](../../reference/infra/main.bicep)을 열어 내가 받은 결과와 **비교**해 볼 수 있습니다. 그대로 복사해 쓰는 정답지가 아니니, 차이가 있다면 "왜 다른가"를 따져보세요.
+[Bicep 기준본](../../reference/infra/main.bicep)은 비교용입니다.
+
+- 그대로 복사해 쓰는 정답지가 아닙니다
+- 차이가 있으면 이유를 확인해 봅니다
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>

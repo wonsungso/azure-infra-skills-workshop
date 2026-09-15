@@ -23,15 +23,16 @@
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 승인된 계획을 배포해줘.
+azure-enterprise-infra-planner Skill을 사용해 승인된 계획을 배포해주세요.
 
 [해야 할 일]
-- 배포 진행 상태와 생성된 자원을 기록해줘
-- 실패하면 실제 오류를 분류해줘
+- 배포 진행 상태와 생성된 자원을 기록해주세요
+- 실패하면 실제 오류를 분류해주세요
 
 [제약]
-- 승인 범위를 벗어난 변경은 하지 마
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
+- 승인 범위를 벗어난 변경은 하지 마세요
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+
 ```
 
 배포는 여러 분이 걸립니다. 성공 여부는 클러스터가 Ready가 된 뒤에만 판단합니다.
@@ -62,7 +63,7 @@ bash scripts/set-env.sh NODE_RESOURCE_GROUP \
 > 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-resource-lookup Skill을 사용해 AKS의 실제 상태를 확인해줘.
+azure-resource-lookup Skill을 사용해 AKS의 실제 상태를 확인해주세요.
 
 [읽을 값]
 - 저장소 루트 .env의 RESOURCE_GROUP, AKS_NAME
@@ -71,11 +72,12 @@ azure-resource-lookup Skill을 사용해 AKS의 실제 상태를 확인해줘.
 - 해당 AKS의 실제 상태와 node resource group (읽기 전용)
 
 [그다음]
-- Entra 기반으로 클러스터에 접속하는 데 필요한 점검 항목을 제시해줘
+- Entra 기반으로 클러스터에 접속하는 데 필요한 점검 항목을 제시해주세요
 
 [제약]
-- 역할을 변경하지 마
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
+- 역할을 변경하지 마세요
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+
 ```
 
 클러스터가 Ready라도 **아직 `kubectl`은 쓸 수 없습니다.**

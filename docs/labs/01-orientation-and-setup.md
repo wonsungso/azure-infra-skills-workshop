@@ -57,7 +57,7 @@ ls .github/skills
 > 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-아래 6개 Skill을 지금 쓸 수 있는지 하나씩 확인해서 표로 알려줘.
+아래 6개 Skill을 지금 쓸 수 있는지 하나씩 확인해서 표로 알려주세요.
 
 [확인 대상]
 - azure-quotas
@@ -68,9 +68,10 @@ ls .github/skills
 - azure-resource-visualizer
 
 [제약]
-- 확인만 하고 각 Skill의 실제 작업까지 진행하지 마
-- 없는 것이 있으면 대체 방법을 찾지 말고 그대로 알려줘
-- Azure 리소스를 만들거나 바꾸지 마
+- 확인만 하고 각 Skill의 실제 작업까지 진행하지 마세요
+- 없는 것이 있으면 대체 방법을 찾지 말고 그대로 알려주세요
+- Azure 리소스를 만들거나 바꾸지 마세요
+
 ```
 
 여섯 개가 모두 있어야 합니다.
@@ -205,7 +206,7 @@ az group show -n "$RESOURCE_GROUP" -o table 2>/dev/null || echo "아직 없음 -
 > 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-resource-lookup Skill을 사용해 resource group의 존재 여부를 확인해줘.
+azure-resource-lookup Skill을 사용해 resource group의 존재 여부를 확인해주세요.
 
 [읽을 값]
 - 저장소 루트 .env의 SUBSCRIPTION_ID, RESOURCE_GROUP
@@ -215,8 +216,9 @@ azure-resource-lookup Skill을 사용해 resource group의 존재 여부를 확�
 - 없으면 "없음", 접근이 막혀 있으면 "권한 부족"으로 구분
 
 [제약]
-- Azure 리소스를 만들거나 바꾸지 마
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
+- Azure 리소스를 만들거나 바꾸지 마세요
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+
 ```
 
 **Skill 응답은 CLI보다 느립니다.** 도구를 여러 번 호출하고 결과를 해석하기 때문입니다. 그만큼 더 복잡한 작업에 써야 합니다.

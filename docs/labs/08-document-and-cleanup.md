@@ -24,7 +24,7 @@
 
 ```text
 azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
-아키텍처 문서를 Mermaid로 작성해줘.
+아키텍처 문서를 Mermaid로 작성해주세요.
 
 [읽을 값]
 - 저장소 루트 .env의 RESOURCE_GROUP, NODE_RESOURCE_GROUP
@@ -38,11 +38,12 @@ azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
 
 [구분할 것]
 - 관측 사실 / 설계값 / 추정 / 미검증
-- 보고서에 근거가 없는 항목은 미검증으로 표시해줘
+- 보고서에 근거가 없는 항목은 미검증으로 표시해주세요
 
 [제약]
-- Azure 리소스를 만들거나 바꾸지 마
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
+- Azure 리소스를 만들거나 바꾸지 마세요
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+
 ```
 
 **확인할 것**
@@ -58,7 +59,7 @@ Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 �
 
 ```text
 방금 조회한 실제 리소스로 assets/azure-icons/README.md의
-스펙 형식에 맞는 JSON을 만들어줘.
+스펙 형식에 맞는 JSON을 만들어주세요.
 
 [레이어 구성]
 - Resource group
@@ -70,11 +71,12 @@ Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 �
 - sub에는 실제 SKU나 CIDR
 
 [그다음]
-- 아래를 실행해줘
+- 아래를 실행해주세요
   bash scripts/build-architecture-svg.sh <만든 스펙>.json img/my-architecture.svg
 
 [제약]
-- 추측한 값은 넣지 말고 조회로 확인한 것만 써줘
+- 추측한 값은 넣지 말고 조회로 확인한 것만 써주세요
+
 ```
 
 <img src="../../img/example-architecture.svg" alt="Azure 공식 아이콘으로 그린 아키텍처 예시 - Resource group, Network, Compute 세 레이어에 각 리소스 이름과 SKU가 표기된 그림" width="620">
@@ -105,7 +107,7 @@ Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 �
 > 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-resource-lookup Skill을 사용해 삭제 대상을 확인해줘.
+azure-resource-lookup Skill을 사용해 삭제 대상을 확인해주세요.
 
 [읽을 값]
 - 저장소 루트 .env의 RESOURCE_GROUP, NODE_RESOURCE_GROUP
@@ -115,8 +117,9 @@ azure-resource-lookup Skill을 사용해 삭제 대상을 확인해줘.
 - 삭제 대상과 그에 의존하는 자원을 표로
 
 [제약]
-- 실제 삭제 작업은 명시적 승인 전에는 수행하지 마
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
+- 실제 삭제 작업은 명시적 승인 전에는 수행하지 마세요
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+
 ```
 
 삭제를 승인한 뒤 실제로 삭제하고, 다시 조회해서 잔여 자원이 없는지(또는 남은 것이 무엇인지) 확인합니다.

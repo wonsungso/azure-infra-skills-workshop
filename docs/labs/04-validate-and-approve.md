@@ -45,7 +45,7 @@ az group create -n "$RESOURCE_GROUP" -l "$REGION" -o table
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
+azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해주세요.
 
 [읽을 값]
 - 승인된 infrastructure plan
@@ -53,15 +53,16 @@ azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
 
 [해야 할 일]
 - 그 Skill의 검증 단계를 따라 Bicep build, 보안 검사,
-  ARM validation 또는 what-if를 수행해줘
-- 실제로 실행한 명령과 그 결과, 실패 항목을 정리해줘
-- 고쳐야 할 것이 있으면 어디를 왜 고쳐야 하는지 먼저 설명해줘
-- 검증되지 않은 결과는 예상으로 표시해줘
+  ARM validation 또는 what-if를 수행해주세요
+- 실제로 실행한 명령과 그 결과, 실패 항목을 정리해주세요
+- 고쳐야 할 것이 있으면 어디를 왜 고쳐야 하는지 먼저 설명해주세요
+- 검증되지 않은 결과는 예상으로 표시해주세요
 
 [제약]
-- 코드를 다시 생성하지 마
-- 배포는 하지 마
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
+- 코드를 다시 생성하지 마세요
+- 배포는 하지 마세요
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+
 ```
 
 **확인할 것**
@@ -77,7 +78,7 @@ azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
+azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해주세요.
 
 [읽을 값]
 - 승인된 계획과 검증 증거
@@ -89,11 +90,12 @@ azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
 - 비용과 삭제 책임
 
 [그다음]
-- 명시적 배포 승인을 요청해줘
+- 명시적 배포 승인을 요청해주세요
 
 [제약]
-- 승인을 받기 전에는 Azure 리소스를 만들거나 바꾸지 마
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
+- 승인을 받기 전에는 Azure 리소스를 만들거나 바꾸지 마세요
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+
 ```
 
 **확인할 것**

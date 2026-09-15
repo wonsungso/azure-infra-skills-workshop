@@ -10,15 +10,27 @@
 > 2. **왜 그렇게 만들었는지 남기세요.** 다음 사람이 이어받을 수 있게.
 > 3. **동작한다는 걸 증명하세요.** 실제로 트래픽을 처리하는 화면으로.
 
-우리의 무기는 CLI 암기가 아니라 **Azure Skills**입니다. Skill이 대안·위험·비용을 정리해 제안하면, 여러분은 **검토하고 승인하고 결과를 조회로 검증**합니다.
+CLI 명령을 외우는 대신 **Azure Skills**를 사용합니다.
+
+- Skill은 대안·위험·비용을 정리해 제안합니다
+- 참가자는 제안을 검토하고 승인합니다
+- 마지막으로 조회 결과로 실제 상태를 확인합니다
 
 ## 🏁 6시간 뒤 도달할 화면
 
 <img src="img/shop.png" alt="Contoso Shop 상품 페이지 - 상품 카드 4개와 하단에 응답 Pod 이름이 표시된 화면" width="760">
 
-커머스팀이 출시할 **Contoso Shop**입니다. 화면 아래 **응답을 처리한 Pod 이름**은 고정 텍스트가 아니라 지금 트래픽을 받고 있는 실제 Pod입니다. Pod를 다시 만들면 이름이 바뀝니다.
+커머스팀이 출시할 **Contoso Shop**입니다.
 
-컨테이너 이미지를 빌드하지 않습니다. 공개 nginx 이미지에 **ConfigMap**으로 화면을 주입하고 **Downward API**로 Pod 정보를 전달합니다. 앱 코딩 없이 manifest만으로 만듭니다.
+- 화면 아래 Pod 이름은 고정 텍스트가 아닙니다
+- 지금 트래픽을 처리하는 실제 Pod 이름입니다
+- Pod를 다시 만들면 이름도 바뀝니다
+
+컨테이너 이미지는 빌드하지 않습니다.
+
+- 공개 nginx 이미지에 **ConfigMap**으로 화면을 주입합니다
+- **Downward API**로 Pod 정보를 전달합니다
+- 앱 코딩 없이 manifest만으로 만듭니다
 
 ## 🗺️ 오늘의 여정
 
@@ -50,7 +62,7 @@ flowchart LR
     class G,H wrap
 ```
 
-앞 Lab의 결과물이 다음 Lab의 입력입니다. 순서를 건너뛰지 마세요.
+앞 Lab의 결과물이 다음 Lab의 입력입니다. Lab은 순서대로 진행합니다.
 
 | Lab | 주 Skill | 다음 Lab에 넘길 것 |
 | --- | --- | --- |
@@ -75,13 +87,21 @@ flowchart LR
 - 실습이 끝난 뒤 리소스를 **삭제**할 권한
 
 > [!WARNING]
-> **실제 비용이 발생하는 리소스**를 만듭니다. AKS node는 실행되는 동안 계속 과금되므로, 중간에 그만두더라도 [Lab 08](docs/labs/08-document-and-cleanup.md)의 정리 단계는 반드시 수행하세요. 회사 공용 subscription이라면 **전용 resource group**을 새로 만들어 진행하세요.
+> **실제 비용이 발생하는 리소스**를 만듭니다.
+>
+> - AKS node는 실행되는 동안 계속 과금됩니다
+> - 중간에 멈춰도 [Lab 08](docs/labs/08-document-and-cleanup.md)의 정리 단계는 진행합니다
+> - 회사 공용 subscription에서는 **전용 resource group**을 만들어 사용합니다
 
 ### 2. Codespace를 엽니다
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/wonsungso/azure-infra-skills-workshop)
 
-Azure CLI, Bicep, `kubectl`, `kubelogin`이 설치되고 **이 워크샵이 쓰는 Azure Skill 6개가 받아진 상태**로 열립니다. 로컬에 아무것도 깔지 않아도 됩니다. 컨테이너 준비가 끝나면 터미널에서 확인합니다.
+Azure CLI, Bicep, `kubectl`, `kubelogin`과 Azure Skill 6개가 준비된 상태로 열립니다. 로컬에 별도로 설치할 것은 없습니다.
+
+컨테이너 준비가 끝나면 도구 상태를 확인합니다.
+
+> 💻 **터미널에서 실행**
 
 ```bash
 az version && az bicep version && kubectl version --client && kubelogin --version
@@ -90,18 +110,22 @@ ls .github/skills
 
 Azure 로그인과 Skill 동작 확인은 [Lab 01](docs/labs/01-orientation-and-setup.md)에서 합니다.
 
-로컬 VS Code로 진행해도 됩니다. 그때는 위 도구를 직접 설치하고 [`init-workshop.sh`](scripts/init-workshop.sh)를 한 번 실행하세요. 이후 Lab은 두 경우 모두 동일합니다.
+로컬 VS Code로도 진행할 수 있습니다.
+
+- 위 도구를 직접 설치합니다
+- [`init-workshop.sh`](scripts/init-workshop.sh)를 한 번 실행합니다
+- 이후 Lab은 Codespace와 동일합니다
 
 ### 3. Lab 01부터 순서대로 진행합니다
 
-[Lab 01: 워크샵 시작하기](docs/labs/01-orientation-and-setup.md) 로 이동하세요.
+[Lab 01: 워크샵 시작하기](docs/labs/01-orientation-and-setup.md)에서 시작합니다.
 
 <details>
 <summary>진행이 중간에 끊겼다면</summary>
 
 새 세션에서 아래 프롬프트로 현재 상태부터 이어갑니다.
 
-> 📋 **아래 프롬프트를 복사해 실행**
+> 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 이 저장소의 .env와 infra-report.md를 읽고 현재 완료된 단계를 판별해줘. Azure에서 실제 상태를 조회해 문서와 비교하되 리소스를 변경하지 마. 다음 미완료 단계와 선행 조건만 제시해줘.
@@ -121,7 +145,10 @@ Azure 로그인과 Skill 동작 확인은 [Lab 01](docs/labs/01-orientation-and-
 | `azure-resource-visualizer` | 리소스 관계를 다이어그램으로 정리 |
 | MCP 도구 / CLI / `kubectl` | 제안을 실제로 실행 |
 
-Skill은 판단과 절차를, 도구는 실행을 담당합니다. **프롬프트에 Skill 이름을 썼다는 사실만으로는 증거가 되지 않습니다.** 검토 결과는 [`add-report.sh`](scripts/add-report.sh)가 `infra-report.md`에 문서로 쌓습니다.
+Skill은 판단과 절차를, 도구는 실행을 담당합니다.
+
+- 프롬프트에 Skill 이름을 썼다는 사실만으로는 증거가 되지 않습니다
+- 검토 결과는 [`add-report.sh`](scripts/add-report.sh)가 `infra-report.md`에 문서로 기록합니다
 
 ## ⚡ Skill을 쓰면 무엇이 달라지나
 
@@ -133,9 +160,13 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다. **프롬프�
 | 💬 **일반 프롬프트** | 그럴듯한 명령어와 템플릿을 빠르게 생성 | **내 subscription의 실제 상태를 모름.** 승인 단계가 없고, 검증 없이 "됐다"고 답하기 쉬움 |
 | ⚡ **Skill** | 절차·가드레일·검증 순서를 함께 제공 | 판단과 승인은 여전히 사람 몫 |
 
-핵심 차이는 **속도가 아니라 절차**입니다. 일반 프롬프트도 Bicep을 몇 초 만에 만들어 줍니다. 하지만 "quota를 먼저 확인했는가 → 계획을 승인받았는가 → 배포 전에 검증했는가"라는 순서를 지켜주지는 않습니다. 사고는 대개 그 빠진 순서에서 납니다.
+핵심 차이는 **속도가 아니라 절차**입니다.
 
-각 Lab에는 **"💡 Skill을 안 썼다면?"** 비교가 접힌 형태로 들어 있습니다. 그 단계를 직접 해본 뒤에 펼쳐 보세요.
+- 일반 프롬프트도 Bicep을 빠르게 만들 수 있습니다
+- 하지만 `quota 확인 → 계획 승인 → 배포 전 검증` 순서는 보장하지 않습니다
+- 문제는 대개 이 순서를 건너뛸 때 생깁니다
+
+각 Lab에는 **"💡 Skill을 안 썼다면?"** 비교가 접혀 있습니다. 해당 단계를 마친 뒤 비교해 볼 수 있습니다.
 
 ## 📂 자료 구분
 
@@ -164,4 +195,4 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다. **프롬프�
 
 ### ➡️ [Lab 01: 워크샵 시작하기](docs/labs/01-orientation-and-setup.md)
 
-앞 Lab의 결과물이 다음 Lab의 입력입니다. 순서대로 진행하세요.
+앞 Lab의 결과물이 다음 Lab의 입력입니다. Lab은 순서대로 진행합니다.
