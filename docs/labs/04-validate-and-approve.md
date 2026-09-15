@@ -10,11 +10,15 @@
 
 ## 왜 필요한가요?
 
-"그럴듯해 보인다"와 "빌드와 검사를 통과했다"는 다릅니다. 그리고 검증을 통과했다고 바로 배포해도 되는 것도 아닙니다. 비용과 삭제 책임까지 확인한 뒤에만 배포를 승인합니다.
+- "그럴듯해 보인다"와 "빌드와 검사를 통과했다"는 다릅니다
+- 검증을 통과했다고 바로 배포해도 되는 것도 아닙니다
+- **비용과 삭제 책임까지 확인한 뒤에만** 배포를 승인합니다
 
 ## 시작 전에
 
 - [Lab 03](03-plan-and-bicep.md)에서 생성한 Bicep 파일이 있나요?
+
+> 💻 **터미널에서 실행**
 
 ```bash
 ls infra/ && grep -A3 '"meta"' .azure/infrastructure-plan.json
@@ -22,7 +26,12 @@ ls infra/ && grep -A3 '"meta"' .azure/infrastructure-plan.json
 
 ### 배포 대상 resource group 만들기
 
-what-if는 "이 resource group에 적용하면 무엇이 바뀌는가"를 계산하므로 **비교 대상이 먼저 있어야 합니다.** Bicep은 resource group scope라 그룹 자체를 만들지 않습니다.
+what-if는 "이 resource group에 적용하면 무엇이 바뀌는가"를 계산합니다.
+
+- 그러므로 **비교 대상이 먼저 있어야** 합니다
+- Bicep은 resource group scope라 그룹 자체를 만들지 않습니다
+
+> 💻 **터미널에서 실행**
 
 ```bash
 set -a; . ./.env; set +a
@@ -33,7 +42,7 @@ az group create -n "$RESOURCE_GROUP" -l "$REGION" -o table
 
 ## Step 1. IaC를 실제로 검증하기
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
@@ -65,7 +74,7 @@ azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
 
 ## Step 2. 배포 전에 영향 다시 확인하고 승인받기
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
@@ -112,12 +121,17 @@ azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
 
 ## 🚧 문제가 생겼다면
 
+<details>
+<summary>🔎 <b>증상별 원인과 해결 방법</b></summary>
+
 | 증상 | 원인일 가능성 | 해야 할 일 |
 | --- | --- | --- |
 | what-if가 `ResourceGroupNotFound`로 실패 | 배포 대상 resource group을 안 만들었음 | 위 "배포 대상 resource group 만들기"를 실행한 뒤 재시도 |
 | 빌드는 성공했지만 정책 위반 오류 | Azure Policy 제약 | 위반한 정책 이름을 확인하고, 해당 설정을 정책에 맞게 조정 (정책 자체를 끄려 하지 말 것) |
 | quota/용량 부족 오류 | region 용량 부족 또는 vCPU 한도 초과 | [Lab 02](02-design-aks.md) Step 1로 돌아가 node 개수·SKU를 줄이거나 region 변경 |
 | 승인이 모호하게 넘어감 | 명시적 승인 문구 없이 진행 | 승인자 이름과 "승인합니다" 문구를 다시 기록 |
+
+</details>
 
 ## 다음 Lab
 

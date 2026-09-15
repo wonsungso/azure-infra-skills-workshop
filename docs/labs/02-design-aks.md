@@ -10,7 +10,11 @@
 
 ## 왜 필요한가요?
 
-AKS는 만들고 나면 바꾸기 어려운 설정(네트워크 플러그인, CIDR 등)이 많습니다. 그래서 만들기 **전에** 결정을 검토하고 근거를 남깁니다. 이 랩에서는 아직 아무것도 만들지 않습니다.
+AKS는 만들고 나면 바꾸기 어려운 설정이 많습니다.
+
+- 네트워크 플러그인, CIDR, node pool 구성 등
+- 그래서 만들기 **전에** 결정을 검토하고 근거를 남깁니다
+- 이 Lab에서는 **아직 아무것도 만들지 않습니다**
 
 ## 시작 전에
 
@@ -23,6 +27,8 @@ AKS는 만들고 나면 바꾸기 어려운 설정(네트워크 플러그인, CI
 
 숫자는 CLI로 먼저 가져옵니다. 단순 조회는 몇 초면 끝나고, 뒤의 판단을 검토할 기준이 됩니다.
 
+> 💻 **터미널에서 실행**
+
 ```bash
 set -a; . ./.env; set +a
 SCOPE="/subscriptions/$SUBSCRIPTION_ID/providers/Microsoft.Compute/locations/$REGION"
@@ -34,7 +40,7 @@ az quota show --resource-name cores --scope "$SCOPE" \
 
 그다음 **충분한가**를 Skill에게 판단하게 합니다. 숫자 읽기가 아니라 region 대안까지 같이 봐야 하는 일입니다.
 
-> 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+> 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-quotas Skill을 사용해 AKS node를 만들 quota가 남아 있는지 확인해줘.
@@ -67,6 +73,8 @@ azure-quotas Skill을 사용해 AKS node를 만들 quota가 남아 있는지 확
 
 `REGION`은 `koreacentral`로 이미 채워져 있습니다. **방금 본 quota 결과로 이 값이 맞는지 확인하세요.** 결정한 값은 손으로 편집하지 말고 아래로 반영합니다.
 
+> 💻 **터미널에서 실행**
+
 ```bash
 bash scripts/set-env.sh \
   REGION koreacentral \
@@ -78,7 +86,7 @@ bash scripts/set-env.sh \
 
 ## Step 2. Day-0 결정 검토하기
 
-> 🧠 **Skill** `azure-kubernetes` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+> 🧠 **Skill** `azure-kubernetes` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해줘.
@@ -104,9 +112,11 @@ azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해�
 - Pod CIDR / Service CIDR / DNS IP가 서로, 그리고 기존 네트워크와 겹치지 않는가
 - API server를 공개하되 authorized IP ranges로만 제한한다는 의미
 
-"authorized IP ranges를 넓히면 쉽지 않을까?"라는 제안은 승인하지 않습니다. 공개 API + authorized IP ranges 제한이 이 워크샵의 기본 보안 경계입니다.
+"authorized IP ranges를 넓히면 쉽지 않을까?"라는 제안은 승인하지 않습니다. 공개 API와 authorized IP ranges 제한이 이 워크샵의 기본 보안 경계입니다.
 
 정한 CIDR을 `.env`에 반영합니다. **Lab 03이 이 값을 읽어 쓰므로, 비어 있으면 계획 생성이 멈춥니다.**
+
+> 💻 **터미널에서 실행**
 
 ```bash
 bash scripts/set-env.sh \
@@ -115,11 +125,15 @@ bash scripts/set-env.sh \
   DNS_SERVICE_IP 10.1.48.10
 ```
 
-위 값도 **예시입니다.** VNet은 `10.60.0.0/16`을 쓰므로 Pod·Service 대역이 그것과, 그리고 서로 겹치지 않아야 합니다. `DNS_SERVICE_IP`는 반드시 `SERVICE_CIDR` **안에** 있어야 합니다.
+위 값도 **예시입니다.** 직접 정할 때 지켜야 할 제약은 세 가지입니다.
+
+- VNet은 `10.60.0.0/16`을 씁니다
+- Pod·Service 대역이 VNet과, 그리고 서로 겹치지 않아야 합니다
+- `DNS_SERVICE_IP`는 반드시 `SERVICE_CIDR` **안에** 있어야 합니다
 
 ## Step 3. least privilege 매트릭스 만들기
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-enterprise-infra-planner Skill을 사용해 이 교육용 AKS의
@@ -139,7 +153,9 @@ least privilege 매트릭스를 작성해줘.
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
-"리소스를 배포하는 권한"과 "남에게 역할을 부여하는 권한"은 다릅니다. **Azure 권한과 Kubernetes 내부 권한도 완전히 다른 시스템**입니다. 이 표는 Lab 08 인계 문서에 그대로 들어갑니다.
+- "리소스를 배포하는 권한"과 "남에게 역할을 부여하는 권한"은 다릅니다
+- **Azure 권한과 Kubernetes 내부 권한도 완전히 다른 시스템**입니다
+- 이 표는 Lab 08 인계 문서에 그대로 들어갑니다
 
 **확인할 것** - 나에게 subscription Owner나 cluster-admin을 주는 제안이 없는지. 이 랩에서는 권한을 실제로 바꾸지 않습니다.
 
@@ -164,6 +180,9 @@ least privilege 매트릭스를 작성해줘.
 
 ## 🚧 문제가 생겼다면
 
+<details>
+<summary>🔎 <b>증상별 원인과 해결 방법</b></summary>
+
 | 증상 | 해야 할 일 |
 | --- | --- |
 | vCPU quota 부족 | node 개수·SKU를 줄이거나 다른 region 선택 (증설은 승인에 시간이 걸림) |
@@ -172,6 +191,8 @@ least privilege 매트릭스를 작성해줘.
 | CIDR 겹침 경고 | 겹치지 않는 대역으로 변경 (예: `10.244.0.0/16` → `10.245.0.0/16`) |
 | Skill이 SKU를 추측함 | Step 1의 quota 결과를 붙여넣고 재요청 |
 | 매트릭스에 Owner/cluster-admin 등장 | least privilege 원칙을 다시 언급하며 재요청 |
+
+</details>
 
 ## 다음 Lab
 

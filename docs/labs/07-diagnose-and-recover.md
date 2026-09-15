@@ -10,7 +10,10 @@
 
 ## 왜 필요한가요?
 
-중요한 것은 "그럴듯한 추측"이 아니라 **증거 기반 진단**입니다. 여기서는 장애를 직접 만들어 보고 증거로 찾아내 복구합니다. 원인을 아는 상태로 연습하는 이유는, 진짜 장애 때 쓸 **절차**를 몸에 익히기 위해서입니다.
+중요한 것은 "그럴듯한 추측"이 아니라 **증거 기반 진단**입니다.
+
+- 여기서는 장애를 직접 만들어 보고 증거로 찾아내 복구합니다
+- 원인을 아는 상태로 연습하는 이유는, 진짜 장애 때 쓸 **절차**를 몸에 익히기 위해서입니다
 
 ## 시작 전에
 
@@ -21,6 +24,8 @@
 
 존재하지 않는 이미지 태그로 바꿔 Pod가 뜨지 못하게 만듭니다.
 
+> 💻 **터미널에서 실행**
+
 ```bash
 kubectl set image deployment/lab-web web=nginxinc/nginx-unprivileged:does-not-exist -n lab
 ```
@@ -29,7 +34,7 @@ kubectl set image deployment/lab-web web=nginxinc/nginx-unprivileged:does-not-ex
 
 ## Step 2. 증거로 원인 분석하기
 
-> 🧠 **Skill** `azure-diagnostics` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+> 🧠 **Skill** `azure-diagnostics` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-diagnostics Skill을 사용해 샘플 Deployment가 준비되지 않는
@@ -77,11 +82,16 @@ azure-diagnostics Skill을 사용해 샘플 Deployment가 준비되지 않는
 
 복구 변경(올바른 이미지로 되돌리기)을 승인한 뒤 적용하고, [Lab 06](06-run-sample-workload.md)의 계층별 확인을 다시 수행합니다.
 
+> 💻 **터미널에서 실행**
+
 ```bash
 kubectl rollout undo deployment/lab-web -n lab
 ```
 
-`rollout undo`로 복구하면 **페이지의 Pod 이름은 바뀌지 않습니다.** 기존 Pod가 한 번도 죽지 않았기 때문입니다. 이름이 그대로인 것이 오히려 "무중단으로 막았다"는 증거입니다.
+`rollout undo`로 복구하면 **페이지의 Pod 이름은 바뀌지 않습니다.**
+
+- 기존 Pod가 한 번도 죽지 않았기 때문입니다
+- 이름이 그대로인 것이 오히려 **"무중단으로 막았다"는 증거**입니다
 
 권한 확대, IP 제한 완화, namespace 삭제는 복구 수단이 아닙니다.
 
@@ -95,11 +105,16 @@ kubectl rollout undo deployment/lab-web -n lab
 
 ## 🚧 문제가 생겼다면
 
+<details>
+<summary>🔎 <b>증상별 원인과 해결 방법</b></summary>
+
 | 증상 | 원인일 가능성 | 해야 할 일 |
 | --- | --- | --- |
 | 원인이 불명확 | 증거 부족 | `kubectl describe pod`와 `kubectl get events -n lab --sort-by=.lastTimestamp` 결과를 더 수집 |
 | 복구 후에도 실패 | 다른 근본 원인 존재 | 증상을 처음부터 다시 수집하고, 방금 바꾼 것 외에 달라진 것이 없는지 확인 |
 | 원래 이미지 태그가 기억나지 않음 | 기록 누락 | [manifest](../../reference/kubernetes/lab-web.yaml)의 이미지 값을 확인하거나 `kubectl rollout undo deployment/lab-web -n lab` |
+
+</details>
 
 ## 다음 Lab
 

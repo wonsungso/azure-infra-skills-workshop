@@ -19,13 +19,15 @@
 - [Lab 02](02-design-aks.md)의 Day-0 결정표와 권한 매트릭스가 있나요?
 - `.env`에 `POD_CIDR`, `SERVICE_CIDR`, `DNS_SERVICE_IP`까지 채워져 있나요? 비어 있으면 아래 프롬프트가 멈춥니다.
 
+> 💻 **터미널에서 실행**
+
 ```bash
 cat .env
 ```
 
 ## Step 1. 인프라 계획 만들고 검토하기
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해줘.
@@ -57,7 +59,11 @@ azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해�
 
 **진행 방식**
 
-이 Skill은 7단계를 순서대로 밟으며, 단계마다 자신의 참조 문서를 읽고 검증합니다. **답이 나오기까지 몇 분 걸리고, 파일을 수십 개 읽는 것이 정상입니다.** 빠른 답을 원했다면 그건 일반 프롬프트지 이 Skill을 쓰는 이유가 아닙니다.
+이 Skill은 7단계를 순서대로 밟으며, 단계마다 자신의 참조 문서를 읽고 검증합니다.
+
+- **답이 나오기까지 몇 분 걸립니다**
+- 파일을 수십 개 읽는 것이 정상입니다
+- 빠른 답을 원했다면 그건 일반 프롬프트지 이 Skill을 쓰는 이유가 아닙니다
 
 중간에 **두 번 멈춰 승인을 요청**합니다. 먼저 만들 자원 목록을, 그다음 완성된 계획을 확인합니다. 멈췄다고 실패한 게 아니라 설계된 동작입니다.
 
@@ -71,7 +77,11 @@ azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해�
 
 ### 승인 / 거절 버튼이 떴다면
 
-Skill이 멈추는 자리에서 채팅에 **승인 / 거절** 버튼이 나타납니다. 이건 Azure에 무언가를 만들겠다는 뜻이 아니라, **Skill이 다음 단계로 넘어가도 되는지 묻는 것**입니다. 여기서 승인해도 리소스는 생성되지 않습니다.
+Skill이 멈추는 자리에서 채팅에 **승인 / 거절** 버튼이 나타납니다.
+
+- Azure에 무언가를 만들겠다는 뜻이 아닙니다
+- **Skill이 다음 단계로 넘어가도 되는지 묻는 것**입니다
+- 여기서 승인해도 리소스는 생성되지 않습니다
 
 - **내용을 읽은 후 이상 없다면 승인** 하세요.
 - 다르거나 빠진 게 있으면 **거절**하고, 무엇이 왜 잘못됐는지 말로 알려주면 Skill이 고쳐서 다시 제시합니다.
@@ -85,11 +95,13 @@ Skill이 멈추는 자리에서 채팅에 **승인 / 거절** 버튼이 나타�
 
 user node pool의 크기를 한 단계 올려봅니다. 실제로 배포하려는 게 아니라, **바꾸면 무엇이 따라 움직이는지** 보려는 것입니다.
 
+> 💻 **터미널에서 실행**
+
 ```bash
 bash scripts/set-env.sh USER_VM_SIZE Standard_D4s_v5
 ```
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
 
 ```text
 방금 .env의 USER_VM_SIZE를 바꿨어. azure-enterprise-infra-planner Skill로 계획을 갱신해줘.
@@ -111,15 +123,21 @@ bash scripts/set-env.sh USER_VM_SIZE Standard_D4s_v5
 - 비용 요인이 함께 움직였나요?
 - **부탁하지 않은 것까지 바뀌지 않았나요?** CIDR이나 보안 설정이 덩달아 달라졌다면 그게 더 큰 문제입니다.
 
-이것이 계획을 파일로 남기는 이유입니다. 값 하나를 바꾸면 **무엇이 따라 바뀌는지 눈으로 보이고**, 바뀌지 말아야 할 것이 바뀌면 그것도 보입니다. 머릿속 설계로는 안 되는 일입니다.
+이것이 계획을 파일로 남기는 이유입니다.
+
+- 값 하나를 바꾸면 **무엇이 따라 바뀜는지 눈으로 보입니다**
+- 바뀌지 말아야 할 것이 바뀌면 그것도 보입니다
+- 머릿속 설계로는 안 되는 일입니다
 
 이제 되돌립니다. 교육용 클러스터에 user node를 키울 이유가 없다는 것이 **방금 비용 비교로 확인한 판단**입니다.
+
+> 💻 **터미널에서 실행**
 
 ```bash
 bash scripts/set-env.sh USER_VM_SIZE Standard_D2s_v5
 ```
 
-> 📋 **아래 프롬프트를 복사해 실행**
+> � **Copilot 채팅에 붙여넣기**
 
 ```text
 USER_VM_SIZE를 Standard_D2s_v5로 되돌렸어. 계획도 원래대로 되돌리고,
@@ -130,9 +148,12 @@ USER_VM_SIZE를 Standard_D2s_v5로 되돌렸어. 계획도 원래대로 되돌�
 
 ## Step 3. 계획을 승인하고 파일에 남기기
 
-Step 1에서 버튼을 눌렀더라도 한 번 더 확인해야 합니다. 계획 파일의 `meta.status`가 `draft`로 남아 있으면, **다음 프롬프트에서 Skill이 다시 읽고 멈춥니다.** 승인은 대화가 아니라 파일에 기록되어야 합니다.
+Step 1에서 버튼을 눌렀더라도 한 번 더 확인해야 합니다.
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **검토를 마쳤다면 아래 프롬프트를 복사해 실행**
+- 계획 파일의 `meta.status`가 `draft`로 남아 있으면 **다음 프롬프트에서 Skill이 다시 읽고 멈춥니다**
+- 승인은 대화가 아니라 **파일에 기록**되어야 합니다
+
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **검토를 마쳤다면 Copilot 채팅에 붙여넣기**
 
 ```text
 이 계획을 승인합니다.
@@ -149,6 +170,8 @@ Step 1에서 버튼을 눌렀더라도 한 번 더 확인해야 합니다. 계�
 
 **확인할 것**
 
+> 💻 **터미널에서 실행**
+
 ```bash
 grep -A3 '"meta"' .azure/infrastructure-plan.json
 ```
@@ -159,7 +182,7 @@ grep -A3 '"meta"' .azure/infrastructure-plan.json
 
 ## Step 4. 승인된 계획으로 Bicep 생성하기
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
@@ -179,7 +202,11 @@ azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
-이 Skill은 생성한 Bicep의 **문법 확인을 자기 절차의 일부로** 봅니다. 그래서 "검증하지 마"라고 막으면 생성 자체를 거부합니다. 여기서 미루는 것은 **Azure를 건드리는 일**뿐이고, 로컬에서 끝나는 `az bicep build`는 비용도 영향도 없으므로 허용합니다.
+이 Skill은 생성한 Bicep의 **문법 확인을 자기 절차의 일부로** 봅니다.
+
+- 그래서 "검증하지 마"라고 막으면 **생성 자체를 거부**합니다
+- 여기서 미루는 것은 **Azure를 건드리는 일**뿐입니다
+- `az bicep build`는 로컬에서 끝나 비용도 영향도 없으므로 허용합니다
 
 **확인할 것**
 
@@ -209,6 +236,9 @@ azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
 
 ## 🚧 문제가 생겼다면
 
+<details>
+<summary>🔎 <b>증상별 원인과 해결 방법</b></summary>
+
 | 증상 | 원인일 가능성 | 해야 할 일 |
 | --- | --- | --- |
 | "값이 비어 있어 멈췄다"고 답함 | Lab 02의 `set-env.sh` 반영을 건너뜀 | `cat .env`로 빈 항목을 찾아 [Lab 02](02-design-aks.md)에서 반영 후 재실행 |
@@ -221,6 +251,8 @@ azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
 | "WAF·Microsoft Learn 도구가 없다"고 적으며 진행 | MCP 서버가 꺼져 있음 | [Lab 01](01-orientation-and-setup.md) Step 2로 돌아가 `azure`와 `microsoft-learn`을 시작한 뒤 계획을 다시 생성 |
 | 계획에 없던 자원이 생성 목록에 있다 | 기존 자원 참조가 누락됨 | "기존 자원은 참조만" 문구를 강조해 재요청 |
 | 매개변수가 계획과 다르다 | `.env` 값이 최신이 아님 | `.env`를 갱신하고 재생성 요청 |
+
+</details>
 
 ## 다음 Lab
 

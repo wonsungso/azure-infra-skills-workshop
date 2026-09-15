@@ -12,7 +12,11 @@
 
 팀장의 세 번째 조건은 **"살아있다는 걸 증명하세요"** 였습니다. 지금까지는 클러스터가 있다는 것까지만 보였으니, 이제 실제로 **트래픽을 처리하는 화면**을 올립니다.
 
-다만 "배포했다"와 "정상 동작한다"는 다릅니다. Deployment가 `Available`이어도 Pod가 `Ready`가 아닐 수 있고, Service가 있어도 트래픽이 전달되지 않을 수 있습니다. 그래서 계층을 따로따로 확인합니다.
+다만 "배포했다"와 "정상 동작한다"는 다릅니다.
+
+- Deployment가 `Available`이어도 Pod가 `Ready`가 아닐 수 있습니다
+- Service가 있어도 트래픽이 전달되지 않을 수 있습니다
+- 그래서 **계층을 따로따로** 확인합니다
 
 ## 시작 전에
 
@@ -20,7 +24,7 @@
 
 ## Step 1. manifest 검토하기
 
-> 📋 **아래 프롬프트를 복사해 실행**
+> � **Copilot 채팅에 붙여넣기**
 
 ```text
 reference/kubernetes/lab-web.yaml을 검토해줘.
@@ -68,7 +72,7 @@ reference/kubernetes/lab-web.yaml을 검토해줘.
 > [!WARNING]
 > port-forward 성공은 "로컬에서 접근이 됐다"는 것만 증명합니다. 외부 공개나 클러스터 내부 DNS 통신이 된다는 증거로 기록하지 마세요.
 
-각 계층이 정상이면 아래와 같이 보입니다. **EndpointSlice의 `endpoints` 값이 Pod IP와 같은지**가 Service와 Pod가 실제로 연결됐다는 증거입니다.
+각 계층이 정상이면 아래와 같이 보입니다. **EndpointSlice의 `endpoints` 값이 Pod IP와 같은지**가 Service와 Pod가 연결됐다는 증거입니다.
 <img src="../../img/lab06-verify.png" alt="kubectl apply와 계층별 조회 결과 - ConfigMap/Deployment/Service 생성, Pod Running, EndpointSlice 연결, HTTP 200 응답" width="760">
 
 <details>
@@ -86,13 +90,22 @@ reference/kubernetes/lab-web.yaml을 검토해줘.
 
 port-forward를 연 상태에서 브라우저로 `http://127.0.0.1:8080` 에 접속해 **Contoso Shop** 화면을 확인하세요.
 
-Codespace에서는 하단 **포트(Ports) 패널**의 지구본 아이콘으로 열어도 됩니다. 주소가 `...app.github.dev` 형태로 바뀌지만, 이것은 Codespace 내부로의 터널일 뿐이므로 클러스터를 외부에 공개한 것이 아닙니다.
+Codespace에서는 하단 **포트(Ports) 패널**의 지구본 아이콘으로 열어도 됩니다.
+
+- 주소가 `...app.github.dev` 형태로 바뀝니다
+- 이것은 Codespace 내부로의 터널일 뿐입니다
+- **클러스터를 외부에 공개한 것이 아닙니다**
 
 <img src="../../img/shop.png" alt="Contoso Shop 상품 페이지 - 상품 카드 4개와 하단에 실제 Pod 이름이 표시된 화면" width="760">
 
-화면 아래의 Pod 이름과 터미널에서 조회한 이름이 **같은지** 비교해 보세요. 같다면 화면이 정말로 내 클러스터에서 오고 있다는 증거입니다. `-o wide`로 조회한 node가 **user pool**인지도 확인하세요. Lab 02 설계 결정이 실제로 지켜졌다는 증거입니다.
+두 가지를 비교해 보세요.
+
+- 화면 아래의 Pod 이름과 터미널에서 조회한 이름이 **같은가** → 화면이 정말로 내 클러스터에서 오고 있다는 증거
+- `-o wide`로 조회한 node가 **user pool인가** → Lab 02 설계 결정이 지켜졌다는 증거
 
 Pod를 지우고 재생성된 뒤 페이지를 새로고침해 보세요. **하단의 Pod 이름이 바뀝니다.** 재생성이 눈으로 보이는 순간입니다.
+
+> 💻 **터미널에서 실행**
 
 ```bash
 kubectl delete pod -n lab -l app=lab-web
@@ -112,6 +125,9 @@ port-forward는 Pod가 바뀌면 끊어지므로 다시 실행해야 합니다.
 
 ## 🚧 문제가 생겼다면
 
+<details>
+<summary>🔎 <b>증상별 원인과 해결 방법</b></summary>
+
 | 증상 | 원인일 가능성 | 해야 할 일 |
 | --- | --- | --- |
 | Pod가 `Pending` | 스케줄링 제약(nodeSelector) 또는 리소스 부족 | node 상태와 taint/toleration 확인 |
@@ -119,6 +135,8 @@ port-forward는 Pod가 바뀌면 끊어지므로 다시 실행해야 합니다.
 | Pod가 `ContainerCreating`에서 멈춤 | ConfigMap을 먼저 적용하지 않았을 수 있음 | `lab-web-content` ConfigMap 존재 여부 확인 |
 | 화면은 뜨는데 Pod 이름이 `-` | Downward API 파일 경로 불일치 | manifest의 `path` 값과 HTML의 fetch 대상 비교 |
 | port-forward 응답 없음 | 앱이 아직 `Ready` 아님 | 몇 초 대기 후 Pod 상태 재확인 |
+
+</details>
 
 ## 다음 Lab
 

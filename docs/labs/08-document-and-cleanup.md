@@ -10,7 +10,9 @@
 
 ## 왜 필요한가요?
 
-Azure Resource Manager 그림만으로는 Kubernetes 내부의 Pod/Service 관계를 알 수 없습니다. 두 계층을 나누어 문서화하고, 마지막에는 무엇이 남았는지 확인한 뒤 인계합니다.
+- Azure Resource Manager 그림만으로는 Kubernetes 내부의 Pod/Service 관계를 알 수 없습니다
+- 두 계층을 나누어 문서화합니다
+- 마지막에는 무엇이 남았는지 확인한 뒤 인계합니다
 
 ## 시작 전에
 
@@ -18,7 +20,7 @@ Azure Resource Manager 그림만으로는 Kubernetes 내부의 Pod/Service 관�
 
 ## Step 1. 실제 상태 문서화하기
 
-> 🧠 **Skill** `azure-resource-lookup`, `azure-resource-visualizer` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+> 🧠 **Skill** `azure-resource-lookup`, `azure-resource-visualizer` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
@@ -43,13 +45,16 @@ azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
-**확인할 것:** cluster resource group과 node resource group을 모두 조사했는지, Kubernetes 증거(Pod/Service/EndpointSlice)를 Azure ARM 그림과 별도 섹션으로 나눴는지.
+**확인할 것**
+
+- cluster resource group과 node resource group을 모두 조사했는가
+- Kubernetes 증거(Pod/Service/EndpointSlice)를 Azure ARM 그림과 **별도 섹션**으로 나눠는가
 
 ### Azure 공식 아이콘으로 그림 만들기
 
 Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 결과로 **Azure 공식 아이콘이 들어간 SVG**를 함께 만듭니다.
 
-> 📋 **아래 프롬프트를 복사해 실행**
+> � **Copilot 채팅에 붙여넣기**
 
 ```text
 방금 조회한 실제 리소스로 assets/azure-icons/README.md의
@@ -76,7 +81,11 @@ Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 �
 
 위는 [예시 스펙](../../assets/azure-icons/example-architecture.json)으로 만든 결과입니다. 아이콘은 SVG 안에 인라인되므로 파일 하나만 인계 문서에 넣으면 됩니다.
 
-아이콘은 Microsoft가 배포하는 공식 Azure architecture icons입니다. 아키텍처 다이어그램과 교육 자료 용도로만 쓸 수 있고, 자르거나 회전하거나 변형하면 안 됩니다. 자세한 조건은 [assets/azure-icons/README.md](../../assets/azure-icons/README.md)에 있습니다.
+아이콘은 Microsoft가 배포하는 공식 Azure architecture icons입니다.
+
+- 아키텍처 다이어그램과 교육 자료 용도로만 쓸 수 있습니다
+- 자르거나 회전하거나 변형하면 안 됩니다
+- 자세한 조건은 [assets/azure-icons/README.md](../../assets/azure-icons/README.md)에 있습니다
 
 [인계 양식](../../templates/handoff-template.md)에 관측/설계/추정/미검증을 구분해서 채웁니다. Lab 01부터 쌓인 `infra-report.md`가 그 근거입니다.
 
@@ -93,7 +102,7 @@ Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 �
 
 ## Step 2. 제출하고 정리하기
 
-> 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 📋 **아래 프롬프트를 복사해 실행**
+> 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-resource-lookup Skill을 사용해 삭제 대상을 확인해줘.
@@ -124,12 +133,17 @@ azure-resource-lookup Skill을 사용해 삭제 대상을 확인해줘.
 
 ## 🚧 문제가 생겼다면
 
+<details>
+<summary>🔎 <b>증상별 원인과 해결 방법</b></summary>
+
 | 증상 | 원인일 가능성 | 해야 할 일 |
 | --- | --- | --- |
 | ARM 그림에 Pod/Service가 안 보임 | 정상입니다 | Kubernetes API 조회로 별도 확인 |
 | 삭제 후에도 리소스가 남아있음 | 종속 리소스 또는 삭제 지연 | 몇 분 후 재조회. node resource group(`MC_...`)이 함께 지워졌는지도 확인 |
 | resource group 삭제가 거부됨 | 리소스 잠금 또는 권한 부족 | 잠금 여부를 확인하고, 내 권한 범위 안에서 개별 리소스부터 삭제 |
 
+</details>
+
 ## 워크샵을 마칩니다 🎉
 
-수고하셨습니다. Codespace를 더 쓰지 않는다면 GitHub의 Codespaces 목록에서 중지하거나 삭제하세요. Azure 리소스와 달리 Codespace는 사용 시간 기준으로만 과금됩니다.
+수고하셨습니다. Codespace를 더 쓰지 않는다면 GitHub의 Codespaces 목록에서 중지하거나 삭제하세요. Azure 리소스와 달리 Codespace는 사용 시간으로만 과금됩니다.
