@@ -43,7 +43,7 @@ az quota show --resource-name cores --scope "$SCOPE" \
 > 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-quotas Skill을 사용해 AKS node를 만들 quota가 남아 있는지 확인해주세요.
+azure-quotas Skill을 사용해 AKS node를 만들 quota가 남아 있는지 확인해줘.
 
 [읽을 값]
 - 저장소 루트 .env의 SUBSCRIPTION_ID, REGION
@@ -57,12 +57,12 @@ azure-quotas Skill을 사용해 AKS node를 만들 quota가 남아 있는지 확
 [판단할 것]
 - node 3대를 만들 수 있는가
   (Standard_D4s_v5 2대 + Standard_D2s_v5 1대 = 10 vCPU)
-- 부족하면 대안 region도 알려주세요
-- 어느 명령으로 확인했는지 같이 알려주세요
+- 부족하면 대안 region도 알려줘
+- 어느 명령으로 확인했는지 같이 알려줘
 
 [제약]
-- Azure 리소스를 만들거나 바꾸지 마세요
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+- Azure 리소스를 만들거나 바꾸지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 
 ```
 
@@ -90,7 +90,7 @@ bash scripts/set-env.sh \
 > 🧠 **Skill** `azure-kubernetes` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해주세요.
+azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해줘.
 
 [검토 기준]
 - Standard 운영 모드
@@ -103,8 +103,8 @@ azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해�
 - 기준별 대안과 위험을 표로 정리
 
 [제약]
-- Azure 리소스를 만들거나 바꾸지 마세요
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+- Azure 리소스를 만들거나 바꾸지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 
 ```
 
@@ -139,7 +139,7 @@ bash scripts/set-env.sh \
 
 ```text
 azure-enterprise-infra-planner Skill을 사용해 이 교육용 AKS의
-least privilege 매트릭스를 작성해주세요.
+least privilege 매트릭스를 작성해줘.
 
 [분리할 주체]
 - Azure 리소스 배포자
@@ -151,8 +151,8 @@ least privilege 매트릭스를 작성해주세요.
 - 주체별 scope와 필요한 작업을 표로
 
 [제약]
-- 계획만 세우고 권한을 변경하지 마세요
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+- 계획만 세우고 권한을 변경하지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 
 ```
 

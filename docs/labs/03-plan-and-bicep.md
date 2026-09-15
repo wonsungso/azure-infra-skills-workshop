@@ -30,13 +30,13 @@ cat .env
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해주세요.
+azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해줘.
 
 [읽을 값]
 - 저장소 루트 .env의 RESOURCE_GROUP, AKS_NAME, REGION, EGRESS_IP_CIDR,
   POD_CIDR, SERVICE_CIDR, DNS_SERVICE_IP, SYSTEM_VM_SIZE, USER_VM_SIZE
-- 비어 있는 값이 있으면 추측하지 말고 먼저 알려주세요
-- Lab 02의 Day-0 검토와 least privilege 매트릭스를 반영해주세요
+- 비어 있는 값이 있으면 추측하지 말고 먼저 알려줘
+- Lab 02의 Day-0 검토와 least privilege 매트릭스를 반영해줘
 
 [보안 요구]
 - public API server의 authorized IP ranges는 EGRESS_IP_CIDR만 사용
@@ -53,8 +53,8 @@ azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해�
 - 대안, 위험, 비용 요인
 
 [제약]
-- 계획 승인 전에는 멈춰 주세요
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+- 계획 승인 전에는 멈춰
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 **진행 방식**
@@ -108,7 +108,7 @@ bash scripts/set-env.sh USER_VM_SIZE Standard_D4s_v5
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-방금 .env의 USER_VM_SIZE를 바꿨습니다. azure-enterprise-infra-planner Skill로 계획을 갱신해주세요.
+방금 .env의 USER_VM_SIZE를 바꿨어. azure-enterprise-infra-planner Skill로 계획을 갱신해줘.
 
 [보여줄 것]
 - 계획에서 바뀐 항목과 바뀌기 전후 값
@@ -117,8 +117,8 @@ bash scripts/set-env.sh USER_VM_SIZE Standard_D4s_v5
 
 [제약]
 - 내가 바꾼 값 때문에 달라지는 것만 바꿔 주세요. 나머지는 그대로 두세요
-- Azure 리소스를 만들거나 바꾸지 마세요
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+- Azure 리소스를 만들거나 바꾸지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 **확인할 것**
@@ -144,8 +144,8 @@ bash scripts/set-env.sh USER_VM_SIZE Standard_D2s_v5
 > 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-USER_VM_SIZE를 Standard_D2s_v5로 되돌렸습니다. 계획도 원래대로 되돌리고,
-지금 계획이 Lab 02에서 결정한 값과 다시 일치하는지 확인해주세요.
+USER_VM_SIZE를 Standard_D2s_v5로 되돌렸어. 계획도 원래대로 되돌리고,
+지금 계획이 Lab 02에서 결정한 값과 다시 일치하는지 확인해줘.
 ```
 
 **완료 기준:** 계획의 user node SKU가 `Standard_D2s_v5`로 돌아왔고, vCPU 합계가 다시 10입니다.
@@ -164,12 +164,12 @@ Step 1에서 버튼을 눌렀더라도 한 번 더 확인합니다.
 
 [해야 할 일]
 - azure-enterprise-infra-planner Skill의 Phase 5에 따라
-  .azure/infrastructure-plan.json의 meta.status를 approved로 바꿔주세요
-- 승인자와 승인 시각을 함께 기록해주세요
-- 어떤 값이 approved로 바뀌었는지 보여주세요
+  .azure/infrastructure-plan.json의 meta.status를 approved로 바꿔줘
+- 승인자와 승인 시각을 함께 기록해줘
+- 어떤 값이 approved로 바뀌었는지 보여줘
 
 [제약]
-- 아직 IaC 생성이나 배포로 넘어가지 마세요
+- 아직 IaC 생성이나 배포로 넘어가지 마
 ```
 
 **확인할 것**
@@ -189,21 +189,21 @@ grep -A3 '"meta"' .azure/infrastructure-plan.json
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해주세요.
+azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
 
 [읽을 값]
 - 승인된 infrastructure plan
 - 저장소 루트의 .env
 
 [해야 할 일]
-- 기존 foundation 자원은 참조만 하고 덮어쓰지 마세요
-- 변경 대상과 생성 파일을 설명해주세요
-- 그 Skill이 요구하는 로컬 문법 확인(az bicep build)까지는 진행해 주세요
+- 기존 foundation 자원은 참조만 하고 덮어쓰지 마
+- 변경 대상과 생성 파일을 설명해줘
+- 그 Skill이 요구하는 로컬 문법 확인(az bicep build)까지는 해도 돼
 
 [제약]
-- Azure에 자원을 만들거나 바꾸는 명령은 실행하지 마세요
-- 보안 검사와 what-if는 Lab 04에서 하니 여기서는 하지 마세요
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+- Azure에 자원을 만들거나 바꾸는 명령은 실행하지 마
+- 보안 검사와 what-if는 Lab 04에서 하니 여기서는 하지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 이 Skill은 생성한 Bicep의 **문법 확인을 자기 절차의 일부로** 봅니다.

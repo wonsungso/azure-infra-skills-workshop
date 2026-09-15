@@ -38,7 +38,7 @@ kubectl set image deployment/lab-web web=nginxinc/nginx-unprivileged:does-not-ex
 
 ```text
 azure-diagnostics Skill을 사용해 샘플 Deployment가 준비되지 않는
-원인을 찾아주세요.
+원인을 찾아줘.
 
 [읽을 값]
 - 저장소 루트 .env의 RESOURCE_GROUP, AKS_NAME, NAMESPACE
@@ -49,13 +49,13 @@ azure-diagnostics Skill을 사용해 샘플 Deployment가 준비되지 않는
 - 이미지 참조
 
 [그다음]
-- 원인과 영향 범위를 설명해주세요
-- 복구를 위해 무엇을 바꿔야 하는지 설명해주세요
+- 원인과 영향 범위를 설명해줘
+- 복구를 위해 무엇을 바꿔야 하는지 설명해줘
 
 [제약]
-- 조회 위주로 분석하고 클러스터를 바꾸지 마세요
-- 복구 변경은 적용 승인 전에는 하지 마세요
-- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려주세요
+- 조회 위주로 분석하고 클러스터를 바꾸지 마
+- 복구 변경은 적용 승인 전에는 하지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 
 ```
 
