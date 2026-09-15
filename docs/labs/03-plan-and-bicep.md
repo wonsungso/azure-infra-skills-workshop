@@ -61,6 +61,14 @@ azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해�
 
 이 Skill은 7단계를 순서대로 밟으며, 단계마다 자신의 참조 문서를 읽고 검증합니다.
 
+- 1. 기존 환경 정보 수집 - `.azure/insights.json`에 기록
+- 2. 모범 사례 조사 - MCP와 Well-Architected Framework 기준 확인
+- 3. 필요한 Azure 자원 조사 - 자원 목록을 보여주고 **첫 승인** 요청
+- 4. 인프라 계획 작성 - `.azure/infrastructure-plan.json`에 `draft`로 저장
+- 5. 계획 검증 - 검토 결과를 보여주고 **두 번째 승인** 요청
+- 6. Bicep 또는 Terraform 생성 - 승인된 계획에서 IaC 파일 생성
+- 7. Azure 배포 - 실제 자원 생성 또는 변경 전 최종 승인 요청
+
 - **답이 나오기까지 몇 분 걸립니다**
 - 파일을 수십 개 읽는 것이 정상입니다
 - 빠른 답을 원했다면 그건 일반 프롬프트지 이 Skill을 쓰는 이유가 아닙니다
