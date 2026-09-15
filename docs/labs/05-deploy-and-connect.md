@@ -20,7 +20,7 @@
 
 ## Step 1. 클러스터 배포 관찰하기
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-enterprise-infra-planner Skill을 사용해 승인된 계획을 배포해줘.
@@ -59,7 +59,7 @@ bash scripts/set-env.sh NODE_RESOURCE_GROUP \
 
 ## Step 2. 접속하고 `lab` namespace 만들기
 
-> 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-resource-lookup Skill을 사용해 AKS의 실제 상태를 확인해줘.
@@ -98,7 +98,7 @@ az role assignment create \
 **역할이 실제로 적용되기까지 1분 남짓 걸립니다.**
 
 - 그 사이에는 아래 명령이 `Forbidden`으로 실패합니다
-- 실패했다고 다시 부여하지 말고, 잠시 기다렸다 다시 실행하세요
+- 실패했다고 다시 부여하지 않습니다. 잠시 기다린 뒤 다시 실행합니다
 
 그다음 credentials를 가져옵니다. **`kubelogin` 변환을 함께 실행해야 합니다.**
 
@@ -139,7 +139,7 @@ kubectl create namespace "$NAMESPACE"
 - 대신 Lab 02의 least privilege 매트릭스를 다시 보고, **팀원에게 `lab`만 허용하려면 어떤 역할을 어느 scope에 줘야 하는지**를 인계 문서에 적어두세요
 
 > [!WARNING]
-> 접속이 안 될 때 authorized IP ranges에 `0.0.0.0/0`을 넣지 않습니다. 먼저 내 egress IP가 바뀌지 않았는지 `curl -s https://api.ipify.org`로 다시 확인하세요.
+> 접속이 안 될 때 authorized IP ranges에 `0.0.0.0/0`을 넣지 않습니다. 먼저 `curl -s https://api.ipify.org`로 egress IP가 바뀌지 않았는지 확인합니다.
 
 ## ✅ 완료 체크리스트
 

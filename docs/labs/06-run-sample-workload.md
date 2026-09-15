@@ -24,7 +24,7 @@
 
 ## Step 1. manifest 검토하기
 
-> � **Copilot 채팅에 붙여넣기**
+> 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 reference/kubernetes/lab-web.yaml을 검토해줘.
@@ -59,7 +59,7 @@ reference/kubernetes/lab-web.yaml을 검토해줘.
 
 ## Step 2. 적용하고 계층별로 검증하기
 
-승인 후 `lab` namespace에만 manifest를 적용합니다. 아래 항목을 하나씩, 개별적으로 확인하세요.
+승인 후 `lab` namespace에만 manifest를 적용합니다. 아래 항목을 하나씩 확인합니다.
 
 | 확인 항목 | 무엇을 보는가 |
 | --- | --- |
@@ -70,7 +70,7 @@ reference/kubernetes/lab-web.yaml을 검토해줘.
 | HTTP 응답 | localhost-bound port-forward로 응답이 오는가? |
 
 > [!WARNING]
-> port-forward 성공은 "로컬에서 접근이 됐다"는 것만 증명합니다. 외부 공개나 클러스터 내부 DNS 통신이 된다는 증거로 기록하지 마세요.
+> port-forward 성공은 "로컬에서 접근이 됐다"는 것만 증명합니다. 외부 공개나 클러스터 내부 DNS 통신의 증거로 기록하지 않습니다.
 
 각 계층이 정상이면 아래와 같이 보입니다. **EndpointSlice의 `endpoints` 값이 Pod IP와 같은지**가 Service와 Pod가 연결됐다는 증거입니다.
 <img src="../../img/lab06-verify.png" alt="kubectl apply와 계층별 조회 결과 - ConfigMap/Deployment/Service 생성, Pod Running, EndpointSlice 연결, HTTP 200 응답" width="760">
@@ -88,7 +88,7 @@ reference/kubernetes/lab-web.yaml을 검토해줘.
 
 ## Step 3. 상품 페이지 열어보기
 
-port-forward를 연 상태에서 브라우저로 `http://127.0.0.1:8080` 에 접속해 **Contoso Shop** 화면을 확인하세요.
+port-forward를 연 상태에서 브라우저로 `http://127.0.0.1:8080`에 접속합니다. **Contoso Shop** 화면이 보이면 됩니다.
 
 Codespace에서는 하단 **포트(Ports) 패널**의 지구본 아이콘으로 열어도 됩니다.
 

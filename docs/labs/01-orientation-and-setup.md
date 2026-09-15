@@ -34,7 +34,7 @@
 
 지킬 규칙은 세 가지입니다.
 
-- Skill 이름을 썼다고 실행된 게 아닙니다. **어떤 도구가 호출됐는지** 확인하세요
+- Skill 이름을 썼다고 실행된 게 아닙니다. **어떤 도구가 호출됐는지** 확인해 봅니다
 - 만들거나 바꾸거나 지우기 전에 항상 사람이 승인합니다
 - `예상`과 `관측`을 구분해 기록합니다
 
@@ -81,7 +81,7 @@ ls .github/skills
 - 계획은 나오지만 근거가 얕아집니다
 - 경고 없이 품질만 낮아지므로 **지금 확인해야** 합니다
 
-VS Code 왼쪽 사이드바의 **MCP 서버** 목록에서 `azure`와 `microsoft-learn`이 실행 중인지 확인하세요.
+VS Code 왼쪽 사이드바의 **MCP 서버** 목록에서 `azure`와 `microsoft-learn`의 실행 상태를 봅니다.
 
 - 설정은 [`mcp.json`](../../.vscode/mcp.json)에 있습니다
 - 멈춰 있으면 거기서 시작합니다
@@ -90,7 +90,7 @@ VS Code 왼쪽 사이드바의 **MCP 서버** 목록에서 `azure`와 `microsoft
 <details>
 <summary>🖐 <b>비어 있거나 로컬 VS Code로 진행한다면</b></summary>
 
-자동 설치는 Codespace를 만들 때만 실행됩니다. 직접 내려받으려면 저장소 루트에서 아래를 실행하세요.
+자동 설치는 Codespace를 만들 때만 실행됩니다. 직접 내려받는 경우에는 저장소 루트에서 아래 명령을 사용합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -133,7 +133,7 @@ az provider show --namespace Microsoft.Quota --query registrationState -o tsv
 
 - 비용이 없고 리소스를 만들지 않습니다
 - 해당 API를 쓸 수 있게 만들 뿐입니다
-- 그래도 subscription 설정을 바꾸므로, 공용 subscription이라면 먼저 확인하세요
+- 그래도 subscription 설정을 바꾸므로, 공용 subscription이라면 먼저 확인해 둡니다
 
 ## Step 4. 입력값 확인하기
 
@@ -256,13 +256,13 @@ azure-resource-lookup Skill을 사용해 resource group의 존재 여부를 확�
 | --- | --- |
 | "~ 도구가 제공되지 않아" 라며 다른 방법으로 답함 | Skill이 로드되지 않은 것입니다. Step 2를 다시 확인하고, 그 답변은 증거로 쓰지 마세요 |
 | `.github/skills`가 비어 있거나 없음 | Step 2의 "비어 있거나 로컬 VS Code로 진행한다면"을 펼쳐 수동으로 내려받으세요 |
-| 파일은 있는데 Copilot이 못 찾음 | Azure MCP server가 npm 패키지입니다. `node --version`으로 Node.js를 확인하세요 |
+| 파일은 있는데 Copilot이 못 찾음 | Azure MCP server가 npm 패키지입니다. `node --version`으로 Node.js 설치 상태를 봅니다 |
 | `az login`이 브라우저를 못 열고 멈춤 | `--use-device-code`를 붙였는지 확인 |
 | 로그인은 됐는데 subscription이 안 보임 | 게스트 계정일 수 있음. `az login --use-device-code --tenant <tenant-id>` |
 | `SUBSCRIPTION_ID`가 비어 있음 | 로그인 후 [`init-workshop.sh`](../../scripts/init-workshop.sh)를 다시 실행 |
 | 조회 결과가 `.env`와 다름 | `az account set --subscription <id>` 후 [`init-workshop.sh`](../../scripts/init-workshop.sh) 재실행 |
 | "권한이 없습니다" | 권한을 스스로 올리지 말고, 권한이 있는 다른 subscription·그룹으로 진행 |
-| Skill이 리소스를 만들려 함 | "읽기 전용"을 다시 강조해 재요청 |
+| Skill이 리소스를 만들려 함 | "읽기 전용"을 다시 강조해 다시 요청 |
 
 </details>
 

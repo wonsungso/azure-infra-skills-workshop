@@ -42,7 +42,7 @@ az group create -n "$RESOURCE_GROUP" -l "$REGION" -o table
 
 ## Step 1. IaC를 실제로 검증하기
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
@@ -74,7 +74,7 @@ azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
 
 ## Step 2. 배포 전에 영향 다시 확인하고 승인받기
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.

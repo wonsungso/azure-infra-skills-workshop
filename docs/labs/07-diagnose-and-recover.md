@@ -18,7 +18,7 @@
 ## 시작 전에
 
 - [Lab 06](06-run-sample-workload.md)의 정상 상태 증거가 있나요? 복구 여부를 판단할 기준이 됩니다.
-- **내 실습용 클러스터에서만** 진행합니다. 공용 환경에 장애를 주입하지 마세요.
+- **내 실습용 클러스터에서만** 진행합니다. 공용 환경에는 장애를 주입하지 않습니다.
 
 ## Step 1. 장애를 직접 주입하기
 
@@ -34,7 +34,7 @@ kubectl set image deployment/lab-web web=nginxinc/nginx-unprivileged:does-not-ex
 
 ## Step 2. 증거로 원인 분석하기
 
-> 🧠 **Skill** `azure-diagnostics` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-diagnostics` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-diagnostics Skill을 사용해 샘플 Deployment가 준비되지 않는
@@ -63,7 +63,7 @@ azure-diagnostics Skill을 사용해 샘플 Deployment가 준비되지 않는
 - 제시된 원인이 **실제 Events 문구**에 근거하는가, 아니면 일반론인가?
 - 기존 Pod는 아직 살아있는가? (Deployment는 새 Pod가 Ready가 되기 전까지 기존 Pod를 지우지 않습니다)
 
-새 Pod는 `ImagePullBackOff`지만 **기존 Pod는 `1/1 Running`으로 남아 서비스가 계속 응답한다**는 점을 확인하세요.
+새 Pod는 `ImagePullBackOff`지만 **기존 Pod는 `1/1 Running`으로 남아 서비스가 계속 응답하는지** 봅니다.
 
 <img src="../../img/lab07-diagnose.png" alt="장애 주입 후 kubectl 출력 - 새 Pod는 ImagePullBackOff, 기존 Pod는 Running 상태이며 events에 이미지 pull 실패가 기록되고 rollout undo로 복구된 터미널 화면" width="760">
 

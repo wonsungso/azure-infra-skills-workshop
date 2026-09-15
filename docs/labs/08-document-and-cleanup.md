@@ -20,7 +20,7 @@
 
 ## Step 1. 실제 상태 문서화하기
 
-> 🧠 **Skill** `azure-resource-lookup`, `azure-resource-visualizer` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-resource-lookup`, `azure-resource-visualizer` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
@@ -48,13 +48,13 @@ azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
 **확인할 것**
 
 - cluster resource group과 node resource group을 모두 조사했는가
-- Kubernetes 증거(Pod/Service/EndpointSlice)를 Azure ARM 그림과 **별도 섹션**으로 나눠는가
+- Kubernetes 증거(Pod/Service/EndpointSlice)를 Azure ARM 그림과 **별도 섹션**으로 나눴는가
 
 ### Azure 공식 아이콘으로 그림 만들기
 
 Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 결과로 **Azure 공식 아이콘이 들어간 SVG**를 함께 만듭니다.
 
-> � **Copilot 채팅에 붙여넣기**
+> 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 방금 조회한 실제 리소스로 assets/azure-icons/README.md의
@@ -102,7 +102,7 @@ Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 �
 
 ## Step 2. 제출하고 정리하기
 
-> 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-resource-lookup Skill을 사용해 삭제 대상을 확인해줘.

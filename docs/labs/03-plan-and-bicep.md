@@ -27,7 +27,7 @@ cat .env
 
 ## Step 1. 인프라 계획 만들고 검토하기
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해줘.
@@ -73,7 +73,7 @@ azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해�
    - API authorized IP ranges, Entra 인증, local accounts 비활성화가 모두 들어있는지
    - Lab 02에서 결정한 region·SKU·node 개수·CIDR과 정확히 일치하는지
 
-승인자는 여러분 자신입니다. 애매하면 질문을 더 하세요.
+승인자는 여러분 자신입니다. 판단이 서지 않으면, 이유를 더 물어본 뒤 결정하면 됩니다.
 
 ### 승인 / 거절 버튼이 떴다면
 
@@ -83,7 +83,7 @@ Skill이 멈추는 자리에서 채팅에 **승인 / 거절** 버튼이 나타�
 - **Skill이 다음 단계로 넘어가도 되는지 묻는 것**입니다
 - 여기서 승인해도 리소스는 생성되지 않습니다
 
-- **내용을 읽은 후 이상 없다면 승인** 하세요.
+- **내용을 읽은 뒤 이상이 없으면 승인**을 선택합니다.
 - 다르거나 빠진 게 있으면 **거절**하고, 무엇이 왜 잘못됐는지 말로 알려주면 Skill이 고쳐서 다시 제시합니다.
 - 버튼이 안 보이면 채팅에 그냥 "승인합니다"라고 써도 같습니다.
 
@@ -101,7 +101,7 @@ user node pool의 크기를 한 단계 올려봅니다. 실제로 배포하려�
 bash scripts/set-env.sh USER_VM_SIZE Standard_D4s_v5
 ```
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 방금 .env의 USER_VM_SIZE를 바꿨어. azure-enterprise-infra-planner Skill로 계획을 갱신해줘.
@@ -125,7 +125,7 @@ bash scripts/set-env.sh USER_VM_SIZE Standard_D4s_v5
 
 이것이 계획을 파일로 남기는 이유입니다.
 
-- 값 하나를 바꾸면 **무엇이 따라 바뀜는지 눈으로 보입니다**
+- 값 하나를 바꾸면 **무엇이 따라 바뀌는지 눈으로 보입니다**
 - 바뀌지 말아야 할 것이 바뀌면 그것도 보입니다
 - 머릿속 설계로는 안 되는 일입니다
 
@@ -137,7 +137,7 @@ bash scripts/set-env.sh USER_VM_SIZE Standard_D4s_v5
 bash scripts/set-env.sh USER_VM_SIZE Standard_D2s_v5
 ```
 
-> � **Copilot 채팅에 붙여넣기**
+> 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 USER_VM_SIZE를 Standard_D2s_v5로 되돌렸어. 계획도 원래대로 되돌리고,
@@ -153,7 +153,7 @@ Step 1에서 버튼을 눌렀더라도 한 번 더 확인해야 합니다.
 - 계획 파일의 `meta.status`가 `draft`로 남아 있으면 **다음 프롬프트에서 Skill이 다시 읽고 멈춥니다**
 - 승인은 대화가 아니라 **파일에 기록**되어야 합니다
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **검토를 마쳤다면 Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **검토를 마쳤다면 Copilot 채팅에 붙여넣기**
 
 ```text
 이 계획을 승인합니다.
@@ -182,7 +182,7 @@ grep -A3 '"meta"' .azure/infrastructure-plan.json
 
 ## Step 4. 승인된 계획으로 Bicep 생성하기
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
@@ -244,12 +244,12 @@ azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
 | "값이 비어 있어 멈췄다"고 답함 | Lab 02의 `set-env.sh` 반영을 건너뜀 | `cat .env`로 빈 항목을 찾아 [Lab 02](02-design-aks.md)에서 반영 후 재실행 |
 | 승인/거절 버튼이 떴는데 눌러도 되는지 모르겠다 | Skill이 다음 단계로 가도 되는지 묻는 gate | 내용을 확인하고 눌러도 됩니다. 리소스는 생성되지 않으며, 파일 기록은 Step 3에서 확인 |
 | "plan 상태가 `draft`"라며 Bicep 생성을 거부 | 버튼을 눌렀을 뿐 파일에 반영되지 않음 | Step 3의 승인 프롬프트를 실행해 `meta.status`를 `approved`로 바꾼 뒤 재실행 |
-| 값을 바꿨는데 계획이 그대로다 | Skill이 `.env`를 다시 읽지 않았음 | 어느 파일의 어떤 키를 바꿨는지 명시해 재요청 |
+| 값을 바꿨는데 계획이 그대로다 | Skill이 `.env`를 다시 읽지 않았음 | 어느 파일의 어떤 키를 바꿨는지 명시해 다시 요청 |
 | 부탁하지 않은 항목까지 바뀜다 | 변경 범위를 제한하지 않음 | 바뀌면 안 되는 항목을 짚어 되돌리게 하고, 왜 바꿨는지 물어보기 |
 | "검증하지 말라는 조건과 충돌"한다며 멈춤 | Skill은 문법 확인을 생성 절차의 일부로 봄 | Step 4 프롬프트처럼 **Azure 배포만** 막고 `az bicep build`는 허용 |
 | 승인을 물어보는 단계가 두 번 나온다 | 자원 목록과 완성된 계획을 따로 확인하는 정상 동작 | 각각 내용을 확인하고 승인 |
 | "WAF·Microsoft Learn 도구가 없다"고 적으며 진행 | MCP 서버가 꺼져 있음 | [Lab 01](01-orientation-and-setup.md) Step 2로 돌아가 `azure`와 `microsoft-learn`을 시작한 뒤 계획을 다시 생성 |
-| 계획에 없던 자원이 생성 목록에 있다 | 기존 자원 참조가 누락됨 | "기존 자원은 참조만" 문구를 강조해 재요청 |
+| 계획에 없던 자원이 생성 목록에 있다 | 기존 자원 참조가 누락됨 | "기존 자원은 참조만" 문구를 강조해 다시 요청 |
 | 매개변수가 계획과 다르다 | `.env` 값이 최신이 아님 | `.env`를 갱신하고 재생성 요청 |
 
 </details>

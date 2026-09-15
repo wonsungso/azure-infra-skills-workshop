@@ -40,7 +40,7 @@ az quota show --resource-name cores --scope "$SCOPE" \
 
 그다음 **충분한가**를 Skill에게 판단하게 합니다. 숫자 읽기가 아니라 region 대안까지 같이 봐야 하는 일입니다.
 
-> 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-quotas Skill을 사용해 AKS node를 만들 quota가 남아 있는지 확인해줘.
@@ -71,7 +71,7 @@ azure-quotas Skill을 사용해 AKS node를 만들 quota가 남아 있는지 확
 - 부족하면 region을 바꾸거나 node 개수·SKU를 줄입니다.
 - **어떤 명령으로 확인했다고 하나요?** 조회 없이 일반론으로 답했다면 근거가 아닙니다.
 
-`REGION`은 `koreacentral`로 이미 채워져 있습니다. **방금 본 quota 결과로 이 값이 맞는지 확인하세요.** 결정한 값은 손으로 편집하지 말고 아래로 반영합니다.
+`REGION`은 `koreacentral`로 이미 채워져 있습니다. 방금 본 quota 결과로 이 값이 맞는지 확인한 뒤, 결정한 값은 아래 명령으로 반영합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -86,7 +86,7 @@ bash scripts/set-env.sh \
 
 ## Step 2. Day-0 결정 검토하기
 
-> 🧠 **Skill** `azure-kubernetes` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-kubernetes` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해줘.
@@ -112,7 +112,7 @@ azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해�
 - Pod CIDR / Service CIDR / DNS IP가 서로, 그리고 기존 네트워크와 겹치지 않는가
 - API server를 공개하되 authorized IP ranges로만 제한한다는 의미
 
-"authorized IP ranges를 넓히면 쉽지 않을까?"라는 제안은 승인하지 않습니다. 공개 API와 authorized IP ranges 제한이 이 워크샵의 기본 보안 경계입니다.
+"authorized IP ranges를 넓히면 쉽지 않을까?"라는 제안은 이 워크샵의 보안 경계와 맞지 않습니다. 공개 API는 authorized IP ranges로 제한합니다.
 
 정한 CIDR을 `.env`에 반영합니다. **Lab 03이 이 값을 읽어 쓰므로, 비어 있으면 계획 생성이 멈춥니다.**
 
@@ -133,7 +133,7 @@ bash scripts/set-env.sh \
 
 ## Step 3. least privilege 매트릭스 만들기
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; � **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
 azure-enterprise-infra-planner Skill을 사용해 이 교육용 AKS의
@@ -189,8 +189,8 @@ least privilege 매트릭스를 작성해줘.
 | Skill이 `quota` extension이 없다고 함 | `az extension add --name quota --upgrade --yes` 후 다시 실행 |
 | `az quota`가 `MissingSubscription`으로 실패 | [Lab 01](01-orientation-and-setup.md)의 `Microsoft.Quota` provider 등록을 건너뛰었는지 확인. 즉시 진행해야 한다면 `az vm list-usage --location "$REGION"`로도 같은 숫자를 볼 수 있습니다 |
 | CIDR 겹침 경고 | 겹치지 않는 대역으로 변경 (예: `10.244.0.0/16` → `10.245.0.0/16`) |
-| Skill이 SKU를 추측함 | Step 1의 quota 결과를 붙여넣고 재요청 |
-| 매트릭스에 Owner/cluster-admin 등장 | least privilege 원칙을 다시 언급하며 재요청 |
+| Skill이 SKU를 추측함 | Step 1의 quota 결과를 붙여넣고 다시 요청 |
+| 매트릭스에 Owner/cluster-admin 등장 | least privilege 원칙을 다시 언급하며 다시 요청 |
 
 </details>
 
