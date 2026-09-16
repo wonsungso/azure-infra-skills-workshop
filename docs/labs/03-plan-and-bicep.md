@@ -136,14 +136,20 @@ USER_VM_SIZE를 Standard_D2s_v5로 되돌렸어. 계획도 원래대로 되돌�
 
 **완료 기준:** 계획의 user node SKU가 `Standard_D2s_v5`로 돌아왔고, vCPU 합계가 다시 10입니다.
 
-## Step 3. 계획을 승인하고 파일에 남기기
+## Step 3. 계획 상태 확인하기
 
-Step 1에서 버튼을 눌렀더라도 한 번 더 확인합니다.
+원본 계획이 `0.1-approved`처럼 **승인된 버전으로 그대로 복원**됐다면 재승인은 필요 없습니다. 이미 검토하고 승인한 동일한 계획이기 때문입니다.
 
-- 계획 파일의 `meta.status`가 `draft`로 남아 있으면 **다음 프롬프트에서 Skill이 다시 읽고 멈춥니다**
-- 승인은 대화가 아니라 **파일에 기록**되어야 합니다
+> 💻 **터미널에서 실행**
 
-> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **검토를 마쳤다면 Copilot 채팅에 붙여넣기**
+```bash
+grep -A3 '"meta"' .azure/infrastructure-plan.json
+```
+
+- `"status": "approved"`이고 원본 버전이 복원됐다면 Step 4로 진행합니다
+- `"status": "draft"`이거나 원본과 다른 값이 남아 있으면 아래 프롬프트로 승인합니다
+
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **`draft`일 때만 Copilot 채팅에 붙여넣기**
 
 ```text
 이 계획을 승인해.
@@ -158,17 +164,7 @@ Step 1에서 버튼을 눌렀더라도 한 번 더 확인합니다.
 - 아직 IaC 생성이나 배포로 넘어가지 마
 ```
 
-**확인할 것**
-
-> 💻 **터미널에서 실행**
-
-```bash
-grep -A3 '"meta"' .azure/infrastructure-plan.json
-```
-
-`"status": "approved"`가 보여야 다음 Step이 진행됩니다. 아직 `draft`라면 승인이 파일에 반영되지 않은 것입니다.
-
-**완료 기준:** `.azure/infrastructure-plan.json`의 `meta.status`가 `approved`이고, 승인자와 승인 시각이 들어 있습니다.
+**완료 기준:** `.azure/infrastructure-plan.json`의 `meta.status`가 `approved`입니다. 새로 승인했다면 승인자와 승인 시각도 들어 있습니다.
 
 ## Step 4. 승인된 계획으로 Bicep 생성하기
 
