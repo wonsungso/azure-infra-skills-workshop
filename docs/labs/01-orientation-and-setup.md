@@ -221,9 +221,7 @@ azure-resource-lookup Skill을 사용해 resource group의 존재 여부를 확�
 
 ```
 
-**Skill 응답은 CLI보다 느립니다.** 도구를 여러 번 호출하고 결과를 해석하기 때문입니다. 그만큼 더 복잡한 작업에 써야 합니다.
-
-**단순 조회는 CLI, 판단·절차·위험 검토는 Skill.** 이 구분이 이번 Lab의 진짜 교훈입니다. Lab 02부터는 CLI 한 줄로 대체할 수 없는 작업이 이어집니다.
+**단순 조회는 CLI, 판단·절차·위험 검토는 Skill을 사용합니다.** Skill은 여러 도구를 호출하고 결과를 해석하므로 더 복잡한 작업에 적합합니다.
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>

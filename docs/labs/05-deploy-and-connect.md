@@ -80,11 +80,7 @@ azure-resource-lookup Skill을 사용해 AKS의 실제 상태를 확인해줘.
 
 ```
 
-클러스터가 Ready라도 **아직 `kubectl`은 쓸 수 없습니다.**
-
-- 이 클러스터는 local accounts를 끄고 Azure RBAC for Kubernetes를 켰습니다
-- 클러스터를 만든 사람이라도 Kubernetes 역할을 따로 받아야 합니다
-- **subscription의 Owner 권한은 여기에 해당하지 않습니다**
+클러스터가 Ready라도 `kubectl`을 바로 쓸 수는 없습니다. local accounts를 끄고 Azure RBAC for Kubernetes를 켰으므로, 클러스터를 만든 사람도 Kubernetes 역할이 필요합니다. **subscription의 Owner 권한만으로는 충분하지 않습니다.**
 
 > 💻 **터미널에서 실행**
 
@@ -97,10 +93,7 @@ az role assignment create \
   --scope "$(az aks show -g "$RESOURCE_GROUP" -n "$AKS_NAME" --query id -o tsv)"
 ```
 
-**역할이 실제로 적용되기까지 1분 남짓 걸립니다.**
-
-- 그 사이에는 아래 명령이 `Forbidden`으로 실패합니다
-- 실패했다고 다시 부여하지 않습니다. 잠시 기다린 뒤 다시 실행합니다
+역할 적용에는 1분 남짓 걸립니다. 그동안 `Forbidden`이 나오면 다시 부여하지 않고 잠시 뒤 재시도합니다.
 
 그다음 credentials를 가져옵니다. **`kubelogin` 변환을 함께 실행해야 합니다.**
 
@@ -115,7 +108,7 @@ kubelogin convert-kubeconfig -l azurecli
 - `-l azurecli`는 이미 `az login`으로 받아둔 토큰을 그대로 씁니다
 - 따라서 추가 로그인이 없습니다
 
-이제 node를 확인하고 실습용 namespace를 만듭니다. Copilot에게 namespace 생성을 요청할 수도 있습니다. 이 Lab에서는 인증과 권한 상태를 직접 확인하기 위해 터미널 명령을 사용합니다.
+이제 node를 확인하고 실습용 namespace를 만듭니다. Copilot에게 생성을 요청할 수도 있지만, 이 Lab에서는 인증과 권한 상태를 확인하기 위해 터미널 명령을 사용합니다.
 
 > 💻 **터미널에서 실행**
 
