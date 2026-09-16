@@ -1,4 +1,4 @@
-# AKS 실습 인계 문서
+# 3계층 워크로드 인계 문서
 
 ## 범위와 상태
 
@@ -13,11 +13,16 @@
 
 ## 실제 Azure 구성
 
-`azure-resource-visualizer`가 생성한 Mermaid 또는 문서 링크를 둔다. 설계값과 실제 조회값의 차이를 설명한다.
+Application Gateway for Containers, AKS, PostgreSQL, VNet, identity 관계를 기록한다.
 
 ## 실제 Kubernetes 구성
 
-Deployment, Pod, Service, EndpointSlice, readiness와 내부 DNS 검증 결과를 기록한다. `port-forward` 결과는 로컬 접근 결과로만 기록한다.
+Gateway, HTTPRoute, Deployment, Service, PostgreSQL Job 결과를 기록한다.
+
+## E2E 증거
+
+- Gateway public URL의 HTTP 응답:
+- PostgreSQL `successful_checks` 결과:
 
 ## 검증과 문제 해결
 

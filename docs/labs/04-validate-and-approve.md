@@ -31,14 +31,38 @@ what-if는 "이 resource group에 적용하면 무엇이 바뀌는가"를 계산
 - 그러므로 **비교 대상이 먼저 있어야** 합니다
 - Bicep은 resource group scope라 그룹 자체를 만들지 않습니다
 
-> 💻 **터미널에서 실행**
+> 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
-```bash
-set -a; . ./.env; set +a
-az group create -n "$RESOURCE_GROUP" -l "$REGION" -o table
+```text
+azure-enterprise-infra-planner Skill을 사용해 배포 대상 resource group을 준비해줘.
+
+[읽을 값]
+- 저장소 루트 .env의 SUBSCRIPTION_ID, RESOURCE_GROUP, REGION
+
+[해야 할 일]
+- resource group이 있는지 먼저 조회
+- 없으면 대상과 영향을 보여주고 명시적 승인을 요청
+- 승인 후 빈 resource group만 생성
+- 생성 결과를 infra-report.md의 validate 장에 기록
+
+[제약]
+- resource group 안에 다른 Azure 리소스를 만들지 마
+- 이미 있으면 변경하지 말고 현재 상태만 알려줘
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 **빈 resource group은 비용이 없습니다.** 안에 들어갈 AKS와 node가 비용을 만들고, 그건 [Lab 05](05-deploy-and-connect.md)에서 배포를 승인한 뒤입니다.
+
+Application Gateway for Containers preview 상태도 확인합니다.
+
+> 💻 **터미널에서 실행**
+
+```bash
+az feature show --namespace Microsoft.ContainerService \
+    --name ManagedGatewayAPIPreview --query properties.state -o tsv
+az feature show --namespace Microsoft.ContainerService \
+    --name ApplicationLoadBalancerPreview --query properties.state -o tsv
+```
 
 ## Step 1. IaC를 실제로 검증하기
 
@@ -69,6 +93,8 @@ azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
 
 - 실제로 실행된 명령(예: `az bicep build`, 보안 검사, what-if)과 그 종료 코드
 - 실패가 있다면 "코드 문제"인지 "정책·quota·권한 문제"인지 구분
+- what-if에 AKS, VNet, PostgreSQL, private DNS, managed identity가 포함됐는지
+- PostgreSQL public access와 password authentication이 꺼졌는지
 
 > [!WARNING]
 > 검증 실패를 "일단 무시하고 배포"하지 않습니다. 원인을 고치고 같은 검사를 다시 통과시키세요.
@@ -102,6 +128,7 @@ azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
 
 - 배포 대상(resource group, region)이 `.env`와 같은가?
 - 예상 비용과 삭제 책임자가 명확한가?
+- Application Gateway for Containers와 PostgreSQL 비용이 포함됐는가?
 - 승인자, 승인 시각이 `infra-report.md`에 남았는가?
 
 <details>
@@ -137,4 +164,4 @@ azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
 
 ## 다음 Lab
 
-[Lab 05: AKS 배포 + 접속 확인](05-deploy-and-connect.md)
+[Lab 05: 3계층 인프라 배포](05-deploy-and-connect.md)

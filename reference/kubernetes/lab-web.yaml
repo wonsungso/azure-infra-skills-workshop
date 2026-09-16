@@ -127,7 +127,7 @@ data:
     <footer>
       Contoso, Inc. - 커머스팀 신규 서비스<br>
       이 응답을 처리한 Pod <code id="pod">…</code> · namespace <code id="ns">…</code>
-      &nbsp;|&nbsp; Pod를 다시 만들면 이 이름이 바뀝니다.
+      &nbsp;|&nbsp; PostgreSQL 상품 <code id="db">조회 중</code>
     </footer>
 
     <script>
@@ -140,9 +140,18 @@ data:
       };
       fill('pod-name.txt', 'pod');
       fill('pod-namespace.txt', 'ns');
+      fill('data/products.txt', 'db');
     </script>
     </body>
     </html>
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: postgres-admin
+  namespace: lab
+  annotations:
+    azure.workload.identity/client-id: __POSTGRES_IDENTITY_CLIENT_ID__
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -158,7 +167,9 @@ spec:
     metadata:
       labels:
         app: lab-web
+        azure.workload.identity/use: "true"
     spec:
+      serviceAccountName: postgres-admin
       nodeSelector:
         kubernetes.azure.com/mode: user
       securityContext:
@@ -180,6 +191,62 @@ spec:
                     - path: pod-namespace.txt
                       fieldRef:
                         fieldPath: metadata.namespace
+        - name: token
+          emptyDir:
+            medium: Memory
+        - name: database-content
+          emptyDir: {}
+      initContainers:
+        - name: get-postgres-token
+          image: mcr.microsoft.com/azure-cli:2.77.0
+          env:
+            - name: AZURE_CONFIG_DIR
+              value: /tmp/.azure
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              az login --service-principal \
+                --username "$AZURE_CLIENT_ID" \
+                --tenant "$AZURE_TENANT_ID" \
+                --federated-token "$(cat "$AZURE_FEDERATED_TOKEN_FILE")" \
+                --allow-no-subscriptions >/dev/null
+              az account get-access-token \
+                --resource-type oss-rdbms \
+                --query accessToken -o tsv > /token/access-token
+          volumeMounts:
+            - name: token
+              mountPath: /token
+        - name: query-postgres
+          image: postgres:16-alpine
+          env:
+            - name: PGHOST
+              value: __POSTGRES_HOST__
+            - name: PGUSER
+              value: __POSTGRES_IDENTITY_NAME__
+            - name: PGDATABASE
+              value: appdb
+            - name: PGSSLMODE
+              value: require
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              export PGPASSWORD="$(cat /token/access-token)"
+              psql -v ON_ERROR_STOP=1 \
+                -c 'CREATE TABLE IF NOT EXISTS products (id integer PRIMARY KEY, name text NOT NULL, price integer NOT NULL);' \
+                -c "INSERT INTO products VALUES (1, 'Dune Light DL-12', 250000) ON CONFLICT (id) DO NOTHING;"
+              psql -At -F ' · KRW ' \
+                -c 'SELECT name, price FROM products ORDER BY id LIMIT 1;' \
+                > /database/products.txt
+          volumeMounts:
+            - name: token
+              mountPath: /token
+              readOnly: true
+            - name: database-content
+              mountPath: /database
       containers:
         - name: web
           image: nginxinc/nginx-unprivileged:1.27-alpine
@@ -188,6 +255,9 @@ spec:
           volumeMounts:
             - name: web-content
               mountPath: /usr/share/nginx/html
+              readOnly: true
+            - name: database-content
+              mountPath: /usr/share/nginx/html/data
               readOnly: true
           resources:
             requests:
@@ -224,3 +294,107 @@ spec:
     - name: http
       port: 80
       targetPort: 8080
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgres-check
+  namespace: lab
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        azure.workload.identity/use: "true"
+    spec:
+      restartPolicy: Never
+      serviceAccountName: postgres-admin
+      volumes:
+        - name: token
+          emptyDir:
+            medium: Memory
+      initContainers:
+        - name: get-token
+          image: mcr.microsoft.com/azure-cli:2.77.0
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              az login --service-principal \
+                --username "$AZURE_CLIENT_ID" \
+                --tenant "$AZURE_TENANT_ID" \
+                --federated-token "$(cat "$AZURE_FEDERATED_TOKEN_FILE")" \
+                --allow-no-subscriptions >/dev/null
+              az account get-access-token \
+                --resource-type oss-rdbms \
+                --query accessToken -o tsv > /token/access-token
+          volumeMounts:
+            - name: token
+              mountPath: /token
+      containers:
+        - name: psql
+          image: postgres:16-alpine
+          env:
+            - name: PGHOST
+              value: __POSTGRES_HOST__
+            - name: PGUSER
+              value: __POSTGRES_IDENTITY_NAME__
+            - name: PGDATABASE
+              value: appdb
+            - name: PGSSLMODE
+              value: require
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              export PGPASSWORD="$(cat /token/access-token)"
+              psql -v ON_ERROR_STOP=1 \
+                -c 'CREATE TABLE IF NOT EXISTS workshop_check (checked_at timestamptz NOT NULL DEFAULT now());' \
+                -c 'INSERT INTO workshop_check DEFAULT VALUES;' \
+                -c 'SELECT count(*) AS successful_checks FROM workshop_check;'
+          volumeMounts:
+            - name: token
+              mountPath: /token
+              readOnly: true
+---
+apiVersion: alb.networking.azure.io/v1
+kind: ApplicationLoadBalancer
+metadata:
+  name: lab-alb
+  namespace: lab
+spec:
+  associations:
+    - __ALB_SUBNET_ID__
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: lab-gateway
+  namespace: lab
+  annotations:
+    alb.networking.azure.io/alb-namespace: lab
+    alb.networking.azure.io/alb-name: lab-alb
+spec:
+  gatewayClassName: azure-alb-external
+  listeners:
+    - name: http
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: lab-web
+  namespace: lab
+spec:
+  parentRefs:
+    - name: lab-gateway
+  rules:
+    - backendRefs:
+        - name: lab-web
+          port: 80

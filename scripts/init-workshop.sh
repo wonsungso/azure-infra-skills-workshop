@@ -19,6 +19,10 @@ WORKSHOP_ID=$ID
 RESOURCE_GROUP=rg-aks-lab-$ID
 VNET_NAME=vnet-aks-lab-$ID
 AKS_NAME=aks-lab-$ID
+POSTGRES_NAME=pg-$ID
+POSTGRES_IDENTITY_NAME=id-pg-$ID
+POSTGRES_DATABASE=appdb
+ALB_SUBNET_NAME=snet-alb
 NAMESPACE=lab
 IMAGE_TAG=nginxinc/nginx-unprivileged:1.27-alpine
 
@@ -33,14 +37,31 @@ REGION=koreacentral
 POD_CIDR=
 SERVICE_CIDR=
 DNS_SERVICE_IP=
+ALB_SUBNET_CIDR=
+POSTGRES_SUBNET_CIDR=
 SYSTEM_VM_SIZE=
 USER_VM_SIZE=
+POSTGRES_SKU=
 
 # Lab 05 배포 후 output으로 채움
 NODE_RESOURCE_GROUP=
 EOF
   echo "$ENV_FILE 생성 (WORKSHOP_ID=$ID)"
 fi
+
+# 기존 .env에도 새 워크샵 키를 추가한다.
+ID=$(grep '^WORKSHOP_ID=' "$ENV_FILE" | cut -d= -f2-)
+ensure_key() {
+  local key=$1 val=$2
+  grep -qE "^${key}=" "$ENV_FILE" || printf '%s=%s\n' "$key" "$val" >> "$ENV_FILE"
+}
+ensure_key POSTGRES_NAME "pg-$ID"
+ensure_key POSTGRES_IDENTITY_NAME "id-pg-$ID"
+ensure_key POSTGRES_DATABASE appdb
+ensure_key ALB_SUBNET_NAME snet-alb
+ensure_key ALB_SUBNET_CIDR ''
+ensure_key POSTGRES_SUBNET_CIDR ''
+ensure_key POSTGRES_SKU ''
 
 # 화면 공유나 스크린샷에 그대로 남지 않도록 식별자는 일부만 보여준다
 mask() {

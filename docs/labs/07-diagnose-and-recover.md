@@ -62,7 +62,7 @@ azure-diagnostics Skill을 사용해 샘플 Deployment가 준비되지 않는
 **확인할 것**
 
 - 제시된 원인이 **실제 Events 문구**에 근거하는가, 아니면 일반론인가?
-- 기존 Pod는 아직 살아있는가? (Deployment는 새 Pod가 Ready가 되기 전까지 기존 Pod를 지우지 않습니다)
+- 기존 Pod와 Gateway public URL이 계속 응답하는가?
 
 새 Pod는 `ImagePullBackOff`지만 **기존 Pod는 `1/1 Running`으로 남아 서비스가 계속 응답하는지** 봅니다.
 
@@ -101,6 +101,7 @@ kubectl rollout undo deployment/lab-web -n lab
 - [ ] 장애를 주입하고 증상을 기록함
 - [ ] 원인을 실제 증거(Events/Pod 상태)로 설명함
 - [ ] 장애 중에도 기존 Pod가 살아 있어 서비스가 끊기지 않았음을 확인함
+- [ ] Application Gateway for Containers 경로가 계속 응답함
 - [ ] 복구 변경을 승인 후 적용함
 - [ ] 재검증으로 정상 상태를 다시 확인함
 

@@ -1,12 +1,12 @@
-# Lab 05: AKS 배포 + 접속 확인
+# Lab 05: 3계층 인프라 배포
 
 **Lab 5 / 8** · 2부 · 실행과 마무리
 
-🎯 배포 실행 후 확인할 것 / Entra 인증 접속과 least privilege 검증
+🎯 AGC add-on·AKS·private PostgreSQL 배포 / Entra 기반 접속
 
 🧠 `azure-enterprise-infra-planner` · `azure-resource-lookup`
 
-> 🎬 승인 완료. 문서 속 설계가 **실제 Azure 리소스**로 바뀝니다. 지금부터 진짜 비용이 발생합니다.
+> 🎬 승인 완료. ingress, compute, database가 실제 Azure 리소스로 바뀝니다.
 
 ## 왜 필요한가요?
 
@@ -18,7 +18,7 @@
 
 - [Lab 04](04-validate-and-approve.md)의 배포 승인이 있나요?
 
-## Step 1. 클러스터 배포 관찰하기
+## Step 1. 3계층 인프라 배포하기
 
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
@@ -35,7 +35,7 @@ azure-enterprise-infra-planner Skill을 사용해 승인된 계획을 배포해�
 
 ```
 
-배포는 여러 분이 걸립니다. 성공 여부는 클러스터가 Ready가 된 뒤에만 판단합니다.
+성공 여부는 세 서비스가 모두 `Succeeded`가 된 뒤에 판단합니다.
 
 배포가 끝나면 node resource group을 `.env`에 반영합니다.
 
@@ -45,6 +45,15 @@ azure-enterprise-infra-planner Skill을 사용해 승인된 계획을 배포해�
 set -a; . ./.env; set +a
 bash scripts/set-env.sh NODE_RESOURCE_GROUP \
   "$(az aks show -g "$RESOURCE_GROUP" -n "$AKS_NAME" --query nodeResourceGroup -o tsv)"
+```
+
+> 💻 **터미널에서 실행**
+
+```bash
+az aks show -g "$RESOURCE_GROUP" -n "$AKS_NAME" \
+  --query "{state:provisioningState,workloadIdentity:securityProfile.workloadIdentity.enabled,alb:ingressProfile.applicationLoadBalancer.enabled}"
+az postgres flexible-server show -g "$RESOURCE_GROUP" -n "$POSTGRES_NAME" \
+  --query "{state:state,publicAccess:network.publicNetworkAccess,version:version}"
 ```
 
 <details>
@@ -114,14 +123,21 @@ kubelogin convert-kubeconfig -l azurecli
 
 ```bash
 kubectl get nodes -L kubernetes.azure.com/mode
+kubectl get gatewayclass azure-alb-external
+kubectl get pods -n kube-system | grep alb-controller
 kubectl create namespace "$NAMESPACE"
 ```
 
 **확인할 것**
 
 - node가 모두 `Ready` 상태인가?
+- GatewayClass `azure-alb-external`이 있는가?
+- ALB Controller pod가 `Running`인가?
 - system pool과 user pool이 설계대로 분리되었는가? (`kubectl get nodes -L kubernetes.azure.com/mode`)
 - `lab` namespace가 생성됐는가?
+
+node resource group의 Standard Load Balancer는 AKS egress용입니다. 실제 Application Gateway for Containers는
+[Lab 06](06-run-sample-workload.md)에서 `ApplicationLoadBalancer`를 적용할 때 별도로 생성됩니다.
 
 `MODE` 열에 `system` 2대와 `user` 1대가 보이는 것이 Lab 02의 node pool 분리 결정이 실제로 적용됐다는 증거입니다.
 
@@ -139,6 +155,8 @@ kubectl create namespace "$NAMESPACE"
 ## ✅ 완료 체크리스트
 
 - [ ] 클러스터가 실제로 Ready 상태임을 확인
+- [ ] ALB Controller와 GatewayClass를 확인
+- [ ] PostgreSQL public access가 꺼져 있음
 - [ ] `NODE_RESOURCE_GROUP`이 `.env`에 반영됨
 - [ ] 내 계정에 AKS RBAC 역할을 부여하고 `kubectl`이 동작함
 - [ ] system/user node pool 분리를 확인
@@ -164,4 +182,4 @@ kubectl create namespace "$NAMESPACE"
 
 ## 다음 Lab
 
-[Lab 06: 상품 페이지 배포](06-run-sample-workload.md)
+[Lab 06: Gateway + DB 검증](06-run-sample-workload.md)

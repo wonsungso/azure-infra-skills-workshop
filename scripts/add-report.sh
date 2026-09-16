@@ -128,12 +128,19 @@ build_summary() {
 | 구성 항목 | 값 | 수행 Lab |
 | --- | --- | --- |
 | VNet | $(code_or_dash VNET_NAME) | Lab 03 |
+| Ingress | Application Gateway for Containers | Lab 06 |
+| PostgreSQL | $(code_or_dash POSTGRES_NAME) | Lab 03 |
+| PostgreSQL database | $(code_or_dash POSTGRES_DATABASE) | Lab 03 |
+| Database identity | $(code_or_dash POSTGRES_IDENTITY_NAME) | Lab 03 |
 | Node resource group | $(code_or_dash NODE_RESOURCE_GROUP) | Lab 05 |
 | System node SKU | $(text_or_dash SYSTEM_VM_SIZE) | Lab 02 |
 | User node SKU | $(text_or_dash USER_VM_SIZE) | Lab 02 |
 | Pod CIDR | $(text_or_dash POD_CIDR) | Lab 02 |
 | Service CIDR | $(text_or_dash SERVICE_CIDR) | Lab 02 |
 | DNS service IP | $(text_or_dash DNS_SERVICE_IP) | Lab 02 |
+| ALB subnet | $(text_or_dash ALB_SUBNET_CIDR) | Lab 02 |
+| PostgreSQL subnet | $(text_or_dash POSTGRES_SUBNET_CIDR) | Lab 02 |
+| PostgreSQL SKU | $(text_or_dash POSTGRES_SKU) | Lab 02 |
 | API server 허용 대역 | $(text_or_dash EGRESS_IP_CIDR) | Lab 01 |
 | 워크로드 namespace | $(code_or_dash NAMESPACE) | Lab 05 |
 EOF
@@ -141,7 +148,7 @@ EOF
 
 if [ ! -f "$REPORT" ]; then
   {
-    printf '# AKS 인프라 구성 보고서\n\n'
+    printf '# 3계층 인프라 구성 보고서\n\n'
     printf '<!-- meta:begin -->\n<!-- meta:end -->\n\n'
     printf '## 진행 현황\n\n'
     printf '<!-- toc:begin -->\n<!-- toc:end -->\n\n'

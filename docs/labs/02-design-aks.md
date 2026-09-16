@@ -1,18 +1,18 @@
-# Lab 02: AKS 설계 결정하기
+# Lab 02: 3계층 설계 결정하기
 
 **Lab 2 / 8** · 1부 · 설계와 검증
 
-🎯 quota 확인 / Day-0 결정(네트워크·node pool·접근) / least privilege 매트릭스
+🎯 quota 확인 / ingress·AKS·database Day-0 결정 / least privilege
 
-🧠 `azure-quotas` · `azure-kubernetes` · `azure-enterprise-infra-planner`
+🧠 `azure-quotas` · `azure-kubernetes` · `azure-postgres` · `azure-enterprise-infra-planner`
 
 > 🎬 권한과 범위는 확인했습니다. 이제 **무엇을 만들 것인가**를 정합니다. 여기서 잘못 정하면 클러스터를 처음부터 다시 만들어야 합니다.
 
 ## 왜 필요한가요?
 
-AKS는 만들고 나면 바꾸기 어려운 설정이 많습니다.
+network와 database 연결은 만들고 나면 바꾸기 어렵습니다.
 
-- 네트워크 플러그인, CIDR, node pool 구성 등
+- AKS network, Application Gateway subnet, PostgreSQL private access
 - 그래서 만들기 **전에** 결정을 검토하고 근거를 남깁니다
 - 이 Lab에서는 **아직 아무것도 만들지 않습니다**
 
@@ -36,6 +36,8 @@ az quota show --resource-name standardDSv5Family --scope "$SCOPE" \
   --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
 az quota show --resource-name cores --scope "$SCOPE" \
   --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
+az postgres flexible-server list-skus -l "$REGION" \
+  --query "[?name=='Standard_B1ms'].{name:name,tier:tier}" -o table
 ```
 
 그다음 **충분한가**를 Skill에게 판단하게 합니다. 숫자 읽기가 아니라 region 대안까지 같이 봐야 하는 일입니다.
@@ -57,6 +59,8 @@ azure-quotas Skill을 사용해 AKS node를 만들 quota가 남아 있는지 확
 [판단할 것]
 - node 3대를 만들 수 있는가
   (Standard_D4s_v5 2대 + Standard_D2s_v5 1대 = 10 vCPU)
+- PostgreSQL `Standard_B1ms`를 사용할 수 있는가
+- Application Gateway for Containers를 해당 region에서 사용할 수 있는가
 - 부족하면 대안 region도 알려줘
 - 어느 명령으로 확인했는지 같이 알려줘
 
@@ -90,14 +94,17 @@ bash scripts/set-env.sh \
 > 🧠 **Skill** `azure-kubernetes` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해줘.
+azure-kubernetes와 azure-postgres Skill을 사용해 3계층 구성을 검토해줘.
 
 [검토 기준]
 - Standard 운영 모드
 - system/user pool 분리
 - Azure CNI Overlay + Cilium
-- load balancer egress
+- Application Gateway for Containers add-on + Gateway API
+- Workload Identity
 - public API server의 authorized IP ranges
+- PostgreSQL Flexible Server private access + Entra 인증
+- VNet 안의 node / ALB / PostgreSQL 전용 subnet
 
 [출력]
 - 기준별 대안과 위험을 표로 정리
@@ -124,7 +131,10 @@ azure-kubernetes Skill을 사용해 교육용 AKS의 Day-0 선택을 검토해�
 bash scripts/set-env.sh \
   POD_CIDR 10.245.0.0/16 \
   SERVICE_CIDR 10.1.48.0/20 \
-  DNS_SERVICE_IP 10.1.48.10
+  DNS_SERVICE_IP 10.1.48.10 \
+  ALB_SUBNET_CIDR 10.60.1.0/24 \
+  POSTGRES_SUBNET_CIDR 10.60.2.0/28 \
+  POSTGRES_SKU Standard_B1ms
 ```
 
 위 값도 **예시입니다.** 직접 정할 때 지켜야 할 제약은 세 가지입니다.
@@ -132,6 +142,7 @@ bash scripts/set-env.sh \
 - VNet은 `10.60.0.0/16`을 씁니다
 - Pod·Service 대역이 VNet과, 그리고 서로 겹치지 않아야 합니다
 - `DNS_SERVICE_IP`는 반드시 `SERVICE_CIDR` **안에** 있어야 합니다
+- ALB subnet은 최소 `/24`, PostgreSQL subnet은 최소 `/28`입니다
 
 ## Step 3. least privilege 매트릭스 만들기
 
@@ -145,6 +156,8 @@ least privilege 매트릭스를 작성해줘.
 - Azure 리소스 배포자
 - 역할 할당자
 - AKS control-plane managed identity
+- Application Gateway for Containers add-on identity
+- PostgreSQL Workload Identity
 - lab namespace 사용자
 
 [출력]
@@ -176,8 +189,8 @@ least privilege 매트릭스를 작성해줘.
 ## ✅ 완료 체크리스트
 
 - [ ] quota를 조회해 region·SKU·node 개수를 결정했다
-- [ ] Day-0 결정을 스스로 설명할 수 있다
-- [ ] `cat .env`로 **REGION, SYSTEM_VM_SIZE, USER_VM_SIZE, POD_CIDR, SERVICE_CIDR, DNS_SERVICE_IP가 모두 채워졌는지** 확인했다
+- [ ] ingress·AKS·database Day-0 결정을 설명할 수 있다
+- [ ] `.env`의 node·database SKU와 subnet CIDR이 채워졌다
 - [ ] 세 Step의 검토 결과가 `infra-report.md`에 섹션으로 남았다
 - [ ] 아직 아무것도 생성하지 않았다
 

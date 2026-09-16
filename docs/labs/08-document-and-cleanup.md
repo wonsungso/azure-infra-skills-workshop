@@ -10,8 +10,8 @@
 
 ## 왜 필요한가요?
 
-- Azure Resource Manager 그림만으로는 Kubernetes 내부의 Pod/Service 관계를 알 수 없습니다
-- 두 계층을 나누어 문서화합니다
+- Azure와 Kubernetes 상태를 함께 봐야 전체 요청 경로를 알 수 있습니다
+- AGC → AKS → PostgreSQL을 한 흐름으로 문서화합니다
 - 마지막에는 무엇이 남았는지 확인한 뒤 인계합니다
 
 ## 시작 전에
@@ -32,9 +32,8 @@ azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
   (Lab 01부터 쌓인 결정과 관측 기록)
 
 [작성할 것]
-- 두 그룹의 실제 Azure 리소스와 관계를 Mermaid로
-- Kubernetes Deployment, Pod, Service 관계는
-  kubectl 증거를 별도 섹션으로
+- AGC, AKS, PostgreSQL, VNet, identity 관계를 Mermaid로
+- Gateway, HTTPRoute, Pod, Service, Job은 별도 섹션으로
 
 [구분할 것]
 - 관측 사실 / 설계값 / 추정 / 미검증
@@ -49,7 +48,7 @@ azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
 **확인할 것**
 
 - cluster resource group과 node resource group을 모두 조사했는가
-- Kubernetes 증거(Pod/Service/EndpointSlice)를 Azure ARM 그림과 **별도 섹션**으로 나눴는가
+- Kubernetes Gateway와 PostgreSQL Job 증거가 포함됐는가
 
 ### Azure 공식 아이콘으로 그림 만들기
 
@@ -62,9 +61,10 @@ Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 �
 스펙 형식에 맞는 JSON을 만들어줘.
 
 [레이어 구성]
-- Resource group
+- Ingress
+- Application
+- Data
 - Network
-- Compute
 
 [각 항목에 들어갈 값]
 - label에는 실제 리소스 이름
@@ -129,7 +129,8 @@ azure-resource-lookup Skill을 사용해 삭제 대상을 확인해줘.
 
 ## ✅ 완료 체크리스트
 
-- [ ] Azure와 Kubernetes 증거가 분리되어 문서화됨
+- [ ] AGC → AKS → PostgreSQL 흐름이 문서화됨
+- [ ] public HTTP와 private SQL 증거가 기록됨
 - [ ] 삭제 승인/실행/재조회가 모두 기록됨(또는 미삭제 사유가 기록됨)
 - [ ] 인계 문서와 `infra-report.md`가 모두 채워짐
 - [ ] **리소스가 실제로 삭제됐는지 다시 조회해 확인함** (비용이 계속 나가지 않도록)

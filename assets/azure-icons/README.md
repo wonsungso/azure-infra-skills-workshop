@@ -31,6 +31,8 @@
 | [`load-balancer.svg`](load-balancer.svg) | Load Balancers |
 | [`aks.svg`](aks.svg) | Kubernetes Services |
 | [`managed-identity.svg`](managed-identity.svg) | Managed Identities |
+| [`application-gateway-for-containers.svg`](application-gateway-for-containers.svg) | Application Gateway for Containers |
+| [`postgresql.svg`](postgresql.svg) | Azure Database for PostgreSQL |
 
 ## 그림 만들기
 

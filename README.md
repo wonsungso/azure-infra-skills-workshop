@@ -1,10 +1,10 @@
-# Azure Skills 기반 AKS 워크샵
+# Azure Skills 기반 Azure 인프라 배포 워크샵
 
 ## 🔥 오늘, 당신은 Contoso의 플랫폼 엔지니어입니다
 
-**D-7.** 커머스팀의 신규 서비스 출시가 일주일 앞인데, 개발팀이 코드를 올릴 **Kubernetes 환경이 아직 없습니다.** 팀장이 첫 임무를 건넵니다.
+**D-7.** 커머스팀의 신규 서비스 출시가 일주일 앞입니다. 인터넷 진입점, Kubernetes, database가 필요합니다.
 
-> 🗣️ **"팀 전용 AKS 환경을 오늘 안에 준비해 주세요."**
+> 🗣️ **"실제 서비스와 비슷한 Azure 환경을 준비해 주세요."**
 >
 > 1. **클릭으로 만들지 마세요.** `설계 → 승인 → 코드 → 검증 → 배포` 순서로.
 > 2. **왜 그렇게 만들었는지 남기세요.** 다음 사람이 이어받을 수 있게.
@@ -16,13 +16,22 @@ CLI 명령을 외우는 대신 **Azure Skills**를 사용합니다.
 - 참가자는 제안을 검토하고 승인합니다
 - 마지막으로 조회 결과로 실제 상태를 확인합니다
 
-## 🏁 완성될 화면
+## 🏁 배포할 아키텍처
+
+<img src="img/workload-architecture.png" alt="Application Gateway for Containers에서 Azure Kubernetes Service로 트래픽을 전달하고 private PostgreSQL Flexible Server에 연결하는 Azure 아키텍처" width="740">
+
+- **Application Gateway for Containers**: Gateway API 기반 public ingress
+- **Azure Kubernetes Service**: system/user node pool과 Cilium network policy
+- **PostgreSQL Flexible Server**: private subnet과 Microsoft Entra 인증
+- **Workload Identity**: password 없이 Azure Kubernetes Service에서 PostgreSQL 연결
+
+## 🖥️ 확인할 화면
 
 <img src="img/shop.png" alt="Contoso Shop 상품 페이지 - 상품 카드 4개와 하단에 응답 Pod 이름이 표시된 화면" width="760">
 
 커머스팀이 출시할 **Contoso Shop**입니다. 화면 아래에는 현재 트래픽을 처리하는 Pod 이름이 표시되며, Pod를 다시 만들면 함께 바뀝니다.
 
-컨테이너 이미지는 빌드하지 않습니다.
+앱 이미지는 빌드하지 않습니다.
 
 - 공개 nginx 이미지에 **ConfigMap**으로 화면을 주입합니다
 - **Downward API**로 Pod 정보를 전달합니다
@@ -34,7 +43,7 @@ CLI 명령을 외우는 대신 **Azure Skills**를 사용합니다.
 
 ```mermaid
 flowchart LR
-    A["<b>Lab 01</b><br/>워크샵 시작하기"] --> B["<b>Lab 02</b><br/>AKS 설계 결정하기"] --> C["<b>Lab 03</b><br/>계획 승인 + Bicep 생성"] --> D["<b>Lab 04</b><br/>IaC 검증 + 배포 승인"]
+    A["<b>Lab 01</b><br/>워크샵 시작하기"] --> B["<b>Lab 02</b><br/>3계층 설계 결정"] --> C["<b>Lab 03</b><br/>계획 승인 + Bicep 생성"] --> D["<b>Lab 04</b><br/>IaC 검증 + 배포 승인"]
 
     classDef prep fill:#E7F1FB,stroke:#0F6CBD,stroke-width:2px,color:#16233A
     classDef design fill:#F1EAFA,stroke:#8A57C2,stroke-width:2px,color:#16233A
@@ -49,7 +58,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    E["<b>Lab 05</b><br/>AKS 배포 + 접속 확인"] --> F["<b>Lab 06</b><br/>상품 페이지 배포"] --> G["<b>Lab 07</b><br/>진단과 복구 (선택)"] --> H["<b>Lab 08</b><br/>문서화 + 정리"]
+    E["<b>Lab 05</b><br/>3계층 인프라 배포"] --> F["<b>Lab 06</b><br/>Gateway + DB 검증"] --> G["<b>Lab 07</b><br/>진단과 복구 (선택)"] --> H["<b>Lab 08</b><br/>문서화 + 정리"]
 
     classDef run fill:#E6F4E6,stroke:#0E7A0D,stroke-width:2px,color:#16233A
     classDef wrap fill:#FCE8F1,stroke:#C2185B,stroke-width:2px,color:#16233A
@@ -63,11 +72,11 @@ flowchart LR
 | Lab | 주 Skill | 다음 Lab에 넘길 것 |
 | --- | --- | --- |
 | [01. 워크샵 시작하기](docs/labs/01-orientation-and-setup.md) | `azure-resource-lookup` | `.env`, 확인된 scope |
-| [02. AKS 설계 결정하기](docs/labs/02-design-aks.md) | `azure-quotas`, `azure-kubernetes`, `azure-enterprise-infra-planner` | quota 확인 결과, Day-0 결정표 |
+| [02. 3계층 설계 결정하기](docs/labs/02-design-aks.md) | `azure-quotas`, `azure-kubernetes`, `azure-postgres` | quota, network, SKU 결정 |
 | [03. 계획 승인 + Bicep 생성](docs/labs/03-plan-and-bicep.md) | `azure-enterprise-infra-planner` | 승인된 계획, Bicep |
 | [04. IaC 검증 + 배포 승인](docs/labs/04-validate-and-approve.md) | `azure-enterprise-infra-planner` | 검증 증거, 배포 승인 |
-| [05. AKS 배포 + 접속 확인](docs/labs/05-deploy-and-connect.md) | `azure-resource-lookup` | Ready 클러스터, `lab` namespace |
-| [06. 상품 페이지 배포](docs/labs/06-run-sample-workload.md) | 도구 실행 | 동작하는 상품 페이지 |
+| [05. 3계층 인프라 배포](docs/labs/05-deploy-and-connect.md) | `azure-enterprise-infra-planner` | AGC add-on, Azure Kubernetes Service, PostgreSQL |
+| [06. Gateway + DB 검증](docs/labs/06-run-sample-workload.md) | `kubectl` | public URL, PostgreSQL query |
 | [07. 진단과 복구 (선택)](docs/labs/07-diagnose-and-recover.md) | `azure-diagnostics` | 원인·복구 기록 |
 | [08. 문서화 + 정리](docs/labs/08-document-and-cleanup.md) | `azure-resource-visualizer` | 인계 문서, 삭제 증거 |
 
@@ -79,13 +88,13 @@ flowchart LR
 
 다음 두 가지를 **본인이 직접** 할 수 있어야 합니다. 하나라도 안 되면 끝까지 진행할 수 없습니다.
 
-- resource group을 만들고 그 안에 AKS를 배포할 권한 (예: 해당 scope의 `Contributor`)
+- resource group에 Azure Kubernetes Service, Application Gateway for Containers, PostgreSQL을 배포할 권한
 - 실습이 끝난 뒤 리소스를 **삭제**할 권한
 
 > [!WARNING]
 > **실제 비용이 발생하는 리소스**를 만듭니다.
 >
-> - AKS node는 실행되는 동안 계속 과금됩니다
+> - Azure Kubernetes Service node는 실행되는 동안 계속 과금됩니다
 > - 중간에 멈춰도 [Lab 08](docs/labs/08-document-and-cleanup.md)의 정리 단계는 진행합니다
 > - 회사 공용 subscription에서는 **전용 resource group**을 만들어 사용합니다
 
@@ -93,7 +102,7 @@ flowchart LR
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/wonsungso/azure-infra-skills-workshop)
 
-Azure CLI, Bicep, `kubectl`, `kubelogin`과 Azure Skill 6개가 준비된 상태로 열립니다. 로컬에 별도로 설치할 것은 없습니다.
+Azure CLI, Bicep, `kubectl`, `kubelogin`과 Azure Skill 7개가 준비됩니다.
 
 컨테이너 준비가 끝나면 도구 상태를 확인합니다.
 
@@ -135,7 +144,8 @@ Azure 로그인과 Skill 동작 확인은 [Lab 01](docs/labs/01-orientation-and-
 | --- | --- |
 | `azure-resource-lookup` | 실제 자원을 읽기 전용으로 조회 |
 | `azure-quotas` | vCPU quota와 region 용량 확인 |
-| `azure-kubernetes` | AKS Day-0 설계 검토 |
+| `azure-kubernetes` | Azure Kubernetes Service Day-0 설계 검토 |
+| `azure-postgres` | PostgreSQL network·인증 검토 |
 | `azure-enterprise-infra-planner` | least privilege 매트릭스 설계, 계획 승인, Bicep 생성·검증·배포 |
 | `azure-diagnostics` | 증거 기반 오류 진단 |
 | `azure-resource-visualizer` | 리소스 관계를 다이어그램으로 정리 |
@@ -170,7 +180,7 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다.
 | --- | --- |
 | `docs/labs/` | Lab 01~08 가이드. 프롬프트와 입력값이 모두 이 안에 있습니다 |
 | `reference/infra/` | Bicep 기준본 - **정답지가 아니라 비교용** |
-| `reference/kubernetes/` | 상품 페이지 manifest - **그대로 사용** |
+| `reference/kubernetes/` | 웹·Gateway API·PostgreSQL 검증 manifest |
 | `templates/` | [인계 문서 양식](templates/handoff-template.md) - Lab 08에서 채웁니다 |
 | `.devcontainer/` | Codespace 환경 정의 |
 | `scripts/` | `.env` 초기화([`init-workshop`](scripts/init-workshop.sh)), 값 반영([`set-env`](scripts/set-env.sh)), 보고서 작성([`add-report`](scripts/add-report.sh)) |
@@ -182,7 +192,7 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다.
 - 배포·역할 변경·장애 주입·삭제는 **대상과 영향을 확인한 뒤 승인**하고 수행합니다.
 - 실행 결과가 없는 내용은 `예상` 또는 `미검증`으로 표기합니다.
 - authorized IP ranges에 `0.0.0.0/0`을 넣지 않습니다. 접속이 안 되면 내 egress IP부터 다시 확인합니다.
-- 샘플은 `lab` namespace에서만 실행하고 외부 LoadBalancer나 Ingress를 만들지 않습니다.
+- 샘플은 `lab` namespace에서만 실행합니다. 외부 진입점은 Application Gateway for Containers만 사용합니다.
 - subscription ID, tenant ID, kubeconfig 내용은 저장소에 기록하지 않습니다([AGENTS.md](AGENTS.md) 참고).
 
 ---

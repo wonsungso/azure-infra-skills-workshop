@@ -17,7 +17,7 @@
 ## 시작 전에
 
 - [Lab 02](02-design-aks.md)의 Day-0 결정표와 권한 매트릭스가 있나요?
-- `.env`에 `POD_CIDR`, `SERVICE_CIDR`, `DNS_SERVICE_IP`까지 채워져 있나요? 비어 있으면 아래 프롬프트가 멈춥니다.
+- `.env`의 subnet CIDR과 node·database SKU가 모두 채워져 있나요?
 
 > 💻 **터미널에서 실행**
 
@@ -33,8 +33,10 @@ cat .env
 azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해줘.
 
 [읽을 값]
-- 저장소 루트 .env의 RESOURCE_GROUP, AKS_NAME, REGION, EGRESS_IP_CIDR,
-  POD_CIDR, SERVICE_CIDR, DNS_SERVICE_IP, SYSTEM_VM_SIZE, USER_VM_SIZE
+- 저장소 루트 .env의 RESOURCE_GROUP, AKS_NAME, POSTGRES_NAME, REGION,
+  EGRESS_IP_CIDR, POD_CIDR, SERVICE_CIDR, DNS_SERVICE_IP,
+  ALB_SUBNET_CIDR, POSTGRES_SUBNET_CIDR, SYSTEM_VM_SIZE,
+  USER_VM_SIZE, POSTGRES_SKU
 - 비어 있는 값이 있으면 추측하지 말고 먼저 알려줘
 - Lab 02의 Day-0 검토와 least privilege 매트릭스를 반영해줘
 
@@ -42,11 +44,15 @@ azure-enterprise-infra-planner Skill을 사용해 인프라 계획을 작성해�
 - public API server의 authorized IP ranges는 EGRESS_IP_CIDR만 사용
 - Entra와 Azure RBAC for Kubernetes 사용
 - local accounts는 비활성화
+- PostgreSQL public access와 password authentication은 비활성화
 
 [구성 요구]
 - system/user node pool 분리
 - Azure CNI Overlay + Cilium
-- load balancer egress
+- Gateway API + Application Gateway for Containers add-on
+- OIDC + Workload Identity
+- private PostgreSQL Flexible Server + private DNS
+- node / ALB / PostgreSQL subnet 분리
 - 서로 겹치지 않는 CIDR
 
 [출력]
@@ -74,8 +80,8 @@ Skill은 다음 7단계를 순서대로 진행합니다.
 계획이 나오면 아래 항목만 확인합니다.
 
 - 기존 자원을 "참조"만 하고 덮어쓰지 않는가
-- API authorized IP ranges, Entra 인증, local accounts 비활성화가 들어 있는가
-- Lab 02의 region·SKU·node 수·CIDR과 일치하는가
+- API 제한, Workload Identity, passwordless PostgreSQL이 들어 있는가
+- Lab 02의 region·SKU·node 수·subnet CIDR과 일치하는가
 
 ### 승인여부를 묻는다면
 
@@ -197,7 +203,7 @@ azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
 **확인할 것**
 
 - 생성된 파일 목록과 위치(`infra/main.bicep`, `infra/modules/*.bicep`)
-- 매개변수(authorized IP ranges, CIDR, SKU 등)가 계획과 정확히 일치하는지
+- ingress·AKS·PostgreSQL 매개변수가 계획과 일치하는지
 
 [Bicep 기준본](../../reference/infra/main.bicep)은 비교용입니다.
 
@@ -220,7 +226,7 @@ azure-enterprise-infra-planner Skill을 사용해 Bicep을 생성해줘.
 - [ ] 계획이 `.env` 값을 실제로 읽고 만들어졌음을 값을 바꿔 확인함
 - [ ] 바꿔 본 값을 원래대로 되돌렸고 vCPU 합계가 다시 10임
 - [ ] 계획 파일의 `meta.status`가 `approved`이고 승인자/시각이 들어 있음
-- [ ] Bicep 파일이 생성되고 계획과 일치함
+- [ ] Bicep에 AGC add-on, AKS, private PostgreSQL이 들어 있음
 - [ ] 아직 `az deployment` 등 실제 배포 명령은 실행하지 않음
 
 ## 🚧 문제가 생겼다면

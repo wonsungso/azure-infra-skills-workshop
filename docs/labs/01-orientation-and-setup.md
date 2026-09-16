@@ -42,7 +42,7 @@
 
 ## Step 2. Azure Skills 확인하기
 
-Codespace가 만들어질 때 Skill 6개를 `.github/skills/`에 내려받았습니다. 저장소에는 커밋되지 않고 내 Codespace 안에만 있습니다.
+Codespace가 만들어질 때 Skill 7개를 `.github/skills/`에 내려받았습니다.
 
 먼저 파일이 있는지 봅니다.
 
@@ -57,11 +57,12 @@ ls .github/skills
 > 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-아래 6개 Skill을 지금 쓸 수 있는지 하나씩 확인해서 표로 알려줘.
+아래 7개 Skill을 지금 쓸 수 있는지 표로 알려줘.
 
 [확인 대상]
 - azure-quotas
 - azure-kubernetes
+- azure-postgres
 - azure-enterprise-infra-planner
 - azure-resource-lookup
 - azure-diagnostics
@@ -74,7 +75,7 @@ ls .github/skills
 
 ```
 
-여섯 개가 모두 있어야 합니다.
+일곱 개가 모두 있어야 합니다.
 
 **Skill만으로는 부족합니다.** `azure-enterprise-infra-planner`는 계획을 세우는 도중 Azure 모범 사례와 Microsoft Learn 문서를 **MCP 서버로 조회**합니다.
 
@@ -99,7 +100,7 @@ VS Code 왼쪽 사이드바의 **MCP 서버** 목록에서 `azure`와 `microsoft
 tmp=$(mktemp -d)
 git clone -q --depth 1 https://github.com/microsoft/azure-skills.git "$tmp"
 mkdir -p .github/skills
-for s in azure-quotas azure-kubernetes azure-enterprise-infra-planner \
+for s in azure-quotas azure-kubernetes azure-postgres azure-enterprise-infra-planner \
          azure-resource-lookup azure-diagnostics azure-resource-visualizer; do
   cp -r "$tmp/skills/$s" .github/skills/
 done
@@ -118,17 +119,20 @@ rm -rf "$tmp"
 az login --use-device-code
 ```
 
-Lab 02의 quota 조회 API를 쓰려면 `Microsoft.Quota` provider 등록이 필요합니다.
+quota와 Application Gateway for Containers add-on을 준비합니다.
 
 > 💻 **터미널에서 실행**
 
 ```bash
 az provider register --namespace Microsoft.Quota --wait
-az provider show --namespace Microsoft.Quota --query registrationState -o tsv
+az provider register --namespace Microsoft.NetworkFunction --wait
+az feature register --namespace Microsoft.ContainerService --name ManagedGatewayAPIPreview
+az feature register --namespace Microsoft.ContainerService --name ApplicationLoadBalancerPreview
+az extension add --name alb --upgrade --yes
 ```
 
-- `Registered`가 나와야 합니다
-- 이미 등록돼 있으면 그대로 끝나므로 여러 번 실행해도 안전합니다
+- feature 등록은 완료까지 시간이 걸릴 수 있습니다
+- 등록 후 `Microsoft.ContainerService` provider를 다시 등록합니다
 
 **이것이 이 워크샵의 첫 번째 쓰기 작업입니다.**
 
@@ -156,7 +160,7 @@ cat .env
 | `EGRESS_IP_CIDR` | 자동 (ipify 조회) |
 | `SUBSCRIPTION_ID` | 자동 (Step 3 로그인 후 재실행) |
 | `REGION` | 기본값 `koreacentral` - **Lab 02에서 quota를 보고 확인** |
-| CIDR, VM SKU | **Lab 02에서 내가 결정** |
+| subnet CIDR, node·database SKU | **Lab 02에서 내가 결정** |
 | `NODE_RESOURCE_GROUP` | Lab 05 배포 후 output |
 
 이후 Lab의 프롬프트는 이 값들을 **Skill이 `.env`에서 직접 읽어 씁니다.**
@@ -238,7 +242,7 @@ azure-resource-lookup Skill을 사용해 resource group의 존재 여부를 확�
 
 ## ✅ 완료 체크리스트
 
-- [ ] `.github/skills/`에 Skill 6개가 있고 Copilot이 인식함을 확인했다
+- [ ] `.github/skills/`에 Skill 7개가 있고 Copilot이 인식함을 확인했다
 - [ ] `az login --use-device-code`로 로그인하고 쓸 subscription을 선택했다
 - [ ] `Microsoft.Quota` provider가 `Registered` 상태임을 확인했다
 - [ ] `.env`의 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워진 것을 확인했다
@@ -268,4 +272,4 @@ azure-resource-lookup Skill을 사용해 resource group의 존재 여부를 확�
 
 ## 다음 Lab
 
-[Lab 02: AKS 설계 결정하기](02-design-aks.md)
+[Lab 02: 3계층 설계 결정하기](02-design-aks.md)

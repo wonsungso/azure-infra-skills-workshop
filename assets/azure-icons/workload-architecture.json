@@ -1,0 +1,24 @@
+{
+  "title": "Contoso Shop Azure architecture",
+  "direction": "LR",
+  "layers": [
+    {
+      "label": "Ingress",
+      "nodes": [
+        {"label": "Application Gateway for Containers", "sub": "Gateway API", "icon": "application-gateway-for-containers"}
+      ]
+    },
+    {
+      "label": "Application",
+      "nodes": [
+        {"label": "Azure Kubernetes Service", "sub": "Workload Identity", "icon": "aks"}
+      ]
+    },
+    {
+      "label": "Data",
+      "nodes": [
+        {"label": "PostgreSQL Flexible Server", "sub": "private VNet access", "icon": "postgresql"}
+      ]
+    }
+  ]
+}

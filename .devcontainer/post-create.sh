@@ -24,7 +24,7 @@ $SUDO az aks install-cli \
   --kubelogin-install-location "$BIN_DIR/kubelogin"
 
 # azure-quotas는 quota, 나머지 조회 Skill은 resource-graph extension을 요구한다
-for ext in quota resource-graph; do
+for ext in quota resource-graph alb aks-preview; do
   az extension add --name "$ext" --upgrade --yes --only-show-errors 2>/dev/null \
     || echo "az extension '$ext' 설치 실패 - Lab 02 전에 직접 설치하세요"
 done
@@ -33,7 +33,7 @@ bash "$REPO_ROOT/scripts/init-workshop.sh"
 
 # VS Code는 작업 영역의 .github/skills 에서도 Skill을 읽는다. 저장소에는 커밋하지 않는다.
 SKILL_DIR="$REPO_ROOT/.github/skills"
-WORKSHOP_SKILLS="azure-quotas azure-kubernetes azure-enterprise-infra-planner azure-resource-lookup azure-diagnostics azure-resource-visualizer"
+WORKSHOP_SKILLS="azure-quotas azure-kubernetes azure-postgres azure-enterprise-infra-planner azure-resource-lookup azure-diagnostics azure-resource-visualizer"
 TMP=$(mktemp -d)
 if git clone -q --depth 1 https://github.com/microsoft/azure-skills.git "$TMP" 2>/dev/null; then
   mkdir -p "$SKILL_DIR"
@@ -41,7 +41,7 @@ if git clone -q --depth 1 https://github.com/microsoft/azure-skills.git "$TMP" 2
     [ -d "$TMP/skills/$s" ] && cp -r "$TMP/skills/$s" "$SKILL_DIR/"
   done
   echo ""
-  echo "Azure Skills 설치 완료: $(ls "$SKILL_DIR" 2>/dev/null | wc -l) / 6"
+  echo "Azure Skills 설치 완료: $(ls "$SKILL_DIR" 2>/dev/null | wc -l) / 7"
 else
   echo ""
   echo "Azure Skills 자동 설치 실패 - Lab 01 Step 2의 수동 설치 방법을 따르세요"

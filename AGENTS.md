@@ -129,11 +129,11 @@ Participants had to type values the tooling already knows.
 
 ### 목적
 
-이 저장소는 **Azure Skills를 사용해 AKS 인프라를 설계·검증·배포·문서화하는 자기주도형 워크샵**입니다.
+이 저장소는 **Application Gateway for Containers, AKS, PostgreSQL을 설계·검증·배포하는 자기주도형 워크샵**입니다.
 
 - 참가자가 **강사 없이 혼자서** Lab 01부터 Lab 08까지 순서대로 완주할 수 있어야 합니다
 - 각 Lab은 앞 Lab의 산출물을 입력으로 사용하는 하나의 연속된 흐름입니다
-- AKS는 소재일 뿐이고, 핵심은 "계획 승인 → 코드 → 검증 → 배포 승인 → 배포"라는 안전한 절차입니다
+- 3계층 구조는 소재이고, 핵심은 "계획 승인 → 코드 → 검증 → 배포 승인 → 배포"입니다
 - 실행 환경은 **GitHub Codespaces**가 기본입니다. 도구 설치는 `.devcontainer/`가 담당하므로, Lab 문서에 설치 절차를 다시 쓰지 않습니다
 - 프롬프트와 입력값은 **해당 Lab 본문 안에** 둡니다. 별도의 프롬프트 모음 파일이나 입력표 파일을 다시 만들지 않습니다
 - **기계가 알 수 있는 값은 사람이 타이핑하게 하지 않습니다.** 조회로 얻는 값은 [`scripts/init-workshop.sh`](scripts/init-workshop.sh)가 채우고, 사람이 결정한 값은 [`scripts/set-env.sh`](scripts/set-env.sh)로 반영하며, Lab 결과는 [`scripts/add-report.sh`](scripts/add-report.sh)가 보고서로 쌓습니다. 문서에 "손으로 적으세요"라고 쓰지 않습니다
@@ -159,7 +159,7 @@ Azure·Kubernetes 기술 용어는 **영어를 그대로** 씁니다. 번역하�
 
 - 저장소에 대용량 바이너리 파일(PowerPoint 덱, 동영상, 녹화본)을 두지 않음
 - 앱 소스 코드와 Dockerfile을 추가하지 않음. 이 워크샵은 **앱 코딩과 컨테이너 이미지 빌드를 범위에서 제외**함
-- 샘플 워크로드는 `lab` namespace의 ClusterIP만 사용하고 외부 LoadBalancer나 Ingress를 만들지 않음
+- 샘플 Service는 ClusterIP를 사용하고, 외부 진입점은 Application Gateway for Containers만 사용함
 - 모든 README와 Lab 문서의 상대 링크는 항상 유효해야 함
 - **저장소에 있는 파일을 본문에서 언급할 때는 링크를 겁니다.** 파일명은 백틱으로 감싸고, 링크 대상은 그 문서 위치 기준 상대 경로로 씁니다. 예를 들어 [`set-env.sh`](scripts/set-env.sh)를 Lab 문서에서 가리키려면 경로가 `../../scripts/set-env.sh`가 됩니다. 단, `.env`나 `infra-report.md`처럼 **실행 중에 생성되는 파일**은 저장소에 없으므로 링크하지 않습니다. 연결할 양식이나 생성 스크립트가 있다면 그쪽을 링크합니다
 - 강사 전용 자료를 다시 만들지 않음. 모든 작업은 참가자가 직접 수행하는 형태로 서술함
@@ -168,7 +168,7 @@ Azure·Kubernetes 기술 용어는 **영어를 그대로** 씁니다. 번역하�
 
 - 실제로 실행하지 않은 결과는 `예상` 또는 `미검증`으로 표기합니다
 - "동작합니다"라고 쓰려면 실행 증거가 있어야 합니다
-- `port-forward` 성공은 외부 공개나 클러스터 내부 DNS 통신의 증거가 아닙니다
+- Gateway public HTTP와 PostgreSQL SQL 결과를 E2E 증거로 사용합니다
 
 ### 문서 스타일
 
