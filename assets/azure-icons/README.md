@@ -1,6 +1,6 @@
 # Azure 아키텍처 아이콘
 
-이 폴더의 SVG는 Microsoft가 배포하는 **Azure architecture icons**에서 이 워크샵의 아키텍처 그림에 필요한 것만 가져온 것입니다.
+이 폴더의 SVG는 Microsoft가 배포하는 **Azure Architecture Icons**에서 이 워크샵의 아키텍처 그림에 필요한 것만 가져온 것입니다.
 
 - 출처: <https://learn.microsoft.com/azure/architecture/icons/>
 - 아이콘 팩: `Azure_Public_Service_Icons_V24.zip`

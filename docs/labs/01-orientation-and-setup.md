@@ -111,7 +111,7 @@ rm -rf "$tmp"
 
 ## Step 3. Azure에 로그인하기
 
-**이 단계는 사람이 직접 수행합니다.** 로그인은 본인 계정의 credentials를 다루므로 Skill이나 스크립트에 맡기지 않습니다.
+**이 단계는 사람이 직접 수행합니다.** 로그인은 본인 계정의 Credentials를 다루므로 Skill이나 스크립트에 맡기지 않습니다.
 
 > 💻 **터미널에서 실행**
 
@@ -119,7 +119,7 @@ rm -rf "$tmp"
 az login --use-device-code
 ```
 
-quota와 Application Gateway for Containers add-on을 준비합니다.
+Quota와 Application Gateway for Containers Add-on을 준비합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -131,21 +131,21 @@ az feature register --namespace Microsoft.ContainerService --name ApplicationLoa
 az extension add --name alb --upgrade --yes
 ```
 
-- feature 등록은 완료까지 시간이 걸릴 수 있습니다
-- 등록 후 `Microsoft.ContainerService` provider를 다시 등록합니다
+- Feature 등록은 완료까지 시간이 걸릴 수 있습니다
+- 등록 후 `Microsoft.ContainerService` Provider를 다시 등록합니다
 
 **이것이 이 워크샵의 첫 번째 쓰기 작업입니다.**
 
 - 비용이 없고 리소스를 만들지 않습니다
 - 해당 API를 쓸 수 있게 만들 뿐입니다
-- 그래도 subscription 설정을 바꾸므로, 공용 subscription이라면 먼저 확인해 둡니다
+- 그래도 Subscription 설정을 바꾸므로, 공용 Subscription이라면 먼저 확인해 둡니다
 
 ## Step 4. 입력값 확인하기
 
 이후 모든 프롬프트가 저장소 루트의 `.env`를 공유합니다. **직접 타이핑할 값은 없습니다.**
 
-- Codespace가 만들어질 때 리소스 이름과 egress IP가 채워졌습니다
-- 로그인을 마친 지금 다시 실행하면 subscription까지 채워집니다
+- Codespace가 만들어질 때 리소스 이름과 Egress IP가 채워졌습니다
+- 로그인을 마친 지금 다시 실행하면 Subscription까지 채워집니다
 
 > 💻 **터미널에서 실행**
 
@@ -159,15 +159,15 @@ cat .env
 | `WORKSHOP_ID`와 리소스 이름 | Codespace 생성 시 자동 |
 | `EGRESS_IP_CIDR` | 자동 (ipify 조회) |
 | `SUBSCRIPTION_ID` | 자동 (Step 3 로그인 후 재실행) |
-| `REGION` | 기본값 `koreacentral` - **Lab 02에서 quota를 보고 확인** |
-| subnet CIDR, node·database SKU | **Lab 02에서 내가 결정** |
-| `NODE_RESOURCE_GROUP` | Lab 05 배포 후 output |
+| `REGION` | 기본값 `koreacentral` - **Lab 02에서 Quota를 보고 확인** |
+| Subnet CIDR, Node·Database SKU | **Lab 02에서 내가 결정** |
+| `NODE_RESOURCE_GROUP` | Lab 05 배포 후 Output |
 
 이후 Lab의 프롬프트는 이 값들을 **Skill이 `.env`에서 직접 읽어 씁니다.**
 
-`EGRESS_IP_CIDR`은 내 PC가 아니라 **Codespace의 egress IP**입니다.
+`EGRESS_IP_CIDR`은 내 PC가 아니라 **Codespace의 Egress IP**입니다.
 
-- AKS API server에 접근할 수 있는 유일한 주소가 됩니다
+- AKS API Server에 접근할 수 있는 유일한 주소가 됩니다
 - 반드시 Codespace 안에서 조회된 값이어야 합니다
 - Codespace를 재시작하면 바뀔 수 있습니다. Lab 05 이후 접속이 갑자기 안 되면 [`init-workshop.sh`](../../scripts/init-workshop.sh)로 갱신하세요
 
@@ -187,7 +187,7 @@ az account show --query "{subscription:name, state:state, tenant:tenantDefaultDo
 - [`AGENTS.md`](../../AGENTS.md)에 그렇게 지시돼 있습니다
 - Lab 08의 인계 문서가 이 보고서를 근거로 씁니다
 
-그다음 resource group을 봅니다. [Lab 04](04-validate-and-approve.md)에서 직접 만들 것이므로 **지금 없어도 정상입니다.**
+그다음 Resource Group을 봅니다. [Lab 04](04-validate-and-approve.md)에서 직접 만들 것이므로 **지금 없어도 정상입니다.**
 
 > 💻 **터미널에서 실행**
 
@@ -198,7 +198,7 @@ az group show -n "$RESOURCE_GROUP" -o table 2>/dev/null || echo "아직 없음 -
 
 **확인할 것**
 
-- 표시된 subscription이 `.env`의 `SUBSCRIPTION_ID`와 같은가?
+- 표시된 Subscription이 `.env`의 `SUBSCRIPTION_ID`와 같은가?
 - 그룹에 다른 리소스가 이미 있다면 목록을 기록해 둡니다 (Lab 08에서 실수로 지우지 않게)
 
 ### Skill은 언제 쓰나
@@ -210,7 +210,7 @@ az group show -n "$RESOURCE_GROUP" -o table 2>/dev/null || echo "아직 없음 -
 > 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-resource-lookup Skill을 사용해 resource group의 존재 여부를 확인해줘.
+azure-resource-lookup Skill을 사용해 Resource Group의 존재 여부를 확인해줘.
 
 [읽을 값]
 - 저장소 루트 .env의 SUBSCRIPTION_ID, RESOURCE_GROUP
@@ -243,10 +243,10 @@ azure-resource-lookup Skill을 사용해 resource group의 존재 여부를 확�
 ## ✅ 완료 체크리스트
 
 - [ ] `.github/skills/`에 Skill 7개가 있고 Copilot이 인식함을 확인했다
-- [ ] `az login --use-device-code`로 로그인하고 쓸 subscription을 선택했다
-- [ ] `Microsoft.Quota` provider가 `Registered` 상태임을 확인했다
+- [ ] `az login --use-device-code`로 로그인하고 쓸 Subscription을 선택했다
+- [ ] `Microsoft.Quota` Provider가 `Registered` 상태임을 확인했다
 - [ ] `.env`의 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워진 것을 확인했다
-- [ ] 조회한 subscription이 `.env`와 일치함을 확인했다
+- [ ] 조회한 Subscription이 `.env`와 일치함을 확인했다
 - [ ] `infra-report.md`가 생성되고 조회 결과가 들어갔다
 - [ ] Skill 프롬프트를 실행한 뒤 그 답변이 보고서에 섹션으로 추가되는지 확인했다
 - [ ] 단순 조회와 판단을 각각 어떤 도구로 하는지 설명할 수 있다
@@ -260,12 +260,12 @@ azure-resource-lookup Skill을 사용해 resource group의 존재 여부를 확�
 | --- | --- |
 | "~ 도구가 제공되지 않아" 라며 다른 방법으로 답함 | Skill이 로드되지 않은 것입니다. Step 2를 다시 확인하고, 그 답변은 증거로 쓰지 마세요 |
 | `.github/skills`가 비어 있거나 없음 | Step 2의 "비어 있거나 로컬 VS Code로 진행한다면"을 펼쳐 수동으로 내려받으세요 |
-| 파일은 있는데 Copilot이 못 찾음 | Azure MCP server가 npm 패키지입니다. `node --version`으로 Node.js 설치 상태를 봅니다 |
+| 파일은 있는데 Copilot이 못 찾음 | Azure MCP Server가 npm 패키지입니다. `node --version`으로 Node.js 설치 상태를 봅니다 |
 | `az login`이 브라우저를 못 열고 멈춤 | `--use-device-code`를 붙였는지 확인 |
-| 로그인은 됐는데 subscription이 안 보임 | 게스트 계정일 수 있음. `az login --use-device-code --tenant <tenant-id>` |
+| 로그인은 됐는데 Subscription이 안 보임 | 게스트 계정일 수 있음. `az login --use-device-code --tenant <tenant-id>` |
 | `SUBSCRIPTION_ID`가 비어 있음 | 로그인 후 [`init-workshop.sh`](../../scripts/init-workshop.sh)를 다시 실행 |
 | 조회 결과가 `.env`와 다름 | `az account set --subscription <id>` 후 [`init-workshop.sh`](../../scripts/init-workshop.sh) 재실행 |
-| "권한이 없습니다" | 권한을 스스로 올리지 말고, 권한이 있는 다른 subscription·그룹으로 진행 |
+| "권한이 없습니다" | 권한을 스스로 올리지 말고, 권한이 있는 다른 Subscription·그룹으로 진행 |
 | Skill이 리소스를 만들려 함 | "읽기 전용"을 다시 강조해 다시 요청 |
 
 </details>

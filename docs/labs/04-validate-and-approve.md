@@ -24,36 +24,36 @@
 ls infra/ && grep -A3 '"meta"' .azure/infrastructure-plan.json
 ```
 
-### 배포 대상 resource group 만들기
+### 배포 대상 Resource Group 만들기
 
-what-if는 "이 resource group에 적용하면 무엇이 바뀌는가"를 계산합니다.
+What-if는 "이 Resource Group에 적용하면 무엇이 바뀌는가"를 계산합니다.
 
 - 그러므로 **비교 대상이 먼저 있어야** 합니다
-- Bicep은 resource group scope라 그룹 자체를 만들지 않습니다
+- Bicep은 Resource Group Scope라 그룹 자체를 만들지 않습니다
 
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-enterprise-infra-planner Skill을 사용해 배포 대상 resource group을 준비해줘.
+azure-enterprise-infra-planner Skill을 사용해 배포 대상 Resource Group을 준비해줘.
 
 [읽을 값]
 - 저장소 루트 .env의 SUBSCRIPTION_ID, RESOURCE_GROUP, REGION
 
 [해야 할 일]
-- resource group이 있는지 먼저 조회
+- Resource Group이 있는지 먼저 조회
 - 없으면 대상과 영향을 보여주고 명시적 승인을 요청
-- 승인 후 빈 resource group만 생성
-- 생성 결과를 infra-report.md의 validate 장에 기록
+- 승인 후 빈 Resource Group만 생성
+- 생성 결과를 infra-report.md의 Validate 장에 기록
 
 [제약]
-- resource group 안에 다른 Azure 리소스를 만들지 마
+- Resource Group 안에 다른 Azure 리소스를 만들지 마
 - 이미 있으면 변경하지 말고 현재 상태만 알려줘
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
-**빈 resource group은 비용이 없습니다.** 안에 들어갈 AKS와 node가 비용을 만들고, 그건 [Lab 05](05-deploy-and-connect.md)에서 배포를 승인한 뒤입니다.
+**빈 Resource Group은 비용이 없습니다.** 안에 들어갈 AKS와 Node가 비용을 만들고, 그건 [Lab 05](05-deploy-and-connect.md)에서 배포를 승인한 뒤입니다.
 
-Application Gateway for Containers preview 상태도 확인합니다.
+Application Gateway for Containers Preview 상태도 확인합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -72,12 +72,12 @@ az feature show --namespace Microsoft.ContainerService \
 azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
 
 [읽을 값]
-- 승인된 infrastructure plan
+- 승인된 Infrastructure Plan
 - infra/ 아래의 기존 Bicep
 
 [해야 할 일]
 - 그 Skill의 검증 단계를 따라 Bicep build, 보안 검사,
-    ARM validation 또는 what-if를 수행해줘
+    ARM Validation 또는 What-if를 수행해줘
 - 실제로 실행한 명령과 그 결과, 실패 항목을 정리해줘
 - 고쳐야 할 것이 있으면 어디를 왜 고쳐야 하는지 먼저 설명해줘
 - 검증되지 않은 결과는 예상으로 표시해줘
@@ -91,10 +91,10 @@ azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
 
 **확인할 것**
 
-- 실제로 실행된 명령(예: `az bicep build`, 보안 검사, what-if)과 그 종료 코드
-- 실패가 있다면 "코드 문제"인지 "정책·quota·권한 문제"인지 구분
-- what-if에 AKS, VNet, PostgreSQL, private DNS, managed identity가 포함됐는지
-- PostgreSQL public access와 password authentication이 꺼졌는지
+- 실제로 실행된 명령(예: `az bicep build`, 보안 검사, What-if)과 그 종료 코드
+- 실패가 있다면 "코드 문제"인지 "정책·Quota·권한 문제"인지 구분
+- What-if에 AKS, VNet, PostgreSQL, Private DNS, Managed Identity가 포함됐는지
+- PostgreSQL Public Access와 Password Authentication이 꺼졌는지
 
 > [!WARNING]
 > 검증 실패를 "일단 무시하고 배포"하지 않습니다. 원인을 고치고 같은 검사를 다시 통과시키세요.
@@ -126,7 +126,7 @@ azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
 
 **확인할 것**
 
-- 배포 대상(resource group, region)이 `.env`와 같은가?
+- 배포 대상(Resource Group, Region)이 `.env`와 같은가?
 - 예상 비용과 삭제 책임자가 명확한가?
 - Application Gateway for Containers와 PostgreSQL 비용이 포함됐는가?
 - 승인자, 승인 시각이 `infra-report.md`에 남았는가?
@@ -136,7 +136,7 @@ azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
 
 | 방식 | 이 단계에서 벌어지는 일 |
 | --- | --- |
-| 🖐 수동 | `az bicep build`, what-if를 직접 실행하고 결과를 스스로 해석한다. |
+| 🖐 수동 | `az bicep build`, What-if를 직접 실행하고 결과를 스스로 해석한다. |
 | 💬 일반 프롬프트 | 실행 없이 "문제 없어 보입니다"로 끝나기 쉽다. **검증과 추측이 구분되지 않는다.** |
 | ⚡ Skill | 검증을 실제로 돌리고, 결과를 근거로 **명시적 배포 승인**을 요구한다. |
 
@@ -155,9 +155,9 @@ azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
 
 | 증상 | 원인일 가능성 | 해야 할 일 |
 | --- | --- | --- |
-| what-if가 `ResourceGroupNotFound`로 실패 | 배포 대상 resource group을 안 만들었음 | 위 "배포 대상 resource group 만들기"를 실행한 뒤 재시도 |
+| What-if가 `ResourceGroupNotFound`로 실패 | 배포 대상 Resource Group을 안 만들었음 | 위 "배포 대상 Resource Group 만들기"를 실행한 뒤 재시도 |
 | 빌드는 성공했지만 정책 위반 오류 | Azure Policy 제약 | 위반한 정책 이름을 확인하고, 해당 설정을 정책에 맞게 조정 (정책 자체를 끄려 하지 말 것) |
-| quota/용량 부족 오류 | region 용량 부족 또는 vCPU 한도 초과 | [Lab 02](02-design-aks.md) Step 1로 돌아가 node 개수·SKU를 줄이거나 region 변경 |
+| Quota/용량 부족 오류 | Region 용량 부족 또는 vCPU 한도 초과 | [Lab 02](02-design-aks.md) Step 1로 돌아가 Node 개수·SKU를 줄이거나 Region 변경 |
 | 승인이 모호하게 넘어감 | 명시적 승인 문구 없이 진행 | 승인자 이름과 "승인합니다" 문구를 다시 기록 |
 
 </details>

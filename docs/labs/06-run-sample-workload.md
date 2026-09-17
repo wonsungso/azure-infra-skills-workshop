@@ -1,4 +1,4 @@
-# Lab 06: Gateway + database 검증
+# Lab 06: Gateway + Database 검증
 
 **Lab 6 / 8** · 2부 · 실행과 마무리
 
@@ -6,21 +6,21 @@
 
 🧠 Skill 없이 도구만 사용합니다
 
-> 🎬 인프라가 준비됐습니다. 이제 public 요청과 private database 연결을 증명합니다.
+> 🎬 인프라가 준비됐습니다. 이제 Public 요청과 Private Database 연결을 증명합니다.
 
 ## 왜 필요한가요?
 
 Azure 배포 성공만으로 전체 경로가 동작한다고 볼 수 없습니다.
 
-- Gateway가 public 요청을 Service로 전달해야 합니다
-- Pod가 private DNS로 PostgreSQL을 찾아야 합니다
-- Workload Identity token으로 SQL을 실행해야 합니다
+- Gateway가 Public 요청을 Service로 전달해야 합니다
+- Pod가 Private DNS로 PostgreSQL을 찾아야 합니다
+- Workload Identity Token으로 SQL을 실행해야 합니다
 
 ## 시작 전에
 
-- [Lab 05](05-deploy-and-connect.md)에서 `lab` namespace 접근을 확인했나요?
+- [Lab 05](05-deploy-and-connect.md)에서 `lab` Namespace 접근을 확인했나요?
 
-## Step 1. manifest 검토하기
+## Step 1. Manifest 검토하기
 
 > 💬 **Copilot 채팅에 붙여넣기**
 
@@ -40,19 +40,19 @@ reference/kubernetes/lab-web.yaml과 scripts/render-workload.sh를 검토해줘.
 - 검토만 하고 클러스터에 적용하지 마
 ```
 
-manifest는 네 조각으로 구성됩니다.
+Manifest는 네 조각으로 구성됩니다.
 
 | 조각 | 역할 |
 | --- | --- |
 | `ConfigMap/lab-web-content` | 상품 페이지 `index.html` (외부 CDN 없이 CSS 내장) |
-| `projected` volume → Downward API | 실행 중인 Pod 이름과 namespace를 파일로 주입 |
+| `projected` Volume → Downward API | 실행 중인 Pod 이름과 Namespace를 파일로 주입 |
 | `nginx-unprivileged` 이미지 | 위 두 조각을 합쳐 `/usr/share/nginx/html`로 서빙 |
-| `Gateway` + `HTTPRoute` | AGC public frontend에서 Service로 전달 |
-| `postgres-check` Job | private DNS, TLS, Workload Identity, SQL 검증 |
+| `Gateway` + `HTTPRoute` | AGC Public Frontend에서 Service로 전달 |
+| `postgres-check` Job | Private DNS, TLS, Workload Identity, SQL 검증 |
 
 그래서 페이지에 뜨는 Pod 이름은 **하드코딩된 값이 아니라 지금 응답하는 실제 Pod**입니다.
 
-placeholder는 [`render-workload.sh`](../../scripts/render-workload.sh)가 Azure 조회값으로 채웁니다. secret은 저장하지 않습니다.
+Placeholder는 [`render-workload.sh`](../../scripts/render-workload.sh)가 Azure 조회값으로 채웁니다. Secret은 저장하지 않습니다.
 
 ## Step 2. 렌더링하고 적용하기
 
@@ -64,7 +64,7 @@ kubectl -n lab rollout status deployment/lab-web --timeout=180s
 kubectl -n lab wait --for=condition=complete job/postgres-check --timeout=180s
 ```
 
-renderer 출력에는 Azure resource ID와 FQDN이 포함됩니다. 파일로 저장하거나 커밋하지 않습니다.
+Renderer 출력에는 Azure Resource ID와 FQDN이 포함됩니다. 파일로 저장하거나 커밋하지 않습니다.
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>
@@ -77,7 +77,7 @@ renderer 출력에는 Azure resource ID와 FQDN이 포함됩니다. 파일로 �
 
 </details>
 
-## Step 3. public ingress와 database 확인하기
+## Step 3. Public Ingress와 Database 확인하기
 
 > 💻 **터미널에서 실행**
 
@@ -91,17 +91,17 @@ kubectl -n lab logs job/postgres-check
 
 - Gateway와 HTTPRoute가 `Accepted`, `Programmed` 상태여야 합니다
 - `curl`은 Application Gateway for Containers를 통해 AKS에 도달합니다
-- `/data/products.txt`는 web Pod가 PostgreSQL에서 읽은 row입니다
-- Job log의 `successful_checks`가 PostgreSQL SQL 실행 증거입니다
+- `/data/products.txt`는 Web Pod가 PostgreSQL에서 읽은 Row입니다
+- Job Log의 `successful_checks`가 PostgreSQL SQL 실행 증거입니다
 
 <img src="../../img/shop.png" alt="Contoso Shop 상품 페이지 - 상품 카드 4개와 하단에 실제 Pod 이름이 표시된 화면" width="760">
 
 두 가지를 비교해 봅니다.
 
 - 화면 아래의 Pod 이름과 터미널에서 조회한 이름이 **같은가** → 화면이 정말로 내 클러스터에서 오고 있다는 증거
-- `-o wide`로 조회한 node가 **user pool인가** → Lab 02 설계 결정이 지켜졌다는 증거
+- `-o wide`로 조회한 Node가 **User Pool인가** → Lab 02 설계 결정이 지켜졌다는 증거
 
-Pod를 다시 만들면 public URL은 유지되고 화면의 Pod 이름만 바뀝니다.
+Pod를 다시 만들면 Public URL은 유지되고 화면의 Pod 이름만 바뀝니다.
 
 > 💻 **터미널에서 실행**
 
@@ -113,11 +113,11 @@ kubectl delete pod -n lab -l app=lab-web
 
 ## ✅ 완료 체크리스트
 
-- [ ] Gateway public URL에서 HTTP 응답 확인
+- [ ] Gateway Public URL에서 HTTP 응답 확인
 - [ ] PostgreSQL Job에서 SQL 결과 확인
 - [ ] 페이지에 표시된 Pod 이름이 조회 결과와 일치함
-- [ ] Pod가 user pool node에 배치된 것을 확인함
-- [ ] PostgreSQL public access와 password를 사용하지 않음
+- [ ] Pod가 User Pool Node에 배치된 것을 확인함
+- [ ] PostgreSQL Public Access와 Password를 사용하지 않음
 - [ ] 실패 시 Events와 Pod 상태를 수집함
 
 ## 🚧 문제가 생겼다면
@@ -127,12 +127,12 @@ kubectl delete pod -n lab -l app=lab-web
 
 | 증상 | 원인일 가능성 | 해야 할 일 |
 | --- | --- | --- |
-| Pod가 `Pending` | 스케줄링 제약(nodeSelector) 또는 리소스 부족 | node 상태와 taint/toleration 확인 |
-| Pod가 `ImagePullBackOff` | 이미지 태그/digest 오류 | manifest의 이미지 값 재확인 |
+| Pod가 `Pending` | 스케줄링 제약(nodeSelector) 또는 리소스 부족 | Node 상태와 Taint/Toleration 확인 |
+| Pod가 `ImagePullBackOff` | 이미지 태그/digest 오류 | Manifest의 이미지 값 재확인 |
 | Pod가 `ContainerCreating`에서 멈춤 | ConfigMap을 먼저 적용하지 않았을 수 있음 | `lab-web-content` ConfigMap 존재 여부 확인 |
-| 화면은 뜨는데 Pod 이름이 `-` | Downward API 파일 경로 불일치 | manifest의 `path` 값과 HTML의 fetch 대상 비교 |
-| Gateway 주소가 비어 있음 | ALB Controller 또는 subnet 역할 전파 중 | Gateway와 ApplicationLoadBalancer Events 확인 |
-| PostgreSQL Job 실패 | private DNS, Workload Identity, Entra admin 문제 | init container와 Job log를 분리해 확인 |
+| 화면은 뜨는데 Pod 이름이 `-` | Downward API 파일 경로 불일치 | Manifest의 `path` 값과 HTML의 Fetch 대상 비교 |
+| Gateway 주소가 비어 있음 | ALB Controller 또는 Subnet 역할 전파 중 | Gateway와 ApplicationLoadBalancer Events 확인 |
+| PostgreSQL Job 실패 | Private DNS, Workload Identity, Entra Admin 문제 | Init Container와 Job Log를 분리해 확인 |
 
 </details>
 

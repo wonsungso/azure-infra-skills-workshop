@@ -2,7 +2,7 @@
 
 ## 범위와 상태
 
-- 팀 / scope / region:
+- 팀 / Scope / Region:
 - 실행 일시:
 - 최종 상태: 관측됨 / 부분 관측 / 미검증
 
@@ -13,7 +13,7 @@
 
 ## 실제 Azure 구성
 
-Application Gateway for Containers, AKS, PostgreSQL, VNet, identity 관계를 기록한다.
+Application Gateway for Containers, AKS, PostgreSQL, VNet, Identity 관계를 기록한다.
 
 ## 실제 Kubernetes 구성
 
@@ -21,7 +21,7 @@ Gateway, HTTPRoute, Deployment, Service, PostgreSQL Job 결과를 기록한다.
 
 ## E2E 증거
 
-- Gateway public URL의 HTTP 응답:
+- Gateway Public URL의 HTTP 응답:
 - PostgreSQL `successful_checks` 결과:
 
 ## 검증과 문제 해결

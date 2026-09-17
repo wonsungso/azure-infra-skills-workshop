@@ -32,7 +32,7 @@ azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
   (Lab 01부터 쌓인 결정과 관측 기록)
 
 [작성할 것]
-- AGC, AKS, PostgreSQL, VNet, identity 관계를 Mermaid로
+- AGC, AKS, PostgreSQL, VNet, Identity 관계를 Mermaid로
 - Gateway, HTTPRoute, Pod, Service, Job은 별도 섹션으로
 
 [구분할 것]
@@ -47,7 +47,7 @@ azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
 
 **확인할 것**
 
-- cluster resource group과 node resource group을 모두 조사했는가
+- Cluster Resource Group과 Node Resource Group을 모두 조사했는가
 - Kubernetes Gateway와 PostgreSQL Job 증거가 포함됐는가
 
 ### Azure 공식 아이콘으로 그림 만들기
@@ -67,7 +67,7 @@ Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 �
 - Network
 
 [각 항목에 들어갈 값]
-- label에는 실제 리소스 이름
+- Label에는 실제 리소스 이름
 - sub에는 실제 SKU나 CIDR
 
 [그다음]
@@ -79,11 +79,11 @@ Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 �
 
 ```
 
-<img src="../../img/example-architecture.svg" alt="Azure 공식 아이콘으로 그린 아키텍처 예시 - Resource group, Network, Compute 세 레이어에 각 리소스 이름과 SKU가 표기된 그림" width="620">
+<img src="../../img/example-architecture.svg" alt="Azure 공식 아이콘으로 그린 아키텍처 예시 - Resource Group, Network, Compute 세 레이어에 각 리소스 이름과 SKU가 표기된 그림" width="620">
 
 위는 [예시 스펙](../../assets/azure-icons/example-architecture.json)으로 만든 결과입니다. 아이콘은 SVG 안에 인라인되므로 파일 하나만 인계 문서에 넣으면 됩니다.
 
-아이콘은 Microsoft가 배포하는 공식 Azure architecture icons입니다.
+아이콘은 Microsoft가 배포하는 공식 Azure Architecture Icons입니다.
 
 - 아키텍처 다이어그램과 교육 자료 용도로만 쓸 수 있습니다
 - 자르거나 회전하거나 변형하면 안 됩니다
@@ -130,7 +130,7 @@ azure-resource-lookup Skill을 사용해 삭제 대상을 확인해줘.
 ## ✅ 완료 체크리스트
 
 - [ ] AGC → AKS → PostgreSQL 흐름이 문서화됨
-- [ ] public HTTP와 private SQL 증거가 기록됨
+- [ ] Public HTTP와 Private SQL 증거가 기록됨
 - [ ] 삭제 승인/실행/재조회가 모두 기록됨(또는 미삭제 사유가 기록됨)
 - [ ] 인계 문서와 `infra-report.md`가 모두 채워짐
 - [ ] **리소스가 실제로 삭제됐는지 다시 조회해 확인함** (비용이 계속 나가지 않도록)
@@ -143,8 +143,8 @@ azure-resource-lookup Skill을 사용해 삭제 대상을 확인해줘.
 | 증상 | 원인일 가능성 | 해야 할 일 |
 | --- | --- | --- |
 | ARM 그림에 Pod/Service가 안 보임 | 정상입니다 | Kubernetes API 조회로 별도 확인 |
-| 삭제 후에도 리소스가 남아있음 | 종속 리소스 또는 삭제 지연 | 몇 분 후 재조회. node resource group(`MC_...`)이 함께 지워졌는지도 확인 |
-| resource group 삭제가 거부됨 | 리소스 잠금 또는 권한 부족 | 잠금 여부를 확인하고, 내 권한 범위 안에서 개별 리소스부터 삭제 |
+| 삭제 후에도 리소스가 남아있음 | 종속 리소스 또는 삭제 지연 | 몇 분 후 재조회. Node Resource Group(`MC_...`)이 함께 지워졌는지도 확인 |
+| Resource Group 삭제가 거부됨 | 리소스 잠금 또는 권한 부족 | 잠금 여부를 확인하고, 내 권한 범위 안에서 개별 리소스부터 삭제 |
 
 </details>
 

@@ -62,18 +62,18 @@ azure-diagnostics Skill을 사용해 샘플 Deployment가 준비되지 않는
 **확인할 것**
 
 - 제시된 원인이 **실제 Events 문구**에 근거하는가, 아니면 일반론인가?
-- 기존 Pod와 Gateway public URL이 계속 응답하는가?
+- 기존 Pod와 Gateway Public URL이 계속 응답하는가?
 
 새 Pod는 `ImagePullBackOff`지만 **기존 Pod는 `1/1 Running`으로 남아 서비스가 계속 응답하는지** 봅니다.
 
-<img src="../../img/lab07-diagnose.png" alt="장애 주입 후 kubectl 출력 - 새 Pod는 ImagePullBackOff, 기존 Pod는 Running 상태이며 events에 이미지 pull 실패가 기록되고 rollout undo로 복구된 터미널 화면" width="760">
+<img src="../../img/lab07-diagnose.png" alt="장애 주입 후 kubectl 출력 - 새 Pod는 ImagePullBackOff, 기존 Pod는 Running 상태이며 Events에 이미지 pull 실패가 기록되고 rollout undo로 복구된 터미널 화면" width="760">
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>
 
 | 방식 | 이 단계에서 벌어지는 일 |
 | --- | --- |
-| 🖐 수동 | describe·events·logs를 어떤 순서로 볼지 스스로 정해야 한다. |
+| 🖐 수동 | Describe·Events·Logs를 어떤 순서로 볼지 스스로 정해야 한다. |
 | 💬 일반 프롬프트 | 증상만 듣고 **가장 흔한 원인을 단정**한다. 실제 Events를 읽지 않으므로 이번 장애의 원인이 아닐 수 있다. |
 | ⚡ Skill | 증거 수집 순서를 정하고, 결론에 **실제 Events 문구를 근거로** 인용하게 한다. |
 
@@ -94,7 +94,7 @@ kubectl rollout undo deployment/lab-web -n lab
 - 기존 Pod가 한 번도 죽지 않았기 때문입니다
 - 이름이 그대로인 것이 오히려 **"무중단으로 막았다"는 증거**입니다
 
-권한 확대, IP 제한 완화, namespace 삭제는 복구 수단이 아닙니다.
+권한 확대, IP 제한 완화, Namespace 삭제는 복구 수단이 아닙니다.
 
 ## ✅ 완료 체크리스트
 
@@ -114,7 +114,7 @@ kubectl rollout undo deployment/lab-web -n lab
 | --- | --- | --- |
 | 원인이 불명확 | 증거 부족 | `kubectl describe pod`와 `kubectl get events -n lab --sort-by=.lastTimestamp` 결과를 더 수집 |
 | 복구 후에도 실패 | 다른 근본 원인 존재 | 증상을 처음부터 다시 수집하고, 방금 바꾼 것 외에 달라진 것이 없는지 확인 |
-| 원래 이미지 태그가 기억나지 않음 | 기록 누락 | [manifest](../../reference/kubernetes/lab-web.yaml)의 이미지 값을 확인하거나 `kubectl rollout undo deployment/lab-web -n lab` |
+| 원래 이미지 태그가 기억나지 않음 | 기록 누락 | [Manifest](../../reference/kubernetes/lab-web.yaml)의 이미지 값을 확인하거나 `kubectl rollout undo deployment/lab-web -n lab` |
 
 </details>
 

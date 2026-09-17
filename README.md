@@ -2,7 +2,7 @@
 
 ## 🔥 오늘, 당신은 Contoso의 플랫폼 엔지니어입니다
 
-**D-7.** 커머스팀의 신규 서비스 출시가 일주일 앞입니다. 인터넷 진입점, Kubernetes, database가 필요합니다.
+**D-7.** 커머스팀의 신규 서비스 출시가 일주일 앞입니다. 인터넷 진입점, Kubernetes, Database가 필요합니다.
 
 > 🗣️ **"실제 서비스와 비슷한 Azure 환경을 준비해 주세요."**
 >
@@ -18,12 +18,12 @@ CLI 명령을 외우는 대신 **Azure Skills**를 사용합니다.
 
 ## 🏁 배포할 아키텍처
 
-<img src="img/workload-architecture.png" alt="Application Gateway for Containers에서 Azure Kubernetes Service로 트래픽을 전달하고 private PostgreSQL Flexible Server에 연결하는 Azure 아키텍처" width="740">
+<img src="img/workload-architecture.png" alt="Application Gateway for Containers에서 Azure Kubernetes Service로 트래픽을 전달하고 Private PostgreSQL Flexible Server에 연결하는 Azure 아키텍처" width="740">
 
-- **Application Gateway for Containers**: Gateway API 기반 public ingress
-- **Azure Kubernetes Service**: system/user node pool과 Cilium network policy
-- **PostgreSQL Flexible Server**: private subnet과 Microsoft Entra 인증
-- **Workload Identity**: password 없이 Azure Kubernetes Service에서 PostgreSQL 연결
+- **Application Gateway for Containers**: Gateway API 기반 Public Ingress
+- **Azure Kubernetes Service**: System/User Node Pool과 Cilium Network Policy
+- **PostgreSQL Flexible Server**: Private Subnet과 Microsoft Entra 인증
+- **Workload Identity**: Password 없이 Azure Kubernetes Service에서 PostgreSQL 연결
 
 ## 🖥️ 확인할 화면
 
@@ -33,9 +33,9 @@ CLI 명령을 외우는 대신 **Azure Skills**를 사용합니다.
 
 앱 이미지는 빌드하지 않습니다.
 
-- 공개 nginx 이미지에 **ConfigMap**으로 화면을 주입합니다
+- 공개 NGINX 이미지에 **ConfigMap**으로 화면을 주입합니다
 - **Downward API**로 Pod 정보를 전달합니다
-- 앱 코딩 없이 manifest만으로 만듭니다
+- 앱 코딩 없이 Manifest만으로 만듭니다
 
 ## 🗺️ 오늘의 여정
 
@@ -71,12 +71,12 @@ flowchart LR
 
 | Lab | 주 Skill | 다음 Lab에 넘길 것 |
 | --- | --- | --- |
-| [01. 워크샵 시작하기](docs/labs/01-orientation-and-setup.md) | `azure-resource-lookup` | `.env`, 확인된 scope |
-| [02. 3계층 설계 결정하기](docs/labs/02-design-aks.md) | `azure-quotas`, `azure-kubernetes`, `azure-postgres` | quota, network, SKU 결정 |
+| [01. 워크샵 시작하기](docs/labs/01-orientation-and-setup.md) | `azure-resource-lookup` | `.env`, 확인된 Scope |
+| [02. 3계층 설계 결정하기](docs/labs/02-design-aks.md) | `azure-quotas`, `azure-kubernetes`, `azure-postgres` | Quota, Network, SKU 결정 |
 | [03. 계획 승인 + Bicep 생성](docs/labs/03-plan-and-bicep.md) | `azure-enterprise-infra-planner` | 승인된 계획, Bicep |
 | [04. IaC 검증 + 배포 승인](docs/labs/04-validate-and-approve.md) | `azure-enterprise-infra-planner` | 검증 증거, 배포 승인 |
-| [05. 3계층 인프라 배포](docs/labs/05-deploy-and-connect.md) | `azure-enterprise-infra-planner` | AGC add-on, Azure Kubernetes Service, PostgreSQL |
-| [06. Gateway + DB 검증](docs/labs/06-run-sample-workload.md) | `kubectl` | public URL, PostgreSQL query |
+| [05. 3계층 인프라 배포](docs/labs/05-deploy-and-connect.md) | `azure-enterprise-infra-planner` | AGC Add-on, Azure Kubernetes Service, PostgreSQL |
+| [06. Gateway + DB 검증](docs/labs/06-run-sample-workload.md) | `kubectl` | Public URL, PostgreSQL Query |
 | [07. 진단과 복구 (선택)](docs/labs/07-diagnose-and-recover.md) | `azure-diagnostics` | 원인·복구 기록 |
 | [08. 문서화 + 정리](docs/labs/08-document-and-cleanup.md) | `azure-resource-visualizer` | 인계 문서, 삭제 증거 |
 
@@ -88,15 +88,15 @@ flowchart LR
 
 다음 두 가지를 **본인이 직접** 할 수 있어야 합니다. 하나라도 안 되면 끝까지 진행할 수 없습니다.
 
-- resource group에 Azure Kubernetes Service, Application Gateway for Containers, PostgreSQL을 배포할 권한
+- Resource Group에 Azure Kubernetes Service, Application Gateway for Containers, PostgreSQL을 배포할 권한
 - 실습이 끝난 뒤 리소스를 **삭제**할 권한
 
 > [!WARNING]
 > **실제 비용이 발생하는 리소스**를 만듭니다.
 >
-> - Azure Kubernetes Service node는 실행되는 동안 계속 과금됩니다
+> - Azure Kubernetes Service Node는 실행되는 동안 계속 과금됩니다
 > - 중간에 멈춰도 [Lab 08](docs/labs/08-document-and-cleanup.md)의 정리 단계는 진행합니다
-> - 회사 공용 subscription에서는 **전용 resource group**을 만들어 사용합니다
+> - 회사 공용 Subscription에서는 **전용 Resource Group**을 만들어 사용합니다
 
 ### 2. Codespace를 엽니다
 
@@ -143,10 +143,10 @@ Azure 로그인과 Skill 동작 확인은 [Lab 01](docs/labs/01-orientation-and-
 | Skill / 도구 | 역할 |
 | --- | --- |
 | `azure-resource-lookup` | 실제 자원을 읽기 전용으로 조회 |
-| `azure-quotas` | vCPU quota와 region 용량 확인 |
+| `azure-quotas` | vCPU Quota와 Region 용량 확인 |
 | `azure-kubernetes` | Azure Kubernetes Service Day-0 설계 검토 |
-| `azure-postgres` | PostgreSQL network·인증 검토 |
-| `azure-enterprise-infra-planner` | least privilege 매트릭스 설계, 계획 승인, Bicep 생성·검증·배포 |
+| `azure-postgres` | PostgreSQL Network·인증 검토 |
+| `azure-enterprise-infra-planner` | Least Privilege 매트릭스 설계, 계획 승인, Bicep 생성·검증·배포 |
 | `azure-diagnostics` | 증거 기반 오류 진단 |
 | `azure-resource-visualizer` | 리소스 관계를 다이어그램으로 정리 |
 | MCP 도구 / CLI / `kubectl` | 제안을 실제로 실행 |
@@ -163,7 +163,7 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다.
 | 방식 | 해주는 것 | 빠지는 것 |
 | --- | --- | --- |
 | 🖐 **수동** (포털·CLI) | 내가 모든 것을 결정하고 입력 | 결정 근거가 남지 않음. 문서화는 전부 별도 작업 |
-| 💬 **일반 프롬프트** | 그럴듯한 명령어와 템플릿을 빠르게 생성 | **내 subscription의 실제 상태를 모름.** 승인 단계가 없고, 검증 없이 "됐다"고 답하기 쉬움 |
+| 💬 **일반 프롬프트** | 그럴듯한 명령어와 템플릿을 빠르게 생성 | **내 Subscription의 실제 상태를 모름.** 승인 단계가 없고, 검증 없이 "됐다"고 답하기 쉬움 |
 | ⚡ **Skill** | 절차·가드레일·검증 순서를 함께 제공 | 판단과 승인은 여전히 사람 몫 |
 
 핵심 차이는 **속도가 아니라 절차**입니다.
@@ -180,7 +180,7 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다.
 | --- | --- |
 | `docs/labs/` | Lab 01~08 가이드. 프롬프트와 입력값이 모두 이 안에 있습니다 |
 | `reference/infra/` | Bicep 기준본 - **정답지가 아니라 비교용** |
-| `reference/kubernetes/` | 웹·Gateway API·PostgreSQL 검증 manifest |
+| `reference/kubernetes/` | 웹·Gateway API·PostgreSQL 검증 Manifest |
 | `templates/` | [인계 문서 양식](templates/handoff-template.md) - Lab 08에서 채웁니다 |
 | `.devcontainer/` | Codespace 환경 정의 |
 | `scripts/` | `.env` 초기화([`init-workshop`](scripts/init-workshop.sh)), 값 반영([`set-env`](scripts/set-env.sh)), 보고서 작성([`add-report`](scripts/add-report.sh)) |
@@ -191,9 +191,9 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다.
 
 - 배포·역할 변경·장애 주입·삭제는 **대상과 영향을 확인한 뒤 승인**하고 수행합니다.
 - 실행 결과가 없는 내용은 `예상` 또는 `미검증`으로 표기합니다.
-- authorized IP ranges에 `0.0.0.0/0`을 넣지 않습니다. 접속이 안 되면 내 egress IP부터 다시 확인합니다.
-- 샘플은 `lab` namespace에서만 실행합니다. 외부 진입점은 Application Gateway for Containers만 사용합니다.
-- subscription ID, tenant ID, kubeconfig 내용은 저장소에 기록하지 않습니다([AGENTS.md](AGENTS.md) 참고).
+- Authorized IP Ranges에 `0.0.0.0/0`을 넣지 않습니다. 접속이 안 되면 내 Egress IP부터 다시 확인합니다.
+- 샘플은 `lab` Namespace에서만 실행합니다. 외부 진입점은 Application Gateway for Containers만 사용합니다.
+- Subscription ID, Tenant ID, Kubeconfig 내용은 저장소에 기록하지 않습니다([AGENTS.md](AGENTS.md) 참고).
 
 ---
 
