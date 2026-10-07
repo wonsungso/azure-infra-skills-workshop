@@ -2,17 +2,16 @@
 
 **Lab 8 / 8** · 2부 · 실행과 마무리
 
-🎯 관측된 실제 상태로 인계 문서 만들기 / 승인된 절차로 정리하기
+🎯 관측 기반 인계 문서 / 승인 후 삭제·잔여 확인
 
 🧠 `azure-resource-lookup` · `azure-resource-visualizer`
 
-> 🎬 화면까지 띄웠으니 끝일까요? 팀장의 두 번째 조건 - **다음 사람이 나 없이도 운영할 수 있을 때** 미션이 완료됩니다.
+> 🎬 실제 구성·검증 결과를 인계하고 승인된 리소스를 정리합니다.
 
 ## 왜 필요한가요?
 
-- Azure와 Kubernetes 상태를 함께 봐야 전체 요청 경로를 알 수 있습니다
-- AGC → AKS → PostgreSQL을 한 흐름으로 문서화합니다
-- 마지막에는 무엇이 남았는지 확인한 뒤 인계합니다
+Azure·Kubernetes의 실제 구성과 검증 결과를 남깁니다.
+삭제 후 잔여 리소스를 확인해 비용 책임을 명확히 합니다.
 
 ## 시작 전에
 
@@ -53,7 +52,7 @@ azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
 
 ### Azure 공식 아이콘으로 그림 만들기
 
-Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 결과로 **Azure 공식 아이콘이 들어간 SVG**를 함께 만듭니다.
+같은 조회 결과로 **Azure 공식 아이콘 SVG**도 만듭니다.
 
 > 💬 **Copilot 채팅에 붙여넣기**
 
@@ -82,24 +81,24 @@ Mermaid는 관계를 보여주지만 아이콘이 없습니다. 같은 조회 �
 
 <img src="../../img/example-architecture.svg" alt="Azure 공식 아이콘으로 그린 아키텍처 예시 - Resource Group, Network, Compute 세 레이어에 각 리소스 이름과 SKU가 표기된 그림" width="620">
 
-위는 [예시 스펙](../../assets/azure-icons/example-architecture.json)으로 만든 결과입니다. 아이콘은 SVG 안에 인라인되므로 파일 하나만 인계 문서에 넣으면 됩니다.
-
-아이콘은 Microsoft가 배포하는 공식 Azure Architecture Icons입니다.
+위 그림은 [예시 스펙](../../assets/azure-icons/example-architecture.json)으로 생성했습니다.
+아이콘을 포함한 SVG 파일 하나로 인계할 수 있습니다.
 
 - 아키텍처 다이어그램과 교육 자료 용도로만 쓸 수 있습니다
 - 자르거나 회전하거나 변형하면 안 됩니다
-- 자세한 조건은 [assets/azure-icons/README.md](../../assets/azure-icons/README.md)에 있습니다
+- 이용 조건: [`README.md`](../../assets/azure-icons/README.md)
 
-[인계 양식](../../templates/handoff-template.md)에 관측/설계/추정/미검증을 구분해서 채웁니다. Lab 01부터 쌓인 `infra-report.md`가 그 근거입니다.
+`infra-report.md`를 근거로 [인계 양식](../../templates/handoff-template.md)을 채웁니다.
+**관측·설계·추정·미검증을 구분합니다.**
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>
 
 | 방식 | 이 단계에서 벌어지는 일 |
 | --- | --- |
-| 🖐 수동 | 리소스 관계를 눈으로 훑어 손으로 그린다. 빠뜨리기 쉽다. |
-| 💬 일반 프롬프트 | 실제 배포와 다른 **일반적인 AKS 아키텍처 그림**을 그려준다. 내 클러스터의 진짜 모습이 아니다. |
-| ⚡ Skill | 실제 리소스 그래프를 조회해 **배포된 그대로** 다이어그램을 만든다. |
+| 🖐 수동 | 실제 리소스와 관계를 조회해 직접 그린다. |
+| 💬 일반 프롬프트 | 실제 조회 결과를 사용하도록 명시해야 한다. |
+| ⚡ Skill | 조회한 리소스와 관계로 다이어그램을 만든다. |
 
 </details>
 
@@ -126,23 +125,22 @@ azure-resource-lookup Skill을 사용해 삭제 대상을 확인해줘.
 
 ```
 
-삭제를 승인한 뒤 실제로 삭제하고, 다시 조회해서 잔여 자원이 없는지(또는 남은 것이 무엇인지) 확인합니다.
+**삭제 승인 → 실행 → 재조회** 순서로 잔여 리소스를 확인합니다.
 
-Controller가 관리하는 AGC는 클러스터가 살아 있을 때 먼저 정리합니다.
+**클러스터 삭제 전에** Controller가 관리하는 AGC를 정리합니다.
 
 - 승인한 Namespace의 Gateway와 ApplicationLoadBalancer를 삭제합니다
-- ALB의 Finalizer는 Azure 측 삭제를 기다리는 표시입니다. **강제로 지우지 않습니다**
+- ALB Finalizer는 Azure 삭제 완료를 기다리는 표시입니다. **강제로 지우지 않습니다**
 - Azure AGC·Association·Frontend와 Finalizer가 정리된 뒤 Resource Group을 삭제합니다
-- AKS 삭제가 관리하는 Node Resource Group 정리까지 기다리고 두 그룹을 다시 조회합니다
+- Node Resource Group 삭제까지 기다리고 두 그룹을 다시 조회합니다
 
 [Lab 05](05-deploy-and-connect.md)의 bootstrap Custom Role 정의는 Resource Group 밖에 남을 수 있습니다.
 
-- Resource Group 삭제만으로 권한 정리까지 끝났다고 가정하지 않습니다
-- 이번 실습에서 만든 역할 정의·할당도 삭제 계획과 재조회에 포함합니다
-- 삭제하지 않으면 남은 권한과 Scope도 인계 문서에 기록합니다
+- 실습에서 만든 역할 정의·할당도 삭제 계획과 재조회에 포함합니다
+- 유지한 권한과 Scope는 인계 문서에 기록합니다
 
 > [!WARNING]
-> 삭제하지 않기로 했다면, 그것도 정상입니다. 다만 잔여 자원과 비용 책임자를 인계 문서에 반드시 남기세요.
+> **리소스를 유지하면 과금이 계속됩니다.** 잔여 리소스와 비용 책임자를 인계 문서에 기록합니다.
 
 ## ✅ 완료 체크리스트
 
@@ -150,7 +148,7 @@ Controller가 관리하는 AGC는 클러스터가 살아 있을 때 먼저 정�
 - [ ] Public HTTP와 Private SQL 증거가 기록됨
 - [ ] 삭제 승인/실행/재조회가 모두 기록됨(또는 미삭제 사유가 기록됨)
 - [ ] 인계 문서와 `infra-report.md`가 모두 채워짐
-- [ ] **리소스가 실제로 삭제됐는지 다시 조회해 확인함** (비용이 계속 나가지 않도록)
+- [ ] 삭제를 선택했다면 재조회로 잔여 리소스 확인
 
 ## 🚧 문제가 생겼다면
 
@@ -167,4 +165,4 @@ Controller가 관리하는 AGC는 클러스터가 살아 있을 때 먼저 정�
 
 ## 워크샵을 마칩니다 🎉
 
-수고하셨습니다. Codespace를 더 쓰지 않는다면 GitHub의 Codespaces 목록에서 중지하거나 삭제하세요. Azure 리소스와 달리 Codespace는 사용 시간으로만 과금됩니다.
+사용하지 않는 Codespace는 GitHub의 Codespaces 목록에서 중지하거나 삭제합니다.

@@ -2,17 +2,19 @@
 
 **Lab 4 / 8** · 1부 · 설계와 검증
 
-🎯 배포 전 "검증"의 실제 의미 / 배포 승인이 계획 승인과 별개인 이유
+🎯 IaC 검증 / 배포 영향·비용 확인 / 배포 승인
 
 🧠 `azure-enterprise-infra-planner`
 
-> 🎬 코드는 나왔습니다. 배포 버튼을 누르기 전에 이 코드가 **정말 내 설계대로인지** 증명합니다. 1부의 마지막 관문입니다.
+> 🎬 코드가 계획과 일치하는지 검증한 뒤 배포를 승인합니다.
 
 ## 왜 필요한가요?
 
-- "그럴듯해 보인다"와 "빌드와 검사를 통과했다"는 다릅니다
-- 검증을 통과했다고 바로 배포해도 되는 것도 아닙니다
-- **비용과 삭제 책임까지 확인한 뒤에만** 배포를 승인합니다
+IaC(Infrastructure as Code)는 인프라 구성을 코드로 정의하는 방식입니다.
+
+- 실행한 검사와 결과로 IaC를 검증합니다
+- **검증 통과와 배포 승인은 별개입니다**
+- 비용·삭제 책임을 확인한 뒤 배포를 승인합니다
 
 ## 시작 전에
 
@@ -26,10 +28,8 @@ ls infra/ && jq -e '.meta.status == "approved"' .azure/infrastructure-plan.json
 
 ### 배포 대상 Resource Group 만들기
 
-What-if는 "이 Resource Group에 적용하면 무엇이 바뀌는가"를 계산합니다.
-
-- 그러므로 **비교 대상이 먼저 있어야** 합니다
-- Bicep은 Resource Group Scope라 그룹 자체를 만들지 않습니다
+What-if는 배포할 때의 변경 사항을 미리 보여줍니다.
+Resource Group Scope의 Bicep은 그룹을 만들지 않으므로 **대상 그룹을 먼저 준비합니다.**
 
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
@@ -51,7 +51,7 @@ azure-enterprise-infra-planner Skill을 사용해 배포 대상 Resource Group�
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
-**빈 Resource Group은 비용이 없습니다.** 안에 들어갈 AKS와 Node가 비용을 만들고, 그건 [Lab 05](05-deploy-and-connect.md)에서 배포를 승인한 뒤입니다.
+**빈 Resource Group은 비용이 없습니다.** 비용이 발생하는 리소스는 승인 후 [Lab 05](05-deploy-and-connect.md)에서 배포합니다.
 
 Application Gateway for Containers Preview 상태도 확인합니다.
 
@@ -64,7 +64,7 @@ az feature show --namespace Microsoft.ContainerService \
     --name ApplicationLoadBalancerPreview --query properties.state -o tsv
 ```
 
-## Step 1. IaC를 실제로 검증하기
+## Step 1. IaC 검증하기
 
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
@@ -91,15 +91,15 @@ azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
 
 **확인할 것**
 
-- 실제로 실행된 명령(예: `az bicep build`, 보안 검사, What-if)과 그 종료 코드
-- 실패가 있다면 "코드 문제"인지 "정책·Quota·권한 문제"인지 구분
+- 실행한 build·보안 검사·What-if 명령과 종료 코드
+- 실패 원인이 코드인지 정책·Quota·권한인지 구분
 - What-if에 AKS, VNet, PostgreSQL, Private DNS, Managed Identity가 포함됐는지
 - PostgreSQL Public Access와 Password Authentication이 꺼졌는지
 
 > [!WARNING]
-> 검증 실패를 "일단 무시하고 배포"하지 않습니다. 원인을 고치고 같은 검사를 다시 통과시키세요.
+> **검증 실패 상태에서 배포하지 않습니다.** 원인을 수정하고 같은 검사를 다시 실행합니다.
 
-## Step 2. 배포 전에 영향 다시 확인하고 승인받기
+## Step 2. 배포 영향 확인·승인하기
 
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
@@ -136,9 +136,9 @@ azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
 
 | 방식 | 이 단계에서 벌어지는 일 |
 | --- | --- |
-| 🖐 수동 | `az bicep build`, What-if를 직접 실행하고 결과를 스스로 해석한다. |
-| 💬 일반 프롬프트 | 실행 없이 "문제 없어 보입니다"로 끝나기 쉽다. **검증과 추측이 구분되지 않는다.** |
-| ⚡ Skill | 검증을 실제로 돌리고, 결과를 근거로 **명시적 배포 승인**을 요구한다. |
+| 🖐 수동 | 검사를 실행하고 결과를 해석한다. |
+| 💬 일반 프롬프트 | 실행 증거와 승인 단계를 명시해야 한다. |
+| ⚡ Skill | 검사 결과를 기록하고 배포 승인을 요청한다. |
 
 </details>
 
@@ -156,7 +156,7 @@ azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
 | 증상 | 원인일 가능성 | 해야 할 일 |
 | --- | --- | --- |
 | What-if가 `ResourceGroupNotFound`로 실패 | 배포 대상 Resource Group을 안 만들었음 | 위 "배포 대상 Resource Group 만들기"를 실행한 뒤 재시도 |
-| 빌드는 성공했지만 정책 위반 오류 | Azure Policy 제약 | 위반한 정책 이름을 확인하고, 해당 설정을 정책에 맞게 조정 (정책 자체를 끄려 하지 말 것) |
+| 빌드는 성공했지만 정책 위반 | Azure Policy 제약 | 정책 이름을 확인하고 설정 수정. 정책 자체를 끄지 않음 |
 | Quota/용량 부족 오류 | Region 용량 부족 또는 vCPU 한도 초과 | [Lab 02](02-design-aks.md) Step 1로 돌아가 Node 개수·SKU를 줄이거나 Region 변경 |
 | 승인이 모호하게 넘어감 | 명시적 승인 문구 없이 진행 | 승인자 이름과 "승인합니다" 문구를 다시 기록 |
 

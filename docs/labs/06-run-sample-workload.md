@@ -6,11 +6,11 @@
 
 🧠 Skill 없이 도구만 사용합니다
 
-> 🎬 인프라가 준비됐습니다. 이제 Public 요청과 Private Database 연결을 증명합니다.
+> 🎬 Public HTTP와 Private SQL로 전체 요청 경로를 확인합니다.
 
 ## 왜 필요한가요?
 
-Azure 배포 성공만으로 전체 경로가 동작한다고 볼 수 없습니다.
+배포 성공만으로 요청 경로를 확인할 수는 없습니다.
 
 - Gateway가 Public 요청을 Service로 전달해야 합니다
 - Pod가 Private DNS로 PostgreSQL을 찾아야 합니다
@@ -40,23 +40,23 @@ reference/kubernetes/lab-web.yaml과 scripts/render-workload.sh를 검토해줘.
 - 검토만 하고 클러스터에 적용하지 마
 ```
 
-Manifest는 네 조각으로 구성됩니다.
+Manifest의 주요 구성입니다.
 
 | 조각 | 역할 |
 | --- | --- |
 | `ConfigMap/lab-web-content` | 상품 페이지 `index.html` (외부 CDN 없이 CSS 내장) |
 | `projected` Volume → Downward API | 실행 중인 Pod 이름과 Namespace를 파일로 주입 |
-| `nginx-unprivileged` 이미지 | 위 두 조각을 합쳐 `/usr/share/nginx/html`로 서빙 |
+| `nginx-unprivileged` 이미지 | 화면·Pod 정보·SQL 조회 파일을 HTTP로 제공 |
 | `Gateway` + `HTTPRoute` | AGC Public Frontend에서 Service로 전달 |
 | `postgres-check` Job | Private DNS, TLS, Workload Identity, SQL 검증 |
 
-그래서 페이지에 뜨는 Pod 이름은 **하드코딩된 값이 아니라 지금 응답하는 실제 Pod**입니다.
+페이지의 Pod 이름은 **응답하는 실제 Pod**에서 읽습니다.
 
-Placeholder는 [`render-workload.sh`](../../scripts/render-workload.sh)가 Azure 조회값으로 채웁니다. Secret은 저장하지 않습니다.
+[`render-workload.sh`](../../scripts/render-workload.sh)가 Azure 조회값으로 Placeholder를 채웁니다.
 
 - 조회는 `.env`의 `SUBSCRIPTION_ID` Scope를 사용합니다
-- 필수 값이나 조회 결과가 비면 Manifest를 출력하지 않고 오류로 멈춥니다
-- Manifest와 Federated Credential이 `lab` 전용이므로 다른 `NAMESPACE`도 거부합니다
+- 값이 비면 출력 없이 오류로 멈춥니다. Secret은 저장하지 않습니다
+- Manifest·Federated Credential은 `lab` 전용입니다. 다른 Namespace는 거부합니다
 
 ## Step 2. 렌더링하고 적용하기
 
@@ -69,7 +69,7 @@ kubectl -n lab rollout status deployment/lab-web --timeout=600s
 kubectl -n lab wait --for=condition=complete job/postgres-check --timeout=600s
 ```
 
-`pipefail`은 Renderer 실패를 파이프라인 실패로 전달합니다. 오류가 있으면 다음 검증 전에 먼저 해결합니다.
+`pipefail`은 Renderer 오류를 파이프라인 실패로 전달합니다. 실패하면 다음 단계 전에 해결합니다.
 
 Renderer 출력에는 Azure Resource ID와 FQDN이 포함됩니다. 파일로 저장하거나 커밋하지 않습니다.
 
@@ -78,9 +78,9 @@ Renderer 출력에는 Azure Resource ID와 FQDN이 포함됩니다. 파일로 �
 
 | 방식 | 이 단계에서 벌어지는 일 |
 | --- | --- |
-| 🖐 수동 | `kubectl apply` 후 무엇을 확인해야 정상인지 스스로 정해야 한다. |
-| 💬 일반 프롬프트 | `apply`가 성공하면 "배포 완료"라고 답하기 쉽다. Pod가 `Ready`인지, Service가 Pod와 **실제로 연결됐는지**는 확인하지 않는다. |
-| ⚡ 이 랩은 Skill 없이 | 도구만 씁니다. 대신 **계층별 확인 순서**를 문서가 제공합니다. 무엇을 봐야 하는지 아는 것 자체가 이 랩의 학습 목표입니다. |
+| 🖐 수동 | 적용 후 준비 상태·연결을 직접 검증한다. |
+| 💬 일반 프롬프트 | `apply` 결과와 서비스 동작을 구분하도록 지시해야 한다. |
+| ⚡ 이 Lab은 도구만 사용 | 문서의 계층별 순서로 준비 상태·HTTP·SQL을 확인한다. |
 
 </details>
 
@@ -111,25 +111,22 @@ kubectl -n lab logs job/postgres-check -c psql
 - `/data/products.txt`는 Web Pod가 PostgreSQL에서 읽은 Row입니다
 - Job Log의 `successful_checks`가 PostgreSQL SQL 실행 증거입니다
 
-AGC의 최초 생성·Frontend 준비는 Web Pod와 SQL Job보다 늦을 수 있습니다.
+**Web·SQL 성공과 Public HTTP 준비는 별개입니다.**
+Gateway 준비는 최대 15분 기다립니다. 시간 초과 시 재배포·삭제하지 말고 ALB 상태·Controller Log를 수집합니다.
 
-- 준비 대기는 최대 15분입니다. Web·SQL이 먼저 성공해도 아직 Public 요청 성공은 아닙니다
-- 시간 초과 시 재배포·삭제하지 말고 ALB 상태와 Controller Log를 수집합니다
+[`verify-public-http.sh`](../../scripts/verify-public-http.sh)는 HTTP와 SQL 상품 Row를 확인합니다.
 
-[`verify-public-http.sh`](../../scripts/verify-public-http.sh)는 실제 HTTP와 SQL 상품 Row를 함께 확인합니다.
-
-- 연결은 5초, 각 요청은 20초로 제한해 무기한 기다리지 않습니다
-- Public endpoint가 준비 중이면 상태를 표시하며 최대 3분 대기합니다
-- 시간 초과나 잘못된 내용은 오류로 종료합니다. HTTP 200만으로 성공 처리하지 않습니다
+- 연결 5초·요청 20초, 준비 대기 최대 3분으로 제한합니다
+- 시간 초과·내용 불일치는 오류입니다. HTTP 200만으로 성공 처리하지 않습니다
 
 <img src="../../img/shop.png" alt="Contoso Shop 상품 페이지 - 상품 카드 4개와 하단에 실제 Pod 이름이 표시된 화면" width="760">
 
-두 가지를 비교해 봅니다.
+다음을 비교합니다.
 
-- 화면 아래의 Pod 이름과 터미널에서 조회한 이름이 **같은가** → 화면이 정말로 내 클러스터에서 오고 있다는 증거
-- `-o wide`로 조회한 Node가 **User Pool인가** → Lab 02 설계 결정이 지켜졌다는 증거
+- 화면의 Pod 이름과 실제 조회한 이름이 같은가?
+- `-o wide`로 확인한 배치 Node가 User Pool인가?
 
-Pod를 다시 만들면 Public URL은 유지되고 화면의 Pod 이름만 바뀝니다.
+Pod를 재생성한 뒤 **같은 URL·새 Pod 이름·SQL 상품**을 확인합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -170,4 +167,4 @@ curl -4 -fsS --connect-timeout 5 --max-time 20 "$APP_URL/pod-name.txt"
 
 ## 다음 Lab
 
-[Lab 07: 진단과 복구](07-diagnose-and-recover.md) - 시간이 부족하면 [Lab 08: 문서화 + 정리](08-document-and-cleanup.md)로 바로 갑니다.
+[Lab 07: 진단과 복구](07-diagnose-and-recover.md)는 선택입니다. 생략하면 [Lab 08](08-document-and-cleanup.md)로 진행합니다.

@@ -6,15 +6,12 @@
 
 🧠 `azure-quotas` · `azure-kubernetes` · `azure-enterprise-infra-planner`
 
-> 🎬 권한과 범위는 확인했습니다. 이제 **무엇을 만들 것인가**를 정합니다. 여기서 잘못 정하면 클러스터를 처음부터 다시 만들어야 합니다.
+> 🎬 배포할 Region·Network·SKU와 권한을 결정합니다.
 
 ## 왜 필요한가요?
 
-Network와 Database 연결은 만들고 나면 바꾸기 어렵습니다.
-
-- AKS Network, Application Gateway Subnet, PostgreSQL Private Access
-- 그래서 만들기 **전에** 결정을 검토하고 근거를 남깁니다
-- 이 Lab에서는 **아직 아무것도 만들지 않습니다**
+AKS Network·AGC Subnet·PostgreSQL Private Access는 배포 후 변경이 어렵습니다.
+**배포 전에 검토하고 근거를 기록합니다. 이 Lab에서는 리소스를 만들지 않습니다.**
 
 ## 시작 전에
 
@@ -23,9 +20,7 @@ Network와 Database 연결은 만들고 나면 바꾸기 어렵습니다.
 
 ## Step 1. Quota와 용량 확인하기
 
-배포 실패의 가장 흔한 원인이 Quota 부족입니다. **배포 직전이 아니라 지금** 확인합니다.
-
-숫자는 CLI로 먼저 가져옵니다. 단순 조회는 몇 초면 끝나고, 뒤의 판단을 검토할 기준이 됩니다.
+Quota는 생성할 수 있는 리소스의 한도입니다. CLI로 조회한 뒤 필요한 용량과 비교합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -40,7 +35,7 @@ az postgres flexible-server list-skus -l "$REGION" --subscription "$SUBSCRIPTION
   --query "[].supportedServerEditions[].supportedServerSkus[?name=='Standard_B1ms'][] | [].{name:name,vCores:vCores}" -o table
 ```
 
-그다음 **충분한가**를 Skill에게 판단하게 합니다. 숫자 읽기가 아니라 Region 대안까지 같이 봐야 하는 일입니다.
+Skill로 용량과 대안 Region을 검토합니다.
 
 > 🧠 **Skill** `azure-quotas` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
@@ -72,16 +67,16 @@ azure-quotas Skill을 사용해 AKS Node를 만들 Quota가 남아 있는지 확
 
 **확인할 것**
 
-- 기본 구성은 **10 vCPU**가 필요합니다. 여유가 있나요?
-- 부족하면 Region을 바꾸거나 Node 개수·SKU를 줄입니다.
-- **어떤 명령으로 확인했다고 하나요?** 조회 없이 일반론으로 답했다면 근거가 아닙니다.
+- 기본 구성의 **10 vCPU**를 확보할 수 있는가?
+- 부족하면 Region 또는 Node 개수·SKU를 변경합니다
+- 실제 조회 명령과 결과가 있는가?
 
-`REGION`은 `koreacentral`로 이미 채워져 있습니다. 방금 본 Quota 결과로 이 값이 맞는지 확인한 뒤, 결정한 값은 아래 명령으로 반영합니다.
+기본 `REGION`은 `koreacentral`입니다. Quota를 확인하고 결정한 Region·SKU를 반영합니다.
 
 [`set-env.sh`](../../scripts/set-env.sh)는 입력 쌍을 모두 검사한 뒤 한 번에 반영합니다.
 
-- 알 수 없는 항목이나 잘못된 값이 있으면 기존 `.env`를 바꾸지 않습니다
-- 값에는 공백·따옴표·Shell 특수문자를 넣지 않습니다. `.env`는 이후 Shell이 직접 읽습니다
+- 잘못된 항목·값은 `.env`를 바꾸지 않고 거부합니다
+- Shell이 `.env`를 읽으므로 값에 공백·따옴표·Shell 특수문자를 넣지 않습니다
 
 > 💻 **터미널에서 실행**
 
@@ -92,9 +87,11 @@ bash scripts/set-env.sh \
   USER_VM_SIZE Standard_D2s_v5
 ```
 
-위 값은 **예시입니다.** Region·SKU·Node 개수는 기계가 대신 정해줄 수 없는 **사람의 판단**입니다.
+위 값은 **예시입니다. Region·SKU·Node 개수는 사람이 결정합니다.**
 
 ## Step 2. Day-0 결정 검토하기
+
+Day-0는 배포 전에 결정할 Network·인증·운영 구성입니다.
 
 > 🧠 **Skill** `azure-kubernetes`, `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
@@ -128,12 +125,13 @@ azure-kubernetes Skill과 azure-enterprise-infra-planner Skill을 사용해
 **사람이 판단할 것**
 
 - System 2대 + User 1대가 교육 목적에 맞는가 (운영용 고가용성 구성이 아님)
-- Pod CIDR / Service CIDR / DNS IP가 서로, 그리고 기존 네트워크와 겹치지 않는가
-- API Server를 공개하되 Authorized IP Ranges로만 제한한다는 의미
+- Pod·Service CIDR이 서로 또는 기존 Network와 겹치지 않는가
+- DNS Service IP가 Service CIDR 안에 있는가
+- 공개 API Server를 Authorized IP Ranges로 제한하는가
 
-"Authorized IP Ranges를 넓히면 쉽지 않을까?"라는 제안은 이 워크샵의 보안 경계와 맞지 않습니다. 공개 API는 Authorized IP Ranges로 제한합니다.
+접속 편의를 위해 Authorized IP Ranges를 넓히지 않습니다.
 
-정한 CIDR을 `.env`에 반영합니다. **Lab 03이 이 값을 읽어 쓰므로, 비어 있으면 계획 생성이 멈춥니다.**
+CIDR은 IP 주소 범위입니다. `.env`에 반영해야 Lab 03에서 계획을 생성할 수 있습니다.
 
 > 💻 **터미널에서 실행**
 
@@ -147,7 +145,7 @@ bash scripts/set-env.sh \
   POSTGRES_SKU Standard_B1ms
 ```
 
-위 값도 **예시입니다.** 직접 정할 때 지켜야 할 제약은 세 가지입니다.
+위 값은 **예시입니다.** 다음 조건을 지킵니다.
 
 - VNet은 `10.60.0.0/16`을 씁니다
 - Pod·Service 대역이 VNet과, 그리고 서로 겹치지 않아야 합니다
@@ -179,26 +177,26 @@ Least Privilege 매트릭스를 작성해줘.
 
 ```
 
-- "리소스를 배포하는 권한"과 "남에게 역할을 부여하는 권한"은 다릅니다
-- **Azure 권한과 Kubernetes 내부 권한도 완전히 다른 시스템**입니다
-- 이 표는 Lab 08 인계 문서에 그대로 들어갑니다
+Least Privilege는 필요한 작업과 Scope에만 권한을 부여하는 원칙입니다.
 
-**확인할 것** - 나에게 Subscription Owner나 Cluster Admin을 주는 제안이 없는지. 이 랩에서는 권한을 실제로 바꾸지 않습니다.
+- 배포 권한과 역할 할당 권한을 구분합니다
+- Azure 권한과 Kubernetes 내부 권한을 구분합니다
+- 매트릭스를 Lab 08 인계 문서에 포함합니다
 
-Namespace 생성은 cluster Scope 작업입니다.
+**Owner나 Cluster Admin을 부여하는 제안이 없는지 확인합니다. 이 Lab에서는 권한을 바꾸지 않습니다.**
 
-- [Lab 05](05-deploy-and-connect.md)는 조회·Namespace 생성/갱신용 bootstrap Custom Role을 사용합니다
-- 워크로드 관리 권한은 `lab` Namespace Scope에만 할당합니다
-- Custom Role 생성·할당 권한도 배포 전에 확인합니다
+- Namespace 생성은 cluster Scope입니다. [Lab 05](05-deploy-and-connect.md)에서 bootstrap Custom Role을 사용합니다
+- 워크로드 쓰기는 `lab` Namespace Scope로 제한합니다
+- Custom Role 생성·할당 권한을 배포 전에 확인합니다
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>
 
 | 방식 | 이 단계에서 벌어지는 일 |
 | --- | --- |
-| 🖐 수동 | Quota 명령의 Family 이름을 직접 매핑하고, AKS Day-0 항목과 수백 개 기본 역할을 문서에서 찾아야 한다. |
-| 💬 일반 프롬프트 | 내 Subscription Quota를 모르니 일반론으로 답한다. 오래된 기본값(예: kubenet)이나 `Contributor` 같은 **과도한 권한**을 쉽게 제안한다. |
-| ⚡ Skill | 실제 사용량을 조회해 가능/불가를 판정하고, Day-0 대안·위험과 **Least Privilege 후보를 Scope와 함께** 제시한다. |
+| 🖐 수동 | Quota·Day-0·역할을 직접 조회하고 판단한다. |
+| 💬 일반 프롬프트 | 실제 사용량·설계 기준·최소 권한을 명시해야 한다. |
+| ⚡ Skill | 조회 결과로 용량을 판단하고 설계 대안·위험·역할 Scope를 제시한다. |
 
 </details>
 
@@ -219,7 +217,7 @@ Namespace 생성은 cluster Scope 작업입니다.
 | --- | --- |
 | vCPU Quota 부족 | Node 개수·SKU를 줄이거나 다른 Region 선택 (증설은 승인에 시간이 걸림) |
 | Skill이 `quota` Extension이 없다고 함 | `az extension add --name quota --upgrade --yes` 후 다시 실행 |
-| `az quota`가 `MissingSubscription`으로 실패 | [Lab 01](01-orientation-and-setup.md)의 `Microsoft.Quota` Provider 등록을 건너뛰었는지 확인. 즉시 진행해야 한다면 `az vm list-usage --location "$REGION"`로도 같은 숫자를 볼 수 있습니다 |
+| `az quota`가 `MissingSubscription`으로 실패 | [Lab 01](01-orientation-and-setup.md)의 `Microsoft.Quota` 등록 확인. 직접 조회할 때는 `az vm list-usage --location "$REGION"`도 사용 가능 |
 | CIDR 겹침 경고 | 겹치지 않는 대역으로 변경 (예: `10.244.0.0/16` → `10.245.0.0/16`) |
 | Skill이 SKU를 추측함 | Step 1의 Quota 결과를 붙여넣고 다시 요청 |
 | 매트릭스에 Owner/Cluster Admin 등장 | Least Privilege 원칙을 다시 언급하며 다시 요청 |

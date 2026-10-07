@@ -2,27 +2,22 @@
 
 **Lab 1 / 8** · 1부 · 설계와 검증
 
-🎯 Skill·도구·사람의 역할 구분 / Azure 로그인과 입력값 확인 / 내 범위를 읽기 전용으로 확인
+🎯 역할 구분 / Azure 로그인·입력값 확인 / Scope 조회
 
 🧠 `azure-resource-lookup`
 
-> 🎬 팀장의 요청을 방금 받았습니다. 서두르기 전에 **내가 무엇을 할 수 있는 사람인지**부터 확인합니다.
+> 🎬 배포 전에 도구·권한·Scope를 확인합니다.
 
 ## 왜 필요한가요?
 
-- Skill은 **절차와 판단 기준**을 줍니다
-- MCP 도구와 CLI는 **실행**을 맡습니다
-- 무엇을 승인할지, 결과가 진짜인지 확인하는 것은 **사람의 몫**입니다
-
-이 Lab에서 그 역할을 이해하고, 이후 모든 프롬프트가 공유할 입력값을 확정합니다.
+도구·권한·입력값이 준비돼야 다음 Lab을 진행할 수 있습니다.
 
 ## 시작 전에
 
 - [README](../../README.md)의 시작하기를 읽고 Codespace를 열었나요?
 - 터미널에서 `az version`이 동작하나요?
 
-> 📖 이 문서에는 두 종류의 실행 블록이 나옵니다.
-> **💻 터미널에서 실행**은 명령을 터미널에 붙여넣고, **💬 Copilot 채팅에 붙여넣기**는 Copilot 채팅창에 붙여넣습니다.
+> 📖 **💻 실행**은 터미널, **💬 붙여넣기**는 Copilot 채팅입니다.
 
 ## Step 1. 역할 이해하기
 
@@ -32,19 +27,17 @@
 | MCP 도구 / CLI | 실제 조회·생성·배포 실행 |
 | 사람 | 범위 확인, 승인, 결과 검증 |
 
-지킬 규칙은 세 가지입니다.
-
-- Skill 이름을 썼다고 실행된 게 아닙니다. **어떤 도구가 호출됐는지** 확인해 봅니다
-- 만들거나 바꾸거나 지우기 전에 항상 사람이 승인합니다
+- 실제 도구 호출과 결과를 확인합니다
+- 생성·변경·삭제 전에 사람이 승인합니다
 - `예상`과 `관측`을 구분해 기록합니다
 
-헷갈리면 먼저 물으세요. **"지금 이 작업이 Azure를 바꾸나요, 읽기만 하나요?"**
+작업 전 **조회인지 변경인지** 구분합니다.
 
 ## Step 2. Azure Skills 확인하기
 
 Codespace가 만들어질 때 Skill 6개를 `.github/skills/`에 내려받았습니다.
 
-먼저 파일이 있는지 봅니다.
+설치된 파일을 확인합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -52,7 +45,7 @@ Codespace가 만들어질 때 Skill 6개를 `.github/skills/`에 내려받았습
 ls .github/skills
 ```
 
-파일이 있어도 로드되지 않으면 소용이 없습니다. Copilot이 실제로 인식하는지 확인합니다.
+Copilot이 Skill을 인식하는지도 확인합니다.
 
 > 💬 **Copilot 채팅에 붙여넣기**
 
@@ -74,24 +67,20 @@ ls .github/skills
 
 ```
 
-여섯 개가 모두 있어야 합니다. 누락되면 설치 단계가 실패하며 Lab을 진행하지 않습니다.
+**6개 모두 필요합니다.** 누락되면 설치를 완료한 뒤 진행합니다.
 
-**Skill만으로는 부족합니다.** `azure-enterprise-infra-planner`는 계획을 세우는 도중 Azure 모범 사례와 Microsoft Learn 문서를 **MCP 서버로 조회**합니다.
+`azure-enterprise-infra-planner`는 MCP 서버에서 Azure 모범 사례와 Microsoft Learn 문서를 조회합니다.
+MCP 연결이 없으면 내장 참조 문서만 사용할 수 있으므로 연결 상태를 확인합니다.
 
-- 연결이 안 되면 Skill은 멈추지 않고 내장 참조 문서로 내려앉습니다
-- 계획은 나오지만 근거가 얕아집니다
-- 경고 없이 품질만 낮아지므로 **지금 확인해야** 합니다
-
-VS Code 왼쪽 사이드바의 **MCP 서버** 목록에서 `azure`와 `microsoft-learn`의 실행 상태를 봅니다.
+VS Code의 **MCP 서버** 목록에서 `azure`와 `microsoft-learn`을 확인합니다.
 
 - 설정은 [`mcp.json`](../../.vscode/mcp.json)에 있습니다
-- 멈춰 있으면 거기서 시작합니다
-- 처음 시작할 때는 패키지를 받아오느라 시간이 걸립니다
+- 중지 상태면 시작합니다. 첫 실행에는 패키지 다운로드 시간이 필요합니다
 
 <details>
 <summary>🖐 <b>비어 있거나 로컬 VS Code로 진행한다면</b></summary>
 
-자동 설치는 Codespace를 만들 때만 실행됩니다. 직접 내려받는 경우에는 저장소 루트에서 아래 명령을 사용합니다.
+자동 설치는 Codespace 생성 시 실행됩니다. 수동 설치는 저장소 루트에서 진행합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -120,7 +109,7 @@ rm -rf "$tmp"
 
 ## Step 3. Azure에 로그인하기
 
-**이 단계는 사람이 직접 수행합니다.** 로그인은 본인 계정의 Credentials를 다루므로 Skill이나 스크립트에 맡기지 않습니다.
+**직접 로그인합니다.** Credentials를 다루므로 Skill이나 스크립트에 맡기지 않습니다.
 
 > 💻 **터미널에서 실행**
 
@@ -140,10 +129,7 @@ az feature register --namespace Microsoft.ContainerService --name ApplicationLoa
 az extension add --name alb --upgrade --yes
 ```
 
-- Feature 등록은 완료까지 시간이 걸릴 수 있습니다
-- 등록 후 `Microsoft.ContainerService` Provider를 다시 등록합니다
-
-다음 준비 확인까지 끝나야 Lab 02로 진행합니다.
+Feature 등록을 기다린 뒤 필요한 Provider를 등록합니다. 모두 완료한 뒤 Lab 02로 진행합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -167,18 +153,15 @@ az provider register --namespace Microsoft.DBforPostgreSQL --wait
 az provider register --namespace Microsoft.ManagedIdentity --wait
 ```
 
-**이것이 이 워크샵의 첫 번째 쓰기 작업입니다.**
-
-- 비용이 없고 리소스를 만들지 않습니다
-- 해당 API를 쓸 수 있게 만들 뿐입니다
-- 그래도 Subscription 설정을 바꾸므로, 공용 Subscription이라면 먼저 확인해 둡니다
+**Provider·Feature 등록은 Subscription 설정을 변경합니다.**
+비용이나 리소스 생성은 없지만, 공용 Subscription에서는 먼저 승인을 확인합니다.
 
 ## Step 4. 입력값 확인하기
 
-이후 모든 프롬프트가 저장소 루트의 `.env`를 공유합니다. **직접 타이핑할 값은 없습니다.**
+모든 프롬프트는 저장소 루트의 `.env`를 읽습니다.
 
-- Codespace가 만들어질 때 리소스 이름과 Egress IP가 채워졌습니다
-- 로그인을 마친 지금 다시 실행하면 Subscription까지 채워집니다
+- Codespace 생성 시 리소스 이름과 Egress IP를 자동으로 채웁니다
+- 로그인 후 다시 실행하면 Subscription도 채웁니다
 
 > 💻 **터미널에서 실행**
 
@@ -196,17 +179,15 @@ cat .env
 | Subnet CIDR, Node·Database SKU | **Lab 02에서 내가 결정** |
 | `NODE_RESOURCE_GROUP` | Lab 05 배포 후 Output |
 
-이후 Lab의 프롬프트는 이 값들을 **Skill이 `.env`에서 직접 읽어 씁니다.**
-
-`EGRESS_IP_CIDR`은 내 PC가 아니라 **Codespace의 Egress IP**입니다.
+`EGRESS_IP_CIDR`은 **AKS에 접속할 환경의 Egress IP**입니다. Codespace에서는 PC IP를 쓰지 않습니다.
 
 - AKS API Server에 접근할 수 있는 유일한 주소가 됩니다
-- 반드시 Codespace 안에서 조회된 값이어야 합니다
-- Codespace를 재시작하면 바뀔 수 있습니다. Lab 05 이후 접속이 갑자기 안 되면 [`init-workshop.sh`](../../scripts/init-workshop.sh)로 갱신하세요
+- Codespace 안에서 조회해야 합니다
+- 재시작으로 IP가 바뀌면 [`init-workshop.sh`](../../scripts/init-workshop.sh)로 갱신합니다
 
 ## Step 5. 내 Azure 범위 확인하기
 
-먼저 **빠른 방법**으로 확인합니다. 단순 조회는 CLI가 몇 초면 끝납니다.
+CLI로 현재 Subscription을 확인합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -214,13 +195,11 @@ cat .env
 az account show --query "{subscription:name, state:state, tenant:tenantDefaultDomain}" -o table
 ```
 
-이 명령은 화면에만 출력됩니다. **기록은 프롬프트를 실행했을 때 남습니다.**
+명령 출력은 화면에만 표시됩니다.
+Skill 프롬프트의 답변은 [`AGENTS.md`](../../AGENTS.md)에 따라 `infra-report.md`에 기록됩니다.
+Lab 08은 이 보고서로 인계 문서를 작성합니다.
 
-- Skill 프롬프트를 실행하면 답변의 표와 설명이 `infra-report.md`에 섹션으로 추가됩니다
-- [`AGENTS.md`](../../AGENTS.md)에 그렇게 지시돼 있습니다
-- Lab 08의 인계 문서가 이 보고서를 근거로 씁니다
-
-그다음 Resource Group을 봅니다. [Lab 04](04-validate-and-approve.md)에서 직접 만들 것이므로 **지금 없어도 정상입니다.**
+Resource Group은 [Lab 04](04-validate-and-approve.md)에서 만듭니다. **지금 없어도 정상입니다.**
 
 > 💻 **터미널에서 실행**
 
@@ -237,13 +216,11 @@ fi
 **확인할 것**
 
 - 표시된 Subscription이 `.env`의 `SUBSCRIPTION_ID`와 같은가?
-- 그룹에 다른 리소스가 이미 있다면 목록을 기록해 둡니다 (Lab 08에서 실수로 지우지 않게)
+- 기존 리소스가 있다면 목록을 기록합니다. Lab 08의 삭제 대상과 구분해야 합니다
 
 ### Skill은 언제 쓰나
 
-- 위 두 명령은 **"무엇이 있는가"**를 알려줍니다
-- 하지만 **"접근이 안 되는 게 권한 때문인지, 없어서인지"**는 CLI가 구분해주지 않습니다
-- 그럴 때 Skill을 씁니다
+존재 여부와 권한 부족을 구분하는 등 조회 결과 해석이 필요할 때 Skill을 사용합니다.
 
 > 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
@@ -263,18 +240,16 @@ azure-resource-lookup Skill을 사용해 Resource Group의 존재 여부를 확�
 
 ```
 
-**단순 조회는 CLI, 판단·절차·위험 검토는 Skill을 사용합니다.** Skill은 여러 도구를 호출하고 결과를 해석하므로 더 복잡한 작업에 적합합니다.
+**단순 조회는 CLI, 판단·절차·위험 검토는 Skill을 사용합니다.**
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>
 
 | 방식 | 이 단계에서 벌어지는 일 |
 | --- | --- |
-| 🖐 수동 | `az account show`, `az group show`를 직접 조합한다. **가장 빠르지만** 무엇을 확인해야 하는지 스스로 알아야 한다. |
-| 💬 일반 프롬프트 | 실제 조회 없이 그럴듯한 결과를 지어낼 수 있다. 읽기 전용이라는 보장도 없다. |
-| ⚡ Skill | 조회 도구를 실제로 호출하고, 접근 불가 항목을 **권한 부족으로 구분**해 알려준다. 대신 느리다. |
-
-이번 Lab처럼 **답이 분명한 조회**는 수동이 유리합니다. Skill의 값어치는 Lab 02 이후처럼 **판단과 절차가 필요할 때** 드러납니다.
+| 🖐 수동 | 직접 조회하고 결과를 해석한다. |
+| 💬 일반 프롬프트 | 실제 조회와 읽기 전용 조건을 명시해야 한다. |
+| ⚡ Skill | 조회 결과와 권한 문제를 절차에 따라 해석한다. |
 
 </details>
 

@@ -6,13 +6,12 @@
 
 🧠 `azure-enterprise-infra-planner` · `azure-resource-lookup`
 
-> 🎬 승인 완료. Ingress, Compute, Database가 실제 Azure 리소스로 바뀝니다.
+> 🎬 승인된 인프라를 배포하고 상태·접근 권한을 확인합니다.
 
 ## 왜 필요한가요?
 
-- 배포 명령이 "성공"이라고 답해도 끝이 아닙니다
-- Node가 Ready인지, 허용된 범위에서만 접속되는지는 **별도로 확인**해야 합니다
-- 이 Lab은 배포 대기 시간을 포함해 실제 상태를 관찰합니다
+배포 성공과 서비스 준비 상태는 다릅니다.
+Node·Controller 상태와 접근 권한을 별도로 확인합니다.
 
 ## 시작 전에
 
@@ -35,9 +34,8 @@ azure-enterprise-infra-planner Skill을 사용해 승인된 계획을 배포해�
 
 ```
 
-성공 여부는 세 서비스가 모두 `Succeeded`가 된 뒤에 판단합니다.
-
-배포가 끝나면 Node Resource Group을 `.env`에 반영합니다.
+배포 완료와 각 서비스의 준비 상태를 확인합니다.
+AKS가 관리하는 **Node Resource Group** 이름을 `.env`에 반영합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -61,17 +59,17 @@ az postgres flexible-server show -g "$RESOURCE_GROUP" -n "$POSTGRES_NAME" \
 
 Add-on 상태는 REST로 확인합니다.
 
-- 오래된 CLI·Extension 모델은 새 API의 `ingressProfile`을 누락해 `null`로 표시할 수 있습니다
-- `null`을 비활성화로 단정하지 말고 실제 API 응답의 `enabled`를 확인합니다
+오래된 CLI·Extension은 `ingressProfile`을 `null`로 표시할 수 있습니다.
+비활성화로 단정하지 말고 실제 API의 `enabled`를 확인합니다.
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>
 
 | 방식 | 이 단계에서 벌어지는 일 |
 | --- | --- |
-| 🖐 수동 | 배포 명령을 실행하고 상태를 직접 폴링하며 기다린다. |
-| 💬 일반 프롬프트 | 실패해도 원인을 분류하지 않고 같은 명령을 다시 제안하곤 한다. |
-| ⚡ Skill | 승인 범위를 벗어난 변경을 막고, 실패 시 **Quota·정책·권한 중 무엇인지** 분류해준다. |
+| 🖐 수동 | 배포 상태를 조회하고 오류를 분석한다. |
+| 💬 일반 프롬프트 | 승인 범위와 오류 분석을 명시해야 한다. |
+| ⚡ Skill | 승인 범위를 지키고 Quota·정책·권한 오류를 분류한다. |
 
 </details>
 
@@ -97,12 +95,11 @@ azure-resource-lookup Skill을 사용해 AKS의 실제 상태를 확인해줘.
 
 ```
 
-클러스터가 Ready라도 **`kubectl`을 바로 쓸 수는 없습니다.**
+**클러스터 생성자도 Kubernetes 역할이 필요합니다.**
 
-- Local Accounts를 끄고 Azure RBAC for Kubernetes를 켰습니다
-- 클러스터를 만든 사람도 Kubernetes 역할이 필요합니다
-- **Subscription의 Owner 권한만으로는 충분하지 않습니다**
-- Namespace 생성은 cluster Scope이고, 워크로드 변경은 Namespace Scope로 분리합니다
+- Local Accounts는 꺼져 있고 Azure RBAC for Kubernetes를 사용합니다
+- **Subscription Owner만으로는 Kubernetes 접근이 허용되지 않습니다**
+- Namespace 생성은 cluster Scope, 워크로드 쓰기는 Namespace Scope로 분리합니다
 
 > 🧠 **Skill** `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
@@ -148,25 +145,27 @@ azure-enterprise-infra-planner Skill을 사용해 실습용 Kubernetes 접근을
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
-Custom Role은 필요한 DataActions만 묶은 Azure 역할입니다.
+Custom Role은 필요한 작업 권한(DataActions)을 묶은 Azure 역할입니다.
 
-- bootstrap Role은 Secrets를 제외한 조회와 Namespace 생성·갱신을 허용합니다
-- GatewayClass 같은 Custom Resource도 읽어야 하므로 read wildcard를 사용합니다. 쓰기 wildcard는 사용하지 않습니다
-- Namespace 쓰기는 cluster 전체에 적용됩니다
-- Namespace 안의 Admin 역할은 `lab`의 Custom Resource와 워크로드만 관리하도록 Scope를 제한합니다
-- `kube-system`에는 Reader만 할당합니다. Controller 관찰을 위해 쓰기 권한을 넓히지 않습니다
-- 역할 전파에는 시간이 걸립니다. `Forbidden`이면 중복 부여하지 말고 잠시 뒤 재시도합니다
-- 이 Scope 분리는 [AKS Kubernetes API 권한 문서](https://learn.microsoft.com/azure/aks/entra-id-authorization)를 기준으로 검토합니다
+| 역할 | 허용 범위 |
+| --- | --- |
+| bootstrap | cluster 조회·Namespace 생성/갱신. Secrets 읽기 제외 |
+| `lab` Admin | `lab`의 워크로드·Custom Resource 관리 |
+| `kube-system` Reader | Controller 상태·Log 조회만 허용 |
+
+- GatewayClass 조회에 read wildcard를 사용합니다. **쓰기 wildcard는 사용하지 않습니다**
+- bootstrap의 Namespace 쓰기는 cluster 전체에 적용됩니다
+- 역할 전파 중 `Forbidden`이면 중복 할당하지 말고 기다립니다
+- 기준: [AKS Kubernetes API 권한 문서](https://learn.microsoft.com/azure/aks/entra-id-authorization)
 
 [`prepare-aks-access.sh`](../../scripts/prepare-aks-access.sh)는 승인 후에만 실행합니다.
 
-- Role 이름이 전파되기 전에 할당하지 않도록 Role ID를 사용합니다
-- `kubelogin` 변환과 역할 준비 확인까지 수행하며, 전파 중에는 대기 상태를 표시합니다
-- 준비 확인이 10분 안에 끝나지 않으면 오류로 멈춥니다. 권한을 넓히지 않습니다
-- 권한 준비 뒤 GatewayClass와 ALB Controller의 Ready 상태도 확인하며, 최대 10분 대기합니다
-- 위 프롬프트가 스크립트를 실행했다면 **아래에서 다시 실행하지 않습니다**
+- Role ID로 할당하고 `kubelogin`을 변환합니다
+- 역할 전파와 GatewayClass·Controller 준비를 각각 최대 10분 기다립니다
+- 시간 초과 시 멈춥니다. 권한을 넓히지 않습니다
+- 프롬프트가 이미 실행했다면 **아래 명령은 건너뜁니다**
 
-직접 실행하려면 먼저 같은 대상·역할 변경을 승인합니다.
+직접 실행할 때도 먼저 대상·역할 변경을 승인합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -179,12 +178,12 @@ fi
 bash scripts/prepare-aks-access.sh --approved
 ```
 
-- `-l azurecli`는 이미 `az login`으로 받아둔 토큰을 그대로 씁니다
-- 새 터미널에서도 위 `KUBECONFIG`를 설정한 뒤 진행합니다
+- `-l azurecli`는 기존 Azure 로그인 Token을 사용합니다
+- 새 터미널에서도 같은 `KUBECONFIG`를 설정합니다
 
-이제 Node를 확인하고 실습용 Namespace를 만듭니다. Copilot에게 생성을 요청할 수도 있지만, 이 Lab에서는 인증과 권한 상태를 확인하기 위해 터미널 명령을 사용합니다.
+Node·Controller를 확인하고 실습용 Namespace를 만듭니다.
 
-재실행할 때 Namespace가 이미 있다면 `kubectl get namespace "$NAMESPACE"`로 확인하고 생성 명령은 건너뜁니다.
+Namespace가 이미 있으면 `kubectl get namespace "$NAMESPACE"`로 확인하고 생성은 건너뜁니다.
 
 > 💻 **터미널에서 실행**
 
@@ -213,18 +212,15 @@ fi
 - `lab` Namespace가 생성됐는가?
 - `lab`의 Deployment·Gateway 생성 확인은 `yes`, `kube-system` 쓰기는 예상대로 거부되는가?
 
-Node Resource Group의 Standard Load Balancer는 AKS egress용입니다. 실제 Application Gateway for Containers는
-[Lab 06](06-run-sample-workload.md)에서 `ApplicationLoadBalancer`를 적용할 때 별도로 생성됩니다.
-
-`MODE` 열에 `system` 2대와 `user` 1대가 보이는 것이 Lab 02의 Node Pool 분리 결정이 실제로 적용됐다는 증거입니다.
+- Node Resource Group의 Standard Load Balancer는 AKS Egress용입니다
+- AGC는 [Lab 06](06-run-sample-workload.md)의 `ApplicationLoadBalancer` 적용 시 생성됩니다
+- `MODE` 열의 `system` 2대·`user` 1대를 Lab 02 계획과 비교합니다
 
 <img src="../../img/lab05-nodes.png" alt="kubectl get nodes 결과 - System 2대와 User 1대가 모두 Ready 상태이고 lab Namespace가 생성된 터미널 출력" width="760">
 
-`kube-system` 쓰기가 `yes`라면 기존의 넓은 역할이 함께 적용됐을 수 있습니다.
-
-- 역할을 임의로 지우지 말고 기존 할당과 Scope를 조회합니다
-- 이 상태에서는 Namespace 격리를 검증했다고 기록하지 않습니다
-- Lab 02의 매트릭스와 실제 Scope를 인계 문서에 남깁니다
+`kube-system` 쓰기가 허용되면 기존 역할과 Scope를 조회합니다.
+**역할을 임의로 삭제하거나 Namespace 격리 성공으로 기록하지 않습니다.**
+실제 Scope를 인계 문서에 남깁니다.
 
 > [!WARNING]
 > 접속이 안 될 때 Authorized IP Ranges에 `0.0.0.0/0`을 넣지 않습니다. 먼저 `curl -s https://api.ipify.org`로 Egress IP가 바뀌지 않았는지 확인합니다.
@@ -255,7 +251,7 @@ Node Resource Group의 Standard Load Balancer는 AKS egress용입니다. 실제 
 | Custom Role 생성 직후 역할을 찾지 못함 | Azure Role Definition 전파 중 | 정의를 중복 생성하지 말고 30초 뒤 조회·할당 재시도 |
 | API Server 접속 불가 | Authorized IP Ranges 미반영, 전파 지연, 또는 내 IP 변경 | 내 Egress IP를 다시 조회해 비교, 몇 분 대기 후 재시도 |
 | 어제까지 되던 접속이 갑자기 안 됨 | Codespace를 재시작해 Egress IP가 바뀌었을 수 있음 | [`init-workshop.sh`](../../scripts/init-workshop.sh)로 `.env`를 갱신하고, 바뀌었다면 Authorized IP Ranges를 다시 적용 |
-| 역할 할당 자체가 실패 | Subscription에서 `Microsoft.Authorization` 작업이 제한됨 | 이 Subscription에서는 Azure RBAC for Kubernetes를 검증할 수 없습니다. 권한이 있는 다른 Subscription으로 진행하세요 |
+| 역할 할당 실패 | `Microsoft.Authorization` 작업 제한 | 권한을 넓히지 말고 허용된 다른 Subscription에서 진행 |
 
 </details>
 

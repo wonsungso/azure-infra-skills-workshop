@@ -1,26 +1,24 @@
 # Azure Skills 기반 Azure 인프라 배포 워크샵
 
-## 🔥 오늘, 당신은 Contoso의 플랫폼 엔지니어입니다
+## 🎯 워크샵 목표
 
-**D-7.** 커머스팀의 신규 서비스 출시가 일주일 앞입니다. 인터넷 진입점, Kubernetes, Database가 필요합니다.
+Contoso Shop에 필요한 Public Ingress, Kubernetes, Database를 Azure에 배포합니다.
 
-> 🗣️ **"실제 서비스와 비슷한 Azure 환경을 준비해 주세요."**
->
-> 1. **클릭으로 만들지 마세요.** `설계 → 승인 → 코드 → 검증 → 배포` 순서로.
-> 2. **왜 그렇게 만들었는지 남기세요.** 다음 사람이 이어받을 수 있게.
-> 3. **동작한다는 걸 증명하세요.** 실제로 트래픽을 처리하는 화면으로.
+1. `설계 → 승인 → 코드 → 검증 → 배포` 순서로 진행합니다.
+2. 결정 근거와 관측 결과를 인계 문서에 남깁니다.
+3. Public HTTP와 Private SQL로 동작을 확인합니다.
 
-CLI 명령을 외우는 대신 **Azure Skills**를 사용합니다.
+**Azure Skills**로 설계·검증 절차를 따릅니다.
 
 - Skill은 대안·위험·비용을 정리해 제안합니다
 - 참가자는 제안을 검토하고 승인합니다
-- 마지막으로 조회 결과로 실제 상태를 확인합니다
+- 도구로 실제 상태를 확인합니다
 
 ## 🏁 배포할 아키텍처
 
 <img src="img/workload-architecture.png" alt="Application Gateway for Containers에서 Azure Kubernetes Service로 트래픽을 전달하고 Private PostgreSQL Flexible Server에 연결하는 Azure 아키텍처" width="740">
 
-- **Application Gateway for Containers**: Gateway API 기반 Public Ingress
+- **Application Gateway for Containers (AGC)**: Gateway API 기반 Public Ingress
 - **Azure Kubernetes Service**: System/User Node Pool과 Cilium Network Policy
 - **PostgreSQL Flexible Server**: Private Subnet과 Microsoft Entra 인증
 - **Workload Identity**: Password 없이 Azure Kubernetes Service에서 PostgreSQL 연결
@@ -29,15 +27,15 @@ CLI 명령을 외우는 대신 **Azure Skills**를 사용합니다.
 
 <img src="img/shop.png" alt="Contoso Shop 상품 페이지 - 상품 카드 4개와 하단에 응답 Pod 이름이 표시된 화면" width="760">
 
-커머스팀이 출시할 **Contoso Shop**입니다. 화면 아래에는 현재 트래픽을 처리하는 Pod 이름이 표시되며, Pod를 다시 만들면 함께 바뀝니다.
+**Contoso Shop** 화면 하단에 응답 Pod 이름이 표시됩니다. Pod를 재생성하면 이름이 바뀝니다.
 
 앱 이미지는 빌드하지 않습니다.
 
-- 공개 NGINX 이미지에 **ConfigMap**으로 화면을 주입합니다
-- **Downward API**로 Pod 정보를 전달합니다
-- 앱 코딩 없이 Manifest만으로 만듭니다
+- **ConfigMap**으로 공개 NGINX 이미지에 화면을 넣습니다
+- **Downward API**로 Pod 이름과 Namespace를 전달합니다
+- 앱 코딩·이미지 빌드 없이 Manifest를 적용합니다
 
-## 🗺️ 오늘의 여정
+## 🗺️ 진행 순서
 
 **1부 · 설계와 검증**
 
@@ -82,17 +80,17 @@ flowchart LR
 
 ## 🚀 시작하기
 
-혼자서 끝까지 진행할 수 있게 만들어졌습니다. 사전 세팅을 받지 않아도 됩니다.
+Codespace를 열고 Lab 01부터 순서대로 진행합니다.
 
 ### 1. Azure 권한을 확인합니다
 
-다음 작업을 **본인이 직접** 할 수 있어야 합니다. 하나라도 안 되면 끝까지 진행할 수 없습니다.
+다음 권한이 필요합니다.
 
 - Resource Group에 Azure Kubernetes Service, Application Gateway for Containers, PostgreSQL을 배포할 권한
 - 제한된 Kubernetes 접근용 Custom Role 생성과 역할 할당 권한 ([Lab 05](docs/labs/05-deploy-and-connect.md))
 - 실습이 끝난 뒤 리소스를 **삭제**할 권한
 
-권한이 부족하면 접근 가능한 다른 전용 Scope를 사용합니다. Owner나 Cluster Admin으로 확대하지 않습니다.
+권한이 부족하면 다른 전용 Scope를 사용합니다. Owner나 Cluster Admin을 부여하지 않습니다.
 
 > [!WARNING]
 > **실제 비용이 발생하는 리소스**를 만듭니다.
@@ -107,7 +105,7 @@ flowchart LR
 
 Azure CLI, Bicep, `kubectl`, `kubelogin`과 Azure Skill 6개가 준비됩니다.
 
-컨테이너 준비가 끝나면 도구 상태를 확인합니다.
+컨테이너 준비 후 도구를 확인합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -132,12 +130,22 @@ Azure 로그인과 Skill 동작 확인은 [Lab 01](docs/labs/01-orientation-and-
 <details>
 <summary>진행이 중간에 끊겼다면</summary>
 
-새 세션에서 아래 프롬프트로 현재 상태부터 이어갑니다.
+새 세션에서 현재 상태를 확인합니다.
 
 > 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-이 저장소의 .env와 infra-report.md를 읽고 현재 완료된 단계를 판별해줘. Azure에서 실제 상태를 조회해 문서와 비교하되 리소스를 변경하지 마. 다음 미완료 단계와 선행 조건만 제시해줘.
+현재 진행 상태와 다음 단계를 알려줘.
+
+[읽을 값]
+- 저장소 루트의 .env와 infra-report.md
+
+[확인할 것]
+- Azure 실제 상태와 보고서 비교
+- 완료 단계, 다음 미완료 단계와 선행 조건
+
+[제약]
+- Azure 리소스를 변경하지 마
 ```
 
 </details>
@@ -156,39 +164,32 @@ Azure 로그인과 Skill 동작 확인은 [Lab 01](docs/labs/01-orientation-and-
 
 Skill은 판단과 절차를, 도구는 실행을 담당합니다.
 
-- 프롬프트에 Skill 이름을 썼다는 사실만으로는 증거가 되지 않습니다
-- 검토 결과는 [`add-report.sh`](scripts/add-report.sh)가 `infra-report.md`에 문서로 기록합니다
+- Skill 이름이 아니라 실제 도구 호출과 결과를 확인합니다
+- [`add-report.sh`](scripts/add-report.sh)로 검토 결과를 `infra-report.md`에 기록합니다
 
-## ⚡ Skill을 쓰면 무엇이 달라지나
-
-같은 인프라 작업을 세 가지 방식으로 할 수 있습니다.
+## ⚡ 작업 방식 비교
 
 | 방식 | 해주는 것 | 빠지는 것 |
 | --- | --- | --- |
-| 🖐 **수동** (포털·CLI) | 내가 모든 것을 결정하고 입력 | 결정 근거가 남지 않음. 문서화는 전부 별도 작업 |
-| 💬 **일반 프롬프트** | 그럴듯한 명령어와 템플릿을 빠르게 생성 | **내 Subscription의 실제 상태를 모름.** 승인 단계가 없고, 검증 없이 "됐다"고 답하기 쉬움 |
-| ⚡ **Skill** | 절차·가드레일·검증 순서를 함께 제공 | 판단과 승인은 여전히 사람 몫 |
+| 🖐 **수동** (포털·CLI) | 직접 결정하고 실행 | 근거·결과를 별도로 기록 |
+| 💬 **일반 프롬프트** | 명령과 템플릿 생성 | 실제 조회·승인·검증을 별도로 지시 |
+| ⚡ **Skill** | 절차·안전 조건·검증 순서 제공 | 사람이 검토하고 승인 |
 
-핵심 차이는 **속도가 아니라 절차**입니다.
-
-- 일반 프롬프트도 Bicep을 빠르게 만들 수 있습니다
-- 하지만 `quota 확인 → 계획 승인 → 배포 전 검증` 순서는 보장하지 않습니다
-- 문제는 대개 이 순서를 건너뛸 때 생깁니다
-
-각 Lab에는 **"💡 Skill을 안 썼다면?"** 비교가 접혀 있습니다. 해당 단계를 마친 뒤 비교해 볼 수 있습니다.
+핵심은 **Quota 확인 → 계획 승인 → 배포 전 검증**입니다.
+각 Lab의 접힌 비교 표에서 작업 방식별 차이를 확인할 수 있습니다.
 
 ## 📂 자료 구분
 
 | 위치 | 내용 |
 | --- | --- |
-| `docs/labs/` | Lab 01~08 가이드. 프롬프트와 입력값이 모두 이 안에 있습니다 |
-| `reference/infra/` | Bicep 기준본 - **정답지가 아니라 비교용** |
-| `reference/kubernetes/` | 웹·Gateway API·PostgreSQL 검증 Manifest |
-| `templates/` | [인계 문서 양식](templates/handoff-template.md) - Lab 08에서 채웁니다 |
-| `.devcontainer/` | Codespace 환경 정의 |
-| `scripts/` | `.env` 초기화([`init-workshop`](scripts/init-workshop.sh)), 값 반영([`set-env`](scripts/set-env.sh)), 보고서 작성([`add-report`](scripts/add-report.sh)), 승인 후 접근 준비([`prepare-aks-access`](scripts/prepare-aks-access.sh)) |
+| [`docs/labs/`](docs/labs/) | Lab 01–08의 절차·프롬프트·입력값 |
+| [`reference/infra/`](reference/infra/) | 비교용 Bicep 기준본 |
+| [`reference/kubernetes/`](reference/kubernetes/) | 웹·Gateway API·PostgreSQL 검증 Manifest |
+| [`templates/`](templates/) | Lab 08 [인계 양식](templates/handoff-template.md) |
+| [`.devcontainer/`](.devcontainer/) | Codespace 환경 |
+| [`scripts/`](scripts/) | [초기화](scripts/init-workshop.sh)·[값 반영](scripts/set-env.sh)·[보고서](scripts/add-report.sh)·[접근 준비](scripts/prepare-aks-access.sh) |
 
-모든 Lab은 같은 순서를 따릅니다. 목표 → 왜 필요한가 → 시작 전에 → Step → 완료 체크리스트 → 문제가 생겼다면 → 다음 Lab.
+Lab 구성: 목표 → 왜 필요한가 → 시작 전에 → Step → 완료 체크리스트 → 문제 해결 → 다음 Lab.
 
 ## 🛡️ 안전 경계
 
@@ -200,8 +201,4 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다.
 
 ---
 
-## 준비되셨나요?
-
-### ➡️ [Lab 01: 워크샵 시작하기](docs/labs/01-orientation-and-setup.md)
-
-앞 Lab의 결과물이 다음 Lab의 입력입니다. Lab은 순서대로 진행합니다.
+### ➡️ [Lab 01 시작하기](docs/labs/01-orientation-and-setup.md)

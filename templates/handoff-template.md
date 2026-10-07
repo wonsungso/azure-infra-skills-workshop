@@ -13,11 +13,11 @@
 
 ## 실제 Azure 구성
 
-Application Gateway for Containers, AKS, PostgreSQL, VNet, Identity 관계를 기록한다.
+- Application Gateway for Containers·AKS·PostgreSQL·VNet·Identity 구성과 관계:
 
 ## 실제 Kubernetes 구성
 
-Gateway, HTTPRoute, Deployment, Service, PostgreSQL Job 결과를 기록한다.
+- Gateway·HTTPRoute·Deployment·Service 상태와 PostgreSQL Job 결과:
 
 ## E2E 증거
 
@@ -26,8 +26,13 @@ Gateway, HTTPRoute, Deployment, Service, PostgreSQL Job 결과를 기록한다.
 
 ## 검증과 문제 해결
 
-`infra-report.md`의 해당 섹션, 실패 증상, 원인, 복구 조치, 재검증 결과를 기록한다.
+- `infra-report.md`의 근거 섹션:
+- 실패 증상·원인:
+- 복구 조치·재검증 결과:
 
 ## 미검증 및 정리
 
-미검증 항목, 비용 관찰의 한계, 남은 리소스와 삭제 승인 상태를 기록한다.
+- 미검증 항목·비용 관찰의 한계:
+- 잔여 리소스·권한·Scope:
+- 삭제 승인·실행·재조회 또는 미삭제 사유:
+- 리소스 유지 시 비용 책임자:
