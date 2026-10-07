@@ -1,18 +1,35 @@
-# Azure Skills 기반 Azure 인프라 배포 워크샵
+# GitHub Copilot과 Azure Skills로 진행하는 Azure 인프라 워크샵
+
+## 무엇이 다른가요?
+
+명령과 템플릿을 일일이 작성하는 대신,
+**GitHub Copilot에 자연어로 요청해 Azure 인프라의 배포·운영 점검·트러블슈팅을 진행합니다.**
+
+GitHub Copilot의 **LLM**(대규모 언어 모델)이 요청을 해석하고,
+**Azure Skills**의 작업별 절차·모범 사례에 따라 MCP 도구·CLI를 호출합니다.
+
+- **배포**: 요구사항을 계획과 Bicep으로 만들고, 승인 후 실제 리소스를 생성합니다
+- **운영 점검**: 리소스 상태·접근 권한·HTTP·SQL 결과를 확인합니다
+- **트러블슈팅**: Events·Pod 상태로 원인을 분석하고, 승인 후 복구·재검증합니다
+
+참가자는 **요구사항 전달·설계 선택·변경 승인**에 집중합니다.
+로그인과 Lab의 확인 명령은 직접 실행하며, LLM의 답변은 **실제 실행 결과로 검증합니다.**
+
+## 어떤 시나리오인가요?
+
+참가자는 **Contoso의 플랫폼 엔지니어**입니다.
+커머스팀이 Contoso Shop을 실행할 Public Ingress·Kubernetes·Private Database를 요청했습니다.
+
+- Copilot과 Azure Skills로 전용 Resource Group에 교육용 3계층 환경을 구성합니다
+- 앱 코딩·이미지 빌드 대신 제공된 Manifest로 연결·인증을 검증합니다
+- 검증 결과와 정리 상태를 다음 담당자에게 인계합니다
 
 ## 🎯 워크샵 목표
 
-Contoso Shop에 필요한 Public Ingress, Kubernetes, Database를 Azure에 배포합니다.
-
-1. `설계 → 승인 → 코드 → 검증 → 배포` 순서로 진행합니다.
+1. Copilot과 Azure Skills로 `설계 → 승인 → 코드 → 검증 → 배포`를 진행합니다.
 2. 결정 근거와 관측 결과를 인계 문서에 남깁니다.
 3. Public HTTP와 Private SQL로 동작을 확인합니다.
-
-**Azure Skills**로 설계·검증 절차를 따릅니다.
-
-- Skill은 대안·위험·비용을 정리해 제안합니다
-- 참가자는 제안을 검토하고 승인합니다
-- 도구로 실제 상태를 확인합니다
+4. 장애 증거를 분석하고 승인 후 복구합니다.
 
 ## 🏁 배포할 아키텍처
 
