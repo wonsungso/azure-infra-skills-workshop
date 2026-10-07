@@ -149,7 +149,7 @@ USER_VM_SIZE를 Standard_D2s_v5로 되돌렸어. 계획도 원래대로 되돌�
 > 💻 **터미널에서 실행**
 
 ```bash
-grep -A3 '"meta"' .azure/infrastructure-plan.json
+jq '.meta | {status, version, approvedBy, approvedAt}' .azure/infrastructure-plan.json
 ```
 
 - `"status": "approved"`이고 원본 버전이 복원됐다면 Step 4로 진행합니다
@@ -168,6 +168,7 @@ grep -A3 '"meta"' .azure/infrastructure-plan.json
 
 [제약]
 - 아직 IaC 생성이나 배포로 넘어가지 마
+- 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 ```
 
 **완료 기준:** `.azure/infrastructure-plan.json`의 `meta.status`가 `approved`입니다. 새로 승인했다면 승인자와 승인 시각도 들어 있습니다.

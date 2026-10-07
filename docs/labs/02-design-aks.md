@@ -4,7 +4,7 @@
 
 🎯 Quota 확인 / Ingress·AKS·Database Day-0 결정 / Least Privilege
 
-🧠 `azure-quotas` · `azure-kubernetes` · `azure-postgres` · `azure-enterprise-infra-planner`
+🧠 `azure-quotas` · `azure-kubernetes` · `azure-enterprise-infra-planner`
 
 > 🎬 권한과 범위는 확인했습니다. 이제 **무엇을 만들 것인가**를 정합니다. 여기서 잘못 정하면 클러스터를 처음부터 다시 만들어야 합니다.
 
@@ -36,8 +36,8 @@ az quota show --resource-name standardDSv5Family --scope "$SCOPE" \
   --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
 az quota show --resource-name cores --scope "$SCOPE" \
   --query "{name:properties.name.localizedValue, limit:properties.limit.value}" -o tsv
-az postgres flexible-server list-skus -l "$REGION" \
-  --query "[?name=='Standard_B1ms'].{name:name,tier:tier}" -o table
+az postgres flexible-server list-skus -l "$REGION" --subscription "$SUBSCRIPTION_ID" \
+  --query "[].supportedServerEditions[].supportedServerSkus[?name=='Standard_B1ms'][] | [].{name:name,vCores:vCores}" -o table
 ```
 
 그다음 **충분한가**를 Skill에게 판단하게 합니다. 숫자 읽기가 아니라 Region 대안까지 같이 봐야 하는 일입니다.
@@ -78,6 +78,11 @@ azure-quotas Skill을 사용해 AKS Node를 만들 Quota가 남아 있는지 확
 
 `REGION`은 `koreacentral`로 이미 채워져 있습니다. 방금 본 Quota 결과로 이 값이 맞는지 확인한 뒤, 결정한 값은 아래 명령으로 반영합니다.
 
+[`set-env.sh`](../../scripts/set-env.sh)는 입력 쌍을 모두 검사한 뒤 한 번에 반영합니다.
+
+- 알 수 없는 항목이나 잘못된 값이 있으면 기존 `.env`를 바꾸지 않습니다
+- 값에는 공백·따옴표·Shell 특수문자를 넣지 않습니다. `.env`는 이후 Shell이 직접 읽습니다
+
 > 💻 **터미널에서 실행**
 
 ```bash
@@ -91,10 +96,15 @@ bash scripts/set-env.sh \
 
 ## Step 2. Day-0 결정 검토하기
 
-> 🧠 **Skill** `azure-kubernetes` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
+> 🧠 **Skill** `azure-kubernetes`, `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-azure-kubernetes와 azure-postgres Skill을 사용해 3계층 구성을 검토해줘.
+azure-kubernetes Skill과 azure-enterprise-infra-planner Skill을 사용해
+3계층 구성을 검토해줘.
+
+[나눌 검토]
+- azure-kubernetes Skill: AKS Day-0 결정
+- azure-enterprise-infra-planner Skill: PostgreSQL Network·Entra 인증과 계층 간 연결
 
 [검토 기준]
 - Standard 운영 모드
@@ -174,6 +184,12 @@ Least Privilege 매트릭스를 작성해줘.
 - 이 표는 Lab 08 인계 문서에 그대로 들어갑니다
 
 **확인할 것** - 나에게 Subscription Owner나 Cluster Admin을 주는 제안이 없는지. 이 랩에서는 권한을 실제로 바꾸지 않습니다.
+
+Namespace 생성은 cluster Scope 작업입니다.
+
+- [Lab 05](05-deploy-and-connect.md)는 조회·Namespace 생성/갱신용 bootstrap Custom Role을 사용합니다
+- 워크로드 관리 권한은 `lab` Namespace Scope에만 할당합니다
+- Custom Role 생성·할당 권한도 배포 전에 확인합니다
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>

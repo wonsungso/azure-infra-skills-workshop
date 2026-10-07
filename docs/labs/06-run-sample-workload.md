@@ -54,15 +54,22 @@ Manifest는 네 조각으로 구성됩니다.
 
 Placeholder는 [`render-workload.sh`](../../scripts/render-workload.sh)가 Azure 조회값으로 채웁니다. Secret은 저장하지 않습니다.
 
+- 조회는 `.env`의 `SUBSCRIPTION_ID` Scope를 사용합니다
+- 필수 값이나 조회 결과가 비면 Manifest를 출력하지 않고 오류로 멈춥니다
+- Manifest와 Federated Credential이 `lab` 전용이므로 다른 `NAMESPACE`도 거부합니다
+
 ## Step 2. 렌더링하고 적용하기
 
 > 💻 **터미널에서 실행**
 
 ```bash
+set -o pipefail
 bash scripts/render-workload.sh | kubectl apply -f -
-kubectl -n lab rollout status deployment/lab-web --timeout=180s
-kubectl -n lab wait --for=condition=complete job/postgres-check --timeout=180s
+kubectl -n lab rollout status deployment/lab-web --timeout=600s
+kubectl -n lab wait --for=condition=complete job/postgres-check --timeout=600s
 ```
+
+`pipefail`은 Renderer 실패를 파이프라인 실패로 전달합니다. 오류가 있으면 다음 검증 전에 먼저 해결합니다.
 
 Renderer 출력에는 Azure Resource ID와 FQDN이 포함됩니다. 파일로 저장하거나 커밋하지 않습니다.
 
@@ -82,17 +89,38 @@ Renderer 출력에는 Azure Resource ID와 FQDN이 포함됩니다. 파일로 �
 > 💻 **터미널에서 실행**
 
 ```bash
+echo "Waiting for Gateway Accepted / Programmed"
+kubectl -n lab wait --for=condition=Accepted gateway/lab-gateway --timeout=900s
+kubectl -n lab wait --for=condition=Programmed gateway/lab-gateway --timeout=900s
+echo "Waiting for HTTPRoute Accepted / ResolvedRefs"
+kubectl -n lab wait \
+  --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Accepted")].status}'=True \
+  httproute/lab-web --timeout=180s
+kubectl -n lab wait \
+  --for=jsonpath='{.status.parents[0].conditions[?(@.type=="ResolvedRefs")].status}'=True \
+  httproute/lab-web --timeout=180s
 kubectl -n lab get applicationloadbalancer,gateways,httproutes
 APP_URL="http://$(kubectl -n lab get gateway lab-gateway -o jsonpath='{.status.addresses[0].value}')"
-curl -fsS "$APP_URL" | grep 'Contoso Shop'
-curl -fsS "$APP_URL/data/products.txt" | grep 'Dune Light DL-12'
-kubectl -n lab logs job/postgres-check
+echo "Checking public HTTP and SQL-derived product"
+bash scripts/verify-public-http.sh
+kubectl -n lab logs job/postgres-check -c psql
 ```
 
-- Gateway와 HTTPRoute가 `Accepted`, `Programmed` 상태여야 합니다
+- Gateway는 `Accepted`·`Programmed`, HTTPRoute는 `Accepted`·`ResolvedRefs`가 `True`여야 합니다
 - `curl`은 Application Gateway for Containers를 통해 AKS에 도달합니다
 - `/data/products.txt`는 Web Pod가 PostgreSQL에서 읽은 Row입니다
 - Job Log의 `successful_checks`가 PostgreSQL SQL 실행 증거입니다
+
+AGC의 최초 생성·Frontend 준비는 Web Pod와 SQL Job보다 늦을 수 있습니다.
+
+- 준비 대기는 최대 15분입니다. Web·SQL이 먼저 성공해도 아직 Public 요청 성공은 아닙니다
+- 시간 초과 시 재배포·삭제하지 말고 ALB 상태와 Controller Log를 수집합니다
+
+[`verify-public-http.sh`](../../scripts/verify-public-http.sh)는 실제 HTTP와 SQL 상품 Row를 함께 확인합니다.
+
+- 연결은 5초, 각 요청은 20초로 제한해 무기한 기다리지 않습니다
+- Public endpoint가 준비 중이면 상태를 표시하며 최대 3분 대기합니다
+- 시간 초과나 잘못된 내용은 오류로 종료합니다. HTTP 200만으로 성공 처리하지 않습니다
 
 <img src="../../img/shop.png" alt="Contoso Shop 상품 페이지 - 상품 카드 4개와 하단에 실제 Pod 이름이 표시된 화면" width="760">
 
@@ -107,6 +135,10 @@ Pod를 다시 만들면 Public URL은 유지되고 화면의 Pod 이름만 바�
 
 ```bash
 kubectl delete pod -n lab -l app=lab-web
+kubectl -n lab rollout status deployment/lab-web --timeout=600s
+kubectl -n lab wait --for=condition=Ready pod -l app=lab-web --timeout=600s
+bash scripts/verify-public-http.sh
+curl -4 -fsS --connect-timeout 5 --max-time 20 "$APP_URL/pod-name.txt"
 ```
 
 <img src="../../img/shop-after-restart.png" alt="Pod 재생성 후 같은 상품 페이지 - 하단의 Pod 이름만 다른 값으로 바뀐 화면" width="760">

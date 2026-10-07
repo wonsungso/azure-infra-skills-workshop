@@ -21,7 +21,7 @@
 > 💻 **터미널에서 실행**
 
 ```bash
-ls infra/ && grep -A3 '"meta"' .azure/infrastructure-plan.json
+ls infra/ && jq -e '.meta.status == "approved"' .azure/infrastructure-plan.json
 ```
 
 ### 배포 대상 Resource Group 만들기

@@ -87,6 +87,7 @@ azure-diagnostics Skill을 사용해 샘플 Deployment가 준비되지 않는
 
 ```bash
 kubectl rollout undo deployment/lab-web -n lab
+kubectl -n lab rollout status deployment/lab-web --timeout=600s
 ```
 
 `rollout undo`로 복구하면 **페이지의 Pod 이름은 바뀌지 않습니다.**

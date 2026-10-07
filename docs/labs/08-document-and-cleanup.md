@@ -28,6 +28,7 @@ azure-resource-lookup과 azure-resource-visualizer Skill을 사용해
 
 [읽을 값]
 - 저장소 루트 .env의 RESOURCE_GROUP, NODE_RESOURCE_GROUP
+- 저장소 루트 .env의 NAMESPACE
 - 저장소 루트의 infra-report.md
   (Lab 01부터 쌓인 결정과 관측 기록)
 
@@ -111,18 +112,34 @@ azure-resource-lookup Skill을 사용해 삭제 대상을 확인해줘.
 
 [읽을 값]
 - 저장소 루트 .env의 RESOURCE_GROUP, NODE_RESOURCE_GROUP
+- infra-report.md의 Access 장에 기록한 bootstrap Custom Role과 Namespace 역할
 
 [보여줄 것]
 - 두 그룹의 현재 리소스 (읽기 전용)
+- 해당 AKS에 연결된 실습용 역할 할당과 bootstrap Custom Role 정의
 - 삭제 대상과 그에 의존하는 자원을 표로
 
 [제약]
+- 기존에 있던 역할과 공용 Custom Role은 삭제 대상에서 제외
 - 실제 삭제 작업은 명시적 승인 전에는 수행하지 마
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 
 ```
 
 삭제를 승인한 뒤 실제로 삭제하고, 다시 조회해서 잔여 자원이 없는지(또는 남은 것이 무엇인지) 확인합니다.
+
+Controller가 관리하는 AGC는 클러스터가 살아 있을 때 먼저 정리합니다.
+
+- 승인한 Namespace의 Gateway와 ApplicationLoadBalancer를 삭제합니다
+- ALB의 Finalizer는 Azure 측 삭제를 기다리는 표시입니다. **강제로 지우지 않습니다**
+- Azure AGC·Association·Frontend와 Finalizer가 정리된 뒤 Resource Group을 삭제합니다
+- AKS 삭제가 관리하는 Node Resource Group 정리까지 기다리고 두 그룹을 다시 조회합니다
+
+[Lab 05](05-deploy-and-connect.md)의 bootstrap Custom Role 정의는 Resource Group 밖에 남을 수 있습니다.
+
+- Resource Group 삭제만으로 권한 정리까지 끝났다고 가정하지 않습니다
+- 이번 실습에서 만든 역할 정의·할당도 삭제 계획과 재조회에 포함합니다
+- 삭제하지 않으면 남은 권한과 Scope도 인계 문서에 기록합니다
 
 > [!WARNING]
 > 삭제하지 않기로 했다면, 그것도 정상입니다. 다만 잔여 자원과 비용 책임자를 인계 문서에 반드시 남기세요.

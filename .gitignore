@@ -1,5 +1,7 @@
 # Local E2E test scratch files
 .e2e-test/
+/infra/
+/.mcp.json
 
 # Bicep build output
 *.bicep.json

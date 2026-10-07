@@ -42,7 +42,7 @@
 
 ## Step 2. Azure Skills 확인하기
 
-Codespace가 만들어질 때 Skill 7개를 `.github/skills/`에 내려받았습니다.
+Codespace가 만들어질 때 Skill 6개를 `.github/skills/`에 내려받았습니다.
 
 먼저 파일이 있는지 봅니다.
 
@@ -57,12 +57,11 @@ ls .github/skills
 > 💬 **Copilot 채팅에 붙여넣기**
 
 ```text
-아래 7개 Skill을 지금 쓸 수 있는지 표로 알려줘.
+아래 6개 Skill을 지금 쓸 수 있는지 표로 알려줘.
 
 [확인 대상]
 - azure-quotas
 - azure-kubernetes
-- azure-postgres
 - azure-enterprise-infra-planner
 - azure-resource-lookup
 - azure-diagnostics
@@ -75,7 +74,7 @@ ls .github/skills
 
 ```
 
-일곱 개가 모두 있어야 합니다.
+여섯 개가 모두 있어야 합니다. 누락되면 설치 단계가 실패하며 Lab을 진행하지 않습니다.
 
 **Skill만으로는 부족합니다.** `azure-enterprise-infra-planner`는 계획을 세우는 도중 Azure 모범 사례와 Microsoft Learn 문서를 **MCP 서버로 조회**합니다.
 
@@ -98,9 +97,19 @@ VS Code 왼쪽 사이드바의 **MCP 서버** 목록에서 `azure`와 `microsoft
 
 ```bash
 tmp=$(mktemp -d)
-git clone -q --depth 1 https://github.com/microsoft/azure-skills.git "$tmp"
+git clone -q --depth 1 https://github.com/microsoft/azure-skills.git "$tmp" || {
+  echo "Could not download Azure Skills" >&2
+  exit 1
+}
+for s in azure-quotas azure-kubernetes azure-enterprise-infra-planner \
+         azure-resource-lookup azure-diagnostics azure-resource-visualizer; do
+  [ -f "$tmp/skills/$s/SKILL.md" ] || {
+    echo "Missing required Skill: $s" >&2
+    exit 1
+  }
+done
 mkdir -p .github/skills
-for s in azure-quotas azure-kubernetes azure-postgres azure-enterprise-infra-planner \
+for s in azure-quotas azure-kubernetes azure-enterprise-infra-planner \
          azure-resource-lookup azure-diagnostics azure-resource-visualizer; do
   cp -r "$tmp/skills/$s" .github/skills/
 done
@@ -133,6 +142,30 @@ az extension add --name alb --upgrade --yes
 
 - Feature 등록은 완료까지 시간이 걸릴 수 있습니다
 - 등록 후 `Microsoft.ContainerService` Provider를 다시 등록합니다
+
+다음 준비 확인까지 끝나야 Lab 02로 진행합니다.
+
+> 💻 **터미널에서 실행**
+
+```bash
+for FEATURE in ManagedGatewayAPIPreview ApplicationLoadBalancerPreview; do
+  DEADLINE=$((SECONDS + 1800))
+  while [ "$(az feature show --namespace Microsoft.ContainerService \
+    --name "$FEATURE" --query properties.state -o tsv)" != Registered ]; do
+    [ "$SECONDS" -lt "$DEADLINE" ] || {
+      echo "Feature registration timeout: $FEATURE" >&2
+      exit 1
+    }
+    echo "Waiting for Feature: $FEATURE"
+    sleep 15
+  done
+done
+az provider register --namespace Microsoft.ContainerService --wait
+az provider register --namespace Microsoft.Network --wait
+az provider register --namespace Microsoft.ServiceNetworking --wait
+az provider register --namespace Microsoft.DBforPostgreSQL --wait
+az provider register --namespace Microsoft.ManagedIdentity --wait
+```
 
 **이것이 이 워크샵의 첫 번째 쓰기 작업입니다.**
 
@@ -193,7 +226,12 @@ az account show --query "{subscription:name, state:state, tenant:tenantDefaultDo
 
 ```bash
 set -a; . ./.env; set +a
-az group show -n "$RESOURCE_GROUP" -o table 2>/dev/null || echo "아직 없음 - 정상입니다"
+EXISTS=$(az group exists -n "$RESOURCE_GROUP" --subscription "$SUBSCRIPTION_ID")
+if [ "$EXISTS" = true ]; then
+  az group show -n "$RESOURCE_GROUP" --subscription "$SUBSCRIPTION_ID" -o table
+else
+  echo "Not created yet - expected"
+fi
 ```
 
 **확인할 것**
@@ -242,9 +280,10 @@ azure-resource-lookup Skill을 사용해 Resource Group의 존재 여부를 확�
 
 ## ✅ 완료 체크리스트
 
-- [ ] `.github/skills/`에 Skill 7개가 있고 Copilot이 인식함을 확인했다
+- [ ] `.github/skills/`에 Skill 6개가 있고 Copilot이 인식함을 확인했다
 - [ ] `az login --use-device-code`로 로그인하고 쓸 Subscription을 선택했다
 - [ ] `Microsoft.Quota` Provider가 `Registered` 상태임을 확인했다
+- [ ] 두 Feature와 필요한 Provider 등록 완료를 확인했다
 - [ ] `.env`의 `SUBSCRIPTION_ID`와 `EGRESS_IP_CIDR`이 채워진 것을 확인했다
 - [ ] 조회한 Subscription이 `.env`와 일치함을 확인했다
 - [ ] `infra-report.md`가 생성되고 조회 결과가 들어갔다

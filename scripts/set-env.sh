@@ -16,22 +16,39 @@ ENV_FILE=.env
   exit 2
 }
 
-while [ $# -gt 0 ]; do
-  key=$1 val=$2
-  shift 2
-
-  # .env에 없는 키는 오타일 가능성이 높다. 조용히 추가하지 않고 멈춘다.
-  grep -qE "^${key}=" "$ENV_FILE" || {
+args=("$@")
+for ((i=0; i<${#args[@]}; i+=2)); do
+  key=${args[i]} val=${args[i+1]}
+  [[ "$key" =~ ^[A-Z_][A-Z0-9_]*$ ]] || {
+    echo "  항목 이름 형식이 잘못됐습니다: $key" >&2
+    exit 1
+  }
+  [ "$(grep -c "^${key}=" "$ENV_FILE" || true)" -eq 1 ] || {
     echo "  알 수 없는 항목: $key" >&2
+    echo "  항목이 중복된 경우에도 변경하지 않습니다." >&2
     echo "  사용 가능한 항목: $(grep -oE '^[A-Z_]+=' "$ENV_FILE" | tr -d '=' | tr '\n' ' ')" >&2
     exit 1
   }
+  [[ "$val" =~ ^[A-Za-z0-9_./:@-]*$ ]] || {
+    echo "  $key 값에 지원하지 않는 문자가 있습니다. 변경하지 않습니다." >&2
+    exit 1
+  }
+done
 
-  cur=$(grep -E "^${key}=" "$ENV_FILE" | head -1 | cut -d= -f2- || true)
+TMP=$(mktemp "${ENV_FILE}.XXXXXX")
+trap 'rm -f -- "$TMP"' EXIT
+cp "$ENV_FILE" "$TMP"
+messages=()
+while [ $# -gt 0 ]; do
+  key=$1 val=$2
+  shift 2
+  cur=$(grep "^${key}=" "$TMP" | cut -d= -f2-)
   if [ "$cur" = "$val" ]; then
-    echo "  $key: $val (그대로)"
+    messages+=("  $key: $val (그대로)")
   else
-    sed -i "s|^${key}=.*|${key}=${val}|" "$ENV_FILE"
-    echo "  $key: ${cur:-(비어 있음)} -> $val"
+    sed -i "s|^${key}=.*|${key}=${val}|" "$TMP"
+    messages+=("  $key: ${cur:-(비어 있음)} -> $val")
   fi
 done
+mv "$TMP" "$ENV_FILE"
+printf '%s\n' "${messages[@]}"

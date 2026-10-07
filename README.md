@@ -72,7 +72,7 @@ flowchart LR
 | Lab | 주 Skill | 다음 Lab에 넘길 것 |
 | --- | --- | --- |
 | [01. 워크샵 시작하기](docs/labs/01-orientation-and-setup.md) | `azure-resource-lookup` | `.env`, 확인된 Scope |
-| [02. 3계층 설계 결정하기](docs/labs/02-design-aks.md) | `azure-quotas`, `azure-kubernetes`, `azure-postgres` | Quota, Network, SKU 결정 |
+| [02. 3계층 설계 결정하기](docs/labs/02-design-aks.md) | `azure-quotas`, `azure-kubernetes`, `azure-enterprise-infra-planner` | Quota, Network, SKU 결정 |
 | [03. 계획 승인 + Bicep 생성](docs/labs/03-plan-and-bicep.md) | `azure-enterprise-infra-planner` | 승인된 계획, Bicep |
 | [04. IaC 검증 + 배포 승인](docs/labs/04-validate-and-approve.md) | `azure-enterprise-infra-planner` | 검증 증거, 배포 승인 |
 | [05. 3계층 인프라 배포](docs/labs/05-deploy-and-connect.md) | `azure-enterprise-infra-planner` | AGC Add-on, Azure Kubernetes Service, PostgreSQL |
@@ -86,10 +86,13 @@ flowchart LR
 
 ### 1. Azure 권한을 확인합니다
 
-다음 두 가지를 **본인이 직접** 할 수 있어야 합니다. 하나라도 안 되면 끝까지 진행할 수 없습니다.
+다음 작업을 **본인이 직접** 할 수 있어야 합니다. 하나라도 안 되면 끝까지 진행할 수 없습니다.
 
 - Resource Group에 Azure Kubernetes Service, Application Gateway for Containers, PostgreSQL을 배포할 권한
+- 제한된 Kubernetes 접근용 Custom Role 생성과 역할 할당 권한 ([Lab 05](docs/labs/05-deploy-and-connect.md))
 - 실습이 끝난 뒤 리소스를 **삭제**할 권한
+
+권한이 부족하면 접근 가능한 다른 전용 Scope를 사용합니다. Owner나 Cluster Admin으로 확대하지 않습니다.
 
 > [!WARNING]
 > **실제 비용이 발생하는 리소스**를 만듭니다.
@@ -102,7 +105,7 @@ flowchart LR
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/wonsungso/azure-infra-skills-workshop)
 
-Azure CLI, Bicep, `kubectl`, `kubelogin`과 Azure Skill 7개가 준비됩니다.
+Azure CLI, Bicep, `kubectl`, `kubelogin`과 Azure Skill 6개가 준비됩니다.
 
 컨테이너 준비가 끝나면 도구 상태를 확인합니다.
 
@@ -110,6 +113,7 @@ Azure CLI, Bicep, `kubectl`, `kubelogin`과 Azure Skill 7개가 준비됩니다.
 
 ```bash
 az version && az bicep version && kubectl version --client && kubelogin --version
+jq --version
 ls .github/skills
 ```
 
@@ -145,8 +149,7 @@ Azure 로그인과 Skill 동작 확인은 [Lab 01](docs/labs/01-orientation-and-
 | `azure-resource-lookup` | 실제 자원을 읽기 전용으로 조회 |
 | `azure-quotas` | vCPU Quota와 Region 용량 확인 |
 | `azure-kubernetes` | Azure Kubernetes Service Day-0 설계 검토 |
-| `azure-postgres` | PostgreSQL Network·인증 검토 |
-| `azure-enterprise-infra-planner` | Least Privilege 매트릭스 설계, 계획 승인, Bicep 생성·검증·배포 |
+| `azure-enterprise-infra-planner` | PostgreSQL Network·인증과 Least Privilege 검토, 계획 승인, Bicep 생성·검증·배포 |
 | `azure-diagnostics` | 증거 기반 오류 진단 |
 | `azure-resource-visualizer` | 리소스 관계를 다이어그램으로 정리 |
 | MCP 도구 / CLI / `kubectl` | 제안을 실제로 실행 |
@@ -183,7 +186,7 @@ Skill은 판단과 절차를, 도구는 실행을 담당합니다.
 | `reference/kubernetes/` | 웹·Gateway API·PostgreSQL 검증 Manifest |
 | `templates/` | [인계 문서 양식](templates/handoff-template.md) - Lab 08에서 채웁니다 |
 | `.devcontainer/` | Codespace 환경 정의 |
-| `scripts/` | `.env` 초기화([`init-workshop`](scripts/init-workshop.sh)), 값 반영([`set-env`](scripts/set-env.sh)), 보고서 작성([`add-report`](scripts/add-report.sh)) |
+| `scripts/` | `.env` 초기화([`init-workshop`](scripts/init-workshop.sh)), 값 반영([`set-env`](scripts/set-env.sh)), 보고서 작성([`add-report`](scripts/add-report.sh)), 승인 후 접근 준비([`prepare-aks-access`](scripts/prepare-aks-access.sh)) |
 
 모든 Lab은 같은 순서를 따릅니다. 목표 → 왜 필요한가 → 시작 전에 → Step → 완료 체크리스트 → 문제가 생겼다면 → 다음 Lab.
 
