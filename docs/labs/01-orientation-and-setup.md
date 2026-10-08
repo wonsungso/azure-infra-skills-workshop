@@ -153,7 +153,8 @@ az provider register --namespace Microsoft.ManagedIdentity --wait || exit 1
 az extension add --name alb --upgrade --yes || exit 1
 ```
 
-모든 등록이 완료된 뒤 Lab 02로 진행합니다.
+등록이 완료되면 Step 4의 입력값 확인과 Step 5의 Scope 확인을 진행합니다.
+**완료 체크리스트를 모두 확인한 뒤 Lab 02로 넘어갑니다.**
 
 ## Step 4. 입력값 확인하기
 
