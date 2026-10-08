@@ -117,44 +117,43 @@ rm -rf "$tmp"
 az login --use-device-code
 ```
 
-Quota와 Application Gateway for Containers Add-on을 준비합니다.
+Quota와 Application Gateway for Containers Add-on을 **아래 블록 한 번으로** 준비합니다.
+
+- Feature 등록은 비동기이므로 요청 후 `Registered`까지 기다립니다
+- Feature 등록 완료 후 `Microsoft.ContainerService` Provider를 다시 등록합니다
+- 이미 등록됐다면 대기는 바로 끝납니다
+- **Subscription 설정을 변경합니다.** 비용이나 리소스 생성은 없지만, 공용 Subscription에서는 먼저 승인을 확인합니다
 
 > 💻 **터미널에서 실행**
 
 ```bash
-az provider register --namespace Microsoft.Quota --wait
-az provider register --namespace Microsoft.NetworkFunction --wait
-az feature register --namespace Microsoft.ContainerService --name ManagedGatewayAPIPreview
-az feature register --namespace Microsoft.ContainerService --name ApplicationLoadBalancerPreview
-az extension add --name alb --upgrade --yes
-```
-
-Feature 등록을 기다린 뒤 필요한 Provider를 등록합니다. 모두 완료한 뒤 Lab 02로 진행합니다.
-
-> 💻 **터미널에서 실행**
-
-```bash
+az provider register --namespace Microsoft.Quota --wait || exit 1
+az provider register --namespace Microsoft.NetworkFunction --wait || exit 1
+for FEATURE in ManagedGatewayAPIPreview ApplicationLoadBalancerPreview; do
+  az feature register --namespace Microsoft.ContainerService --name "$FEATURE" || exit 1
+done
 for FEATURE in ManagedGatewayAPIPreview ApplicationLoadBalancerPreview; do
   DEADLINE=$((SECONDS + 1800))
-  while [ "$(az feature show --namespace Microsoft.ContainerService \
-    --name "$FEATURE" --query properties.state -o tsv)" != Registered ]; do
+  while true; do
+    STATE=$(az feature show --namespace Microsoft.ContainerService --name "$FEATURE" --query properties.state -o tsv) || exit 1
+    [ "$STATE" = Registered ] && break
     [ "$SECONDS" -lt "$DEADLINE" ] || {
       echo "Feature registration timeout: $FEATURE" >&2
       exit 1
     }
-    echo "Waiting for Feature: $FEATURE"
+    echo "Waiting for Feature: $FEATURE (state: $STATE)"
     sleep 15
   done
 done
-az provider register --namespace Microsoft.ContainerService --wait
-az provider register --namespace Microsoft.Network --wait
-az provider register --namespace Microsoft.ServiceNetworking --wait
-az provider register --namespace Microsoft.DBforPostgreSQL --wait
-az provider register --namespace Microsoft.ManagedIdentity --wait
+az provider register --namespace Microsoft.ContainerService --wait || exit 1
+az provider register --namespace Microsoft.Network --wait || exit 1
+az provider register --namespace Microsoft.ServiceNetworking --wait || exit 1
+az provider register --namespace Microsoft.DBforPostgreSQL --wait || exit 1
+az provider register --namespace Microsoft.ManagedIdentity --wait || exit 1
+az extension add --name alb --upgrade --yes || exit 1
 ```
 
-**Provider·Feature 등록은 Subscription 설정을 변경합니다.**
-비용이나 리소스 생성은 없지만, 공용 Subscription에서는 먼저 승인을 확인합니다.
+모든 등록이 완료된 뒤 Lab 02로 진행합니다.
 
 ## Step 4. 입력값 확인하기
 

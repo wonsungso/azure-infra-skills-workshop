@@ -107,13 +107,17 @@ Codespace를 열고 Lab 01부터 순서대로 진행합니다.
 - 제한된 Kubernetes 접근용 Custom Role 생성과 역할 할당 권한 ([Lab 05](docs/labs/05-deploy-and-connect.md))
 - 실습이 끝난 뒤 리소스를 **삭제**할 권한
 
-권한이 부족하면 다른 전용 Scope를 사용합니다. Owner나 Cluster Admin을 부여하지 않습니다.
+**권한 부족을 해결하려고 Owner나 Cluster Admin을 새로 부여하지 않습니다.**
+
+- 필요한 작업과 실습 Scope에 한정된 권한을 승인받거나, 권한이 있는 다른 전용 Scope를 사용합니다
+- 이미 Owner인 계정도 참여할 수 있습니다. 다만 Azure Owner와 Kubernetes 접근 권한은 별개입니다
+- Kubernetes 접근은 [Lab 05](docs/labs/05-deploy-and-connect.md)의 제한된 역할로 준비합니다
 
 > [!WARNING]
 > **실제 비용이 발생하는 리소스**를 만듭니다.
 >
 > - Azure Kubernetes Service Node는 실행되는 동안 계속 과금됩니다
-> - 중간에 멈춰도 [Lab 08](docs/labs/08-document-and-cleanup.md)의 정리 단계는 진행합니다
+> - 중간에 멈춰도 [Lab 08](docs/labs/08-document-and-cleanup.md)의 정리 단계는 진행하여 리소스를 삭제하세요.
 > - 회사 공용 Subscription에서는 **전용 Resource Group**을 만들어 사용합니다
 
 ### 2. Codespace를 엽니다
