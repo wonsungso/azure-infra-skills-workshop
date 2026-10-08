@@ -48,6 +48,7 @@ bash scripts/set-env.sh NODE_RESOURCE_GROUP \
 > 💻 **터미널에서 실행**
 
 ```bash
+set -a; . ./.env; set +a
 az aks show -g "$RESOURCE_GROUP" -n "$AKS_NAME" \
   --query "{state:provisioningState,workloadIdentity:securityProfile.workloadIdentity.enabled}"
 AKS_ID=$(az aks show -g "$RESOURCE_GROUP" -n "$AKS_NAME" --query id -o tsv)
@@ -61,6 +62,9 @@ Add-on 상태는 REST로 확인합니다.
 
 오래된 CLI·Extension은 `ingressProfile`을 `null`로 표시할 수 있습니다.
 비활성화로 단정하지 말고 실제 API의 `enabled`를 확인합니다.
+
+AKS가 `Succeeded`, PostgreSQL이 `Ready`이고 Workload Identity·ALB가 `true`인지 확인한 뒤 Step 2로 이동합니다.
+AGC 본체는 아직 생성되지 않습니다. Lab 06의 Manifest 적용 단계에서 생성합니다.
 
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>
@@ -134,7 +138,7 @@ azure-enterprise-infra-planner Skill을 사용해 실습용 Kubernetes 접근을
 - Custom Role 생성·역할 할당의 대상과 영향을 보여주고 승인을 요청
 - 승인 후 scripts/prepare-aks-access.sh --approved를 실행해
   Role ID로 할당하고 Credentials 변환·전파 준비 확인까지 수행
-- 준비 완료 후 Namespace 생성 명령을 제시
+- 준비 완료 후 사용한 KUBECONFIG 경로와 Namespace 생성 명령을 제시
 - 역할과 Scope, 승인 기록을 infra-report.md의 Access 장에 남겨줘
 
 [제약]
@@ -163,9 +167,9 @@ Custom Role은 필요한 작업 권한(DataActions)을 묶은 Azure 역할입니
 - Role ID로 할당하고 `kubelogin`을 변환합니다
 - 역할 전파와 GatewayClass·Controller 준비를 각각 최대 10분 기다립니다
 - 시간 초과 시 멈춥니다. 권한을 넓히지 않습니다
-- 프롬프트가 이미 실행했다면 **아래 명령은 건너뜁니다**
+- 프롬프트가 이미 실행했다면 스크립트 재실행만 건너뜁니다. **터미널 환경 설정은 필요합니다**
 
-직접 실행할 때도 먼저 대상·역할 변경을 승인합니다.
+먼저 참가자 터미널의 환경을 설정합니다. Skill이 사용한 경로가 다르면 같은 `KUBECONFIG`를 사용합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -175,15 +179,24 @@ export KUBECONFIG="$PWD/.azure/workshop.kubeconfig"
 if command -v cygpath >/dev/null; then
   export KUBECONFIG="$(cygpath -m "$KUBECONFIG")"
 fi
+```
+
+**Skill이 아직 접근 준비를 실행하지 않은 경우에만** 대상·역할 변경을 승인하고 아래를 실행합니다.
+이미 성공했다면 Node·Namespace 확인으로 이동합니다.
+
+> 💻 **터미널에서 실행**
+
+```bash
 bash scripts/prepare-aks-access.sh --approved
 ```
 
 - `-l azurecli`는 기존 Azure 로그인 Token을 사용합니다
-- 새 터미널에서도 같은 `KUBECONFIG`를 설정합니다
+- `--approved`는 승인 버튼이 아닙니다. **변경 내용을 승인한 뒤에만** 사용합니다
+- 새 터미널에서는 위 환경 설정을 다시 실행합니다. 역할 준비 스크립트까지 반복할 필요는 없습니다
 
 Node·Controller를 확인하고 실습용 Namespace를 만듭니다.
 
-Namespace가 이미 있으면 `kubectl get namespace "$NAMESPACE"`로 확인하고 생성은 건너뜁니다.
+처음에는 Namespace를 생성하고, 재실행할 때는 기존 Namespace를 유지합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -192,7 +205,10 @@ set -a; . ./.env; set +a
 kubectl get nodes -L kubernetes.azure.com/mode
 kubectl get gatewayclass azure-alb-external
 kubectl get pods -n kube-system | grep alb-controller
-kubectl create namespace "$NAMESPACE"
+EXISTING_NAMESPACE=$(kubectl get namespace "$NAMESPACE" --ignore-not-found -o name) || exit 1
+if [ -z "$EXISTING_NAMESPACE" ]; then
+  kubectl create namespace "$NAMESPACE" || exit 1
+fi
 kubectl auth can-i create deployments -n "$NAMESPACE"
 kubectl auth can-i create gateways.gateway.networking.k8s.io -n "$NAMESPACE"
 if kubectl auth can-i create deployments -n kube-system --quiet; then
@@ -234,7 +250,7 @@ fi
 - [ ] 승인 후 bootstrap·Namespace 역할을 준비하고 `kubectl`이 동작함
 - [ ] `lab` 생성 허용과 `kube-system` 워크로드 쓰기 거부를 확인함
 - [ ] System/User Node Pool 분리를 확인
-- [ ] `lab` Namespace를 직접 생성
+- [ ] `lab` Namespace가 생성됐거나 기존 Namespace가 있음을 확인
 - [ ] 배포와 검증 결과가 `infra-report.md`에 남았다
 
 ## 🚧 문제가 생겼다면
@@ -256,5 +272,7 @@ fi
 </details>
 
 ## 다음 Lab
+
+배포 상태·접근 준비·Namespace·권한 경계를 모두 확인한 뒤 진행합니다.
 
 [Lab 06: Gateway + DB 검증](06-run-sample-workload.md)

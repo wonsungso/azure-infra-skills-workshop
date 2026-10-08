@@ -36,11 +36,16 @@
 
 ## 그림 만들기
 
+저장소 루트에서 실행합니다. 아래는 공용 예시 스펙으로 생성하는 명령입니다.
+
 > 💻 **터미널에서 실행**
 
 ```bash
-bash scripts/build-architecture-svg.sh <스펙.json> <출력.svg>
+mkdir -p .azure
+bash scripts/build-architecture-svg.sh assets/azure-icons/example-architecture.json .azure/example-architecture.svg
 ```
+
+실제 리소스 그림은 [Lab 08](../../docs/labs/08-document-and-cleanup.md)의 절차를 따릅니다.
 
 [`example-architecture.json`](example-architecture.json)에 레이어별 항목을 지정합니다.
 [`build-architecture-svg.sh`](../../scripts/build-architecture-svg.sh)가 배치와 화살표를 생성합니다.

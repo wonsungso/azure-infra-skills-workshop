@@ -19,6 +19,7 @@
 ## 시작 전에
 
 - [Lab 05](05-deploy-and-connect.md)에서 `lab` Namespace 접근을 확인했나요?
+- 같은 Bash 터미널의 `KUBECONFIG`를 유지합니다. 새 터미널이면 Lab 05의 환경 설정만 다시 실행합니다
 
 ## Step 1. Manifest 검토하기
 
@@ -58,7 +59,11 @@ Manifest의 주요 구성입니다.
 - 값이 비면 출력 없이 오류로 멈춥니다. Secret은 저장하지 않습니다
 - Manifest·Federated Credential은 `lab` 전용입니다. 다른 Namespace는 거부합니다
 
-## Step 2. 렌더링하고 적용하기
+## Step 2. 승인 후 렌더링·적용하기
+
+Step 1에서 확인한 적용 대상·영향을 승인한 뒤 실행합니다.
+Manifest 적용은 워크로드를 만들고 **비용이 발생하는 AGC도 생성**합니다.
+이 블록은 최초 적용용입니다. 복구 후 점검에는 다시 적용하지 않습니다.
 
 > 💻 **터미널에서 실행**
 
@@ -73,6 +78,9 @@ kubectl -n lab wait --for=condition=complete job/postgres-check --timeout=600s
 
 Renderer 출력에는 Azure Resource ID와 FQDN이 포함됩니다. 파일로 저장하거나 커밋하지 않습니다.
 
+Deployment rollout과 Job Complete가 모두 성공한 뒤 Step 3으로 이동합니다.
+실패하면 Pod·Events·Log를 확인하고, 다음 단계로 넘어가지 않습니다.
+
 <details>
 <summary>💡 <b>Skill을 안 썼다면?</b></summary>
 
@@ -85,6 +93,8 @@ Renderer 출력에는 Azure Resource ID와 FQDN이 포함됩니다. 파일로 �
 </details>
 
 ## Step 3. Public Ingress와 Database 확인하기
+
+아래는 **읽기 전용 재검증 블록**입니다. 최초 적용 후와 Lab 07 복구 후에 사용합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -112,7 +122,8 @@ kubectl -n lab logs job/postgres-check -c psql
 - Job Log의 `successful_checks`가 PostgreSQL SQL 실행 증거입니다
 
 **Web·SQL 성공과 Public HTTP 준비는 별개입니다.**
-Gateway 준비는 최대 15분 기다립니다. 시간 초과 시 재배포·삭제하지 말고 ALB 상태·Controller Log를 수집합니다.
+Gateway의 각 준비 조건은 최대 15분 기다립니다.
+시간 초과 시 재배포·삭제하지 말고 ALB 상태·Controller Log를 수집합니다.
 
 [`verify-public-http.sh`](../../scripts/verify-public-http.sh)는 HTTP와 SQL 상품 Row를 확인합니다.
 
@@ -121,16 +132,33 @@ Gateway 준비는 최대 15분 기다립니다. 시간 초과 시 재배포·삭
 
 <img src="../../img/shop.png" alt="Contoso Shop 상품 페이지 - 상품 카드 4개와 하단에 실제 Pod 이름이 표시된 화면" width="760">
 
-다음을 비교합니다.
-
-- 화면의 Pod 이름과 실제 조회한 이름이 같은가?
-- `-o wide`로 확인한 배치 Node가 User Pool인가?
-
-Pod를 재생성한 뒤 **같은 URL·새 Pod 이름·SQL 상품**을 확인합니다.
+실제 Pod 이름·배치 Node·User Pool을 조회하고 화면과 비교합니다.
 
 > 💻 **터미널에서 실행**
 
 ```bash
+kubectl -n lab get pods -l app=lab-web -o wide
+kubectl get nodes -L kubernetes.azure.com/mode
+curl -4 -fsS --connect-timeout 5 --max-time 20 "$APP_URL/pod-name.txt"
+```
+
+확인할 것:
+
+- 화면의 Pod 이름과 실제 조회한 이름이 같은가?
+- `-o wide`로 확인한 배치 Node가 User Pool인가?
+
+### 최초 실습에서만: Pod 재생성
+
+**위 읽기 전용 검증이 통과한 뒤**, Pod 삭제의 대상·영향을 승인하고 실행합니다.
+단일 Web Pod이므로 재생성 중 응답이 일시 중단될 수 있습니다.
+복구 후 점검에서는 이 블록을 반복하지 않습니다.
+
+재생성 후 **같은 URL·새 Pod 이름·SQL 상품**을 확인합니다.
+
+> 💻 **터미널에서 실행**
+
+```bash
+APP_URL="http://$(kubectl -n lab get gateway lab-gateway -o jsonpath='{.status.addresses[0].value}')"
 kubectl delete pod -n lab -l app=lab-web
 kubectl -n lab rollout status deployment/lab-web --timeout=600s
 kubectl -n lab wait --for=condition=Ready pod -l app=lab-web --timeout=600s
@@ -147,7 +175,8 @@ curl -4 -fsS --connect-timeout 5 --max-time 20 "$APP_URL/pod-name.txt"
 - [ ] 페이지에 표시된 Pod 이름이 조회 결과와 일치함
 - [ ] Pod가 User Pool Node에 배치된 것을 확인함
 - [ ] PostgreSQL Public Access와 Password를 사용하지 않음
-- [ ] 실패 시 Events와 Pod 상태를 수집함
+- [ ] 최초 실습의 Pod 재생성 후 같은 URL·새 Pod 이름·SQL 상품 확인
+- [ ] 실패가 있었다면 Events와 Pod 상태를 기록함
 
 ## 🚧 문제가 생겼다면
 
@@ -167,4 +196,5 @@ curl -4 -fsS --connect-timeout 5 --max-time 20 "$APP_URL/pod-name.txt"
 
 ## 다음 Lab
 
-[Lab 07: 진단과 복구](07-diagnose-and-recover.md)는 선택입니다. 생략하면 [Lab 08](08-document-and-cleanup.md)로 진행합니다.
+완료 체크리스트를 확인한 뒤 [Lab 07: 진단과 복구](07-diagnose-and-recover.md)를 선택하거나
+바로 [Lab 08](08-document-and-cleanup.md)로 진행합니다. 오류가 남아 있으면 먼저 해결합니다.

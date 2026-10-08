@@ -16,10 +16,12 @@
 
 - 복구 기준으로 사용할 [Lab 06](06-run-sample-workload.md)의 정상 상태 증거가 있나요?
 - **내 실습용 클러스터에서만** 진행합니다. 공용 환경에는 장애를 주입하지 않습니다.
+- Lab 05의 `KUBECONFIG`를 사용합니다. 새 터미널이면 환경 설정만 다시 실행합니다
 
 ## Step 1. 장애를 직접 주입하기
 
 존재하지 않는 이미지 태그로 새 Pod의 시작을 막습니다.
+**`lab-web` 이미지 변경의 대상·영향을 승인한 뒤** 아래를 실행합니다.
 
 > 💻 **터미널에서 실행**
 
@@ -28,6 +30,7 @@ kubectl set image deployment/lab-web web=nginxinc/nginx-unprivileged:does-not-ex
 ```
 
 다음 Step에서는 **주입한 변경이 아니라 실제 Events·Pod 상태를 근거로** 결론을 냅니다.
+`ImagePullBackOff`는 이 실습의 예상 결과입니다. 실패한 rollout 완료를 기다리지 말고 Step 2로 이동합니다.
 
 ## Step 2. 증거로 원인 분석하기
 
@@ -78,7 +81,9 @@ azure-diagnostics Skill을 사용해 샘플 Deployment가 준비되지 않는
 
 ## Step 3. 승인 후 복구하고 재검증하기
 
-원래 이미지 복원을 승인하고 적용한 뒤 [Lab 06](06-run-sample-workload.md)의 검증을 반복합니다.
+Step 2의 원인·변경 내용을 확인하고 원래 이미지 복원을 승인합니다.
+복구 뒤에는 [Lab 06](06-run-sample-workload.md) **Step 3의 읽기 전용 재검증 블록**과 Pod·Node 조회만 반복합니다.
+Manifest 적용이나 Pod 삭제·재생성은 반복하지 않습니다.
 
 > 💻 **터미널에서 실행**
 
@@ -115,5 +120,7 @@ kubectl -n lab rollout status deployment/lab-web --timeout=600s
 </details>
 
 ## 다음 Lab
+
+복구와 읽기 전용 재검증을 마친 뒤 진행합니다. 복구 실패 상태라면 먼저 원인을 해결합니다.
 
 [Lab 08: 문서화 + 정리](08-document-and-cleanup.md)

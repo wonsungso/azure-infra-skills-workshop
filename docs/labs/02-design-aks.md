@@ -71,6 +71,8 @@ azure-quotas Skill을 사용해 AKS Node를 만들 Quota가 남아 있는지 확
 - 부족하면 Region 또는 Node 개수·SKU를 변경합니다
 - 실제 조회 명령과 결과가 있는가?
 
+한도 조회만으로는 여유를 알 수 없습니다. Skill의 **한도 − 현재 사용량** 판단까지 확인한 뒤 값을 결정합니다.
+
 기본 `REGION`은 `koreacentral`입니다. Quota를 확인하고 결정한 Region·SKU를 반영합니다.
 
 [`set-env.sh`](../../scripts/set-env.sh)는 입력 쌍을 모두 검사한 뒤 한 번에 반영합니다.
@@ -183,7 +185,8 @@ Least Privilege는 필요한 작업과 Scope에만 권한을 부여하는 원칙
 - Azure 권한과 Kubernetes 내부 권한을 구분합니다
 - 매트릭스를 Lab 08 인계 문서에 포함합니다
 
-**Owner나 Cluster Admin을 부여하는 제안이 없는지 확인합니다. 이 Lab에서는 권한을 바꾸지 않습니다.**
+**권한 부족 해결을 위해 Owner나 Cluster Admin을 새로 부여하는 제안은 거절합니다.**
+기존 Owner 계정의 참여를 금지하는 뜻은 아닙니다. 이 Lab에서는 권한을 바꾸지 않습니다.
 
 - Namespace 생성은 cluster Scope입니다. [Lab 05](05-deploy-and-connect.md)에서 bootstrap Custom Role을 사용합니다
 - 워크로드 쓰기는 `lab` Namespace Scope로 제한합니다
@@ -225,5 +228,7 @@ Least Privilege는 필요한 작업과 Scope에만 권한을 부여하는 원칙
 </details>
 
 ## 다음 Lab
+
+Step 1–3의 검토 결과를 기록하고 `.env`의 설계값을 채운 뒤 진행합니다.
 
 [Lab 03: 계획 승인 + Bicep 생성](03-plan-and-bicep.md)

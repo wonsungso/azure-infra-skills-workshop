@@ -54,6 +54,7 @@ azure-enterprise-infra-planner Skill을 사용해 배포 대상 Resource Group�
 **빈 Resource Group은 비용이 없습니다.** 비용이 발생하는 리소스는 승인 후 [Lab 05](05-deploy-and-connect.md)에서 배포합니다.
 
 Application Gateway for Containers Preview 상태도 확인합니다.
+Lab 01에서 이미 등록했습니다. 여기서는 **조회만** 하며, 둘 다 `Registered`가 아니면 Lab 01 Step 3으로 돌아갑니다.
 
 > 💻 **터미널에서 실행**
 
@@ -77,7 +78,7 @@ azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
 
 [해야 할 일]
 - 그 Skill의 검증 단계를 따라 Bicep build, 보안 검사,
-    ARM Validation 또는 What-if를 수행해줘
+  ARM Validation과 What-if를 수행해줘
 - 실제로 실행한 명령과 그 결과, 실패 항목을 정리해줘
 - 고쳐야 할 것이 있으면 어디를 왜 고쳐야 하는지 먼저 설명해줘
 - 검증되지 않은 결과는 예상으로 표시해줘
@@ -98,6 +99,8 @@ azure-enterprise-infra-planner Skill을 사용해 IaC를 검증해줘.
 
 > [!WARNING]
 > **검증 실패 상태에서 배포하지 않습니다.** 원인을 수정하고 같은 검사를 다시 실행합니다.
+
+모든 검사가 통과하고 결과가 기록된 뒤 Step 2로 이동합니다.
 
 ## Step 2. 배포 영향 확인·승인하기
 
@@ -120,6 +123,7 @@ azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
 
 [제약]
 - 승인을 받기 전에는 Azure 리소스를 만들거나 바꾸지 마
+- 승인을 받은 뒤에도 여기서는 기록만 하고 멈춰. 실제 배포는 Lab 05에서 요청할게
 - 이 Skill을 쓸 수 없으면 다른 방법으로 대신하지 말고 먼저 알려줘
 
 ```
@@ -163,5 +167,7 @@ azure-enterprise-infra-planner Skill을 사용해 배포 승인을 요청해줘.
 </details>
 
 ## 다음 Lab
+
+검증 통과와 **명시적 배포 승인 기록**을 모두 확인한 뒤 진행합니다.
 
 [Lab 05: 3계층 인프라 배포](05-deploy-and-connect.md)

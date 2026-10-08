@@ -17,12 +17,12 @@ GitHub Copilot의 **LLM**(대규모 언어 모델)이 요청을 해석하고,
 
 ## 어떤 시나리오인가요?
 
-참가자는 **Contoso의 플랫폼 엔지니어**입니다.
-커머스팀이 Contoso Shop을 실행할 Public Ingress·Kubernetes·Private Database를 요청했습니다.
+<img src="img/contoso-scenario.png" alt="Contoso 신입 플랫폼 엔지니어의 가상 시나리오: 일주일 안에 Shop 출시 환경을 준비해야 하지만 시간과 인력이 부족합니다. Copilot과 Azure Skills로 계획·배포·점검·복구를 진행하고, 사람이 승인한 뒤 실제 HTTP·SQL 결과를 확인해 인계합니다." width="1000">
 
-- Copilot과 Azure Skills로 전용 Resource Group에 교육용 3계층 환경을 구성합니다
-- 앱 코딩·이미지 빌드 대신 제공된 Manifest로 연결·인증을 검증합니다
-- 검증 결과와 정리 상태를 다음 담당자에게 인계합니다
+**입사 직후, 일주일 안에 Contoso Shop 출시 환경을 준비하라는 요청을 받았습니다.**
+시간·인력이 부족한 상황에서 Copilot과 Azure Skills로 교육용 3계층 환경을 구성·검증·인계합니다.
+
+앱 코딩·이미지 빌드는 제외합니다. 제공된 Manifest로 연결·인증을 확인합니다.
 
 ## 🎯 워크샵 목표
 
@@ -83,6 +83,11 @@ flowchart LR
 ```
 
 앞 Lab의 결과물이 다음 Lab의 입력입니다. Lab은 순서대로 진행합니다.
+
+- 각 Lab의 **완료 체크리스트를 확인한 뒤** 다음 Lab으로 넘어갑니다
+- 오류·미승인 항목이 있으면 해당 단계에서 멈춥니다
+- 명령은 저장소 루트의 Bash 터미널에서 실행합니다. 새 터미널에서는 `.env`와 `KUBECONFIG`를 다시 설정합니다
+- Lab 07만 선택입니다. 중간에 중단해도 생성된 리소스 정리는 Lab 08을 참고합니다
 
 | Lab | 주 Skill | 다음 Lab에 넘길 것 |
 | --- | --- | --- |

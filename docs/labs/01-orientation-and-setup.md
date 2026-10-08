@@ -117,6 +117,17 @@ rm -rf "$tmp"
 az login --use-device-code
 ```
 
+**등록 전에 사용할 Subscription을 확인합니다.**
+
+> 💻 **터미널에서 실행**
+
+```bash
+az account show --query "{subscription:name,state:state}" -o table
+```
+
+원하는 Subscription이 아니면 `az account set --subscription "<subscription-name>"`으로 선택한 뒤 다시 확인합니다.
+그다음 아래 등록을 실행합니다. Step 4의 초기화 스크립트는 이 선택을 `.env`에 기록합니다.
+
 Quota와 Application Gateway for Containers Add-on을 **아래 블록 한 번으로** 준비합니다.
 
 - Feature 등록은 비동기이므로 요청 후 `Registered`까지 기다립니다
@@ -184,6 +195,9 @@ cat .env
 - AKS API Server에 접근할 수 있는 유일한 주소가 됩니다
 - Codespace 안에서 조회해야 합니다
 - 재시작으로 IP가 바뀌면 [`init-workshop.sh`](../../scripts/init-workshop.sh)로 갱신합니다
+
+이미 AKS를 배포했다면 `.env` 갱신만으로 접속 제한이 바뀌지는 않습니다.
+[Lab 05](05-deploy-and-connect.md)의 문제 해결에서 실제 Authorized IP Ranges 변경을 별도로 승인합니다.
 
 ## Step 5. 내 Azure 범위 확인하기
 
@@ -285,5 +299,7 @@ azure-resource-lookup Skill을 사용해 Resource Group의 존재 여부를 확�
 </details>
 
 ## 다음 Lab
+
+Step 1–5와 완료 체크리스트를 마친 뒤 진행합니다.
 
 [Lab 02: 3계층 설계 결정하기](02-design-aks.md)
