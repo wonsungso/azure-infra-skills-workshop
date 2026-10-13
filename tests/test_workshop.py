@@ -371,10 +371,22 @@ class DocumentTests(unittest.TestCase):
                 self.assertLessEqual(count, 2)
                 main_prompts += count
                 why = text.split("## 왜 필요한가요?", 1)[1].split("## 시작 전에", 1)[0]
-                self.assertEqual(len([line for line in why.splitlines() if line.strip()]), 1)
+                explanation = [line for line in why.splitlines() if line.strip()]
+                self.assertGreaterEqual(len(explanation), 2)
+                self.assertLessEqual(len(explanation), 3)
+                self.assertTrue(all(len(line) <= 100 for line in explanation))
                 prerequisites = text.split("## 시작 전에", 1)[1].split("## Step 1.", 1)[0]
                 self.assertEqual(len([line for line in prerequisites.splitlines() if line.strip()]), 1)
         self.assertEqual(main_prompts, 9)
+
+    def test_steps_explain_the_action_before_execution(self):
+        for path in sorted((ROOT / "docs" / "labs").glob("*.md")):
+            main = re.sub(r"<details>.*?</details>", "", path.read_text(encoding="utf-8"), flags=re.S)
+            steps = re.findall(r"^## Step (\d+)\.[^\n]*\n(.*?)(?=^## |\Z)", main, re.M | re.S)
+            for number, body in steps:
+                with self.subTest(document=path.name, step=number):
+                    intro = body.split("> ", 1)[0]
+                    self.assertTrue(any(line.strip() for line in intro.splitlines()))
 
 
 if __name__ == "__main__":

@@ -10,7 +10,9 @@
 
 ## 왜 필요한가요?
 
-배포 후 바꾸기 어려운 Network·인증·SKU를 먼저 결정합니다.
+- Agent가 Quota·Network·인증·권한을 검토하고, 사람이 Region·SKU·CIDR을 선택합니다.
+- 선택값은 `.env`에, 선택 근거와 역할별 권한은 보고서에 남겨 다음 계획의 입력으로 씁니다.
+- 배포 후 바꾸기 어려운 설정과 용량 부족을 미리 확인하므로, 아직 리소스는 만들지 않습니다.
 
 ## 시작 전에
 
@@ -28,6 +30,8 @@ Day-0는 배포 전 결정입니다. 아래 후보를 **그대로 자동 적용�
 | DNS Service IP | `10.1.48.10` |
 | ALB / PostgreSQL Subnet | `10.60.1.0/24` / `10.60.2.0/28` |
 | Database | PostgreSQL `Standard_B1ms`, Private Access + Entra 인증 |
+
+이 프롬프트는 후보의 실제 사용 가능 여부와 위험을 비교하고, 내가 선택한 값만 기록합니다.
 
 > 🧠 **Skill** `azure-quotas`, `azure-kubernetes`, `azure-enterprise-infra-planner` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 

@@ -10,7 +10,9 @@
 
 ## 왜 필요한가요?
 
-배포 전에 도구와 사용할 Azure Scope를 확인합니다.
+- Agent가 도구·Skill·Azure Scope를 점검하고 필요한 등록과 환경값을 준비합니다.
+- 사용할 Subscription을 확인하고, 다음 Lab에서 읽을 `.env`와 준비 기록을 남깁니다.
+- 도구 누락이나 잘못된 Scope 때문에 실습 도중 멈추는 일을 줄이기 위한 단계입니다.
 
 ## 시작 전에
 
@@ -29,6 +31,8 @@ az login --use-device-code
 브라우저에서 로그인합니다. Credentials·Token은 채팅에 전달하지 않습니다.
 
 ## Step 2. Agent에게 준비 맡기기
+
+이 프롬프트는 로그인 이후의 준비를 점검하고, 등록이 필요할 때만 승인을 요청합니다.
 
 > 🧠 **Skill** `azure-resource-lookup` &nbsp;·&nbsp; 💬 **Copilot 채팅에 붙여넣기**
 
