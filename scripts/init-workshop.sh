@@ -4,6 +4,15 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
+STRICT=0
+if [ $# -ne 0 ]; then
+  [ $# -eq 1 ] && [ "$1" = --strict ] || {
+    echo "Usage: bash scripts/init-workshop.sh [--strict]" >&2
+    exit 2
+  }
+  STRICT=1
+fi
+
 ENV_FILE=.env
 
 if [ ! -f "$ENV_FILE" ]; then
@@ -93,6 +102,7 @@ if [ -n "$IP" ]; then
   set_env EGRESS_IP_CIDR "$IP/32"
 else
   echo "  egress IP 조회 실패 - 네트워크를 확인하고 다시 실행하세요"
+  [ "$STRICT" -eq 0 ] || exit 1
 fi
 
 if command -v az >/dev/null 2>&1; then
@@ -101,7 +111,9 @@ if command -v az >/dev/null 2>&1; then
     set_env SUBSCRIPTION_ID "$SUB"
   else
     echo "  SUBSCRIPTION_ID 비어 있음 - az login --use-device-code 후 이 스크립트를 다시 실행하세요"
+    [ "$STRICT" -eq 0 ] || exit 1
   fi
 else
   echo "  az CLI 없음 - SUBSCRIPTION_ID는 나중에 채워집니다"
+  [ "$STRICT" -eq 0 ] || exit 1
 fi
